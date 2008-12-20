@@ -44,8 +44,8 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=', re.IGNORECASE)
-rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
+rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=attach', re.IGNORECASE)
+#rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -57,13 +57,13 @@ class MyUrlOpener(FancyURLopener):
 
 myopener = MyUrlOpener()
 
-def bellazon_parse(link, page):
+def bellazon_parse(link):
     bellazon_list = []
-    bellazon_list.append(self.page.findAll('a', title=rJpgSrc))
-    #href_links = self.page.findAll('a', href=rBellazon)
+    #bellazon_list.append(page.findAll('a', title=rJpgSrc))
     #bellazon_href = []
     #for li in bellazon_href:
     #    bellazon_href.append(li['href'])
     #    print li
-    for li in bellazon_list:
-        print li
+    if rBellazon.search(str(link)):
+        bellazon_list.append(link)
+        print link

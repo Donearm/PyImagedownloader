@@ -72,8 +72,11 @@ def save_source(page):
     neat_title = re.sub('quot;', '', neat_title) # &quot; removing
     print neat_title
     output_dir = basedir + neat_title
-    os.mkdir(output_dir, 0740)
-    os.chdir(output_dir)
+    try:
+        os.mkdir(output_dir, 0740)
+        os.chdir(output_dir)
+    except OSError:
+        os.chdir(output_dir)
     # save the source url in a file
     source_file = open('source.txt', "w")
     source_file.write('fonte:' + page + "\n\n\n")

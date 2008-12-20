@@ -103,7 +103,7 @@ class ImageHostParser():
             elif rUppix.search(stringl):
                 uppix.uppix_parse(L)
             elif rBellazon.search(stringl):
-                bellazon.bellazon_parse(L, page)
+                bellazon.bellazon_parse(L)
             elif rSkinsBe.search(stringl):
                 print "We found a link!"
                 skinsbe.skinsbe_parse(L)
