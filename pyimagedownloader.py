@@ -128,18 +128,28 @@ class ImageHostParser():
                 linked_image_page = myopener.open(li_without_loc)
                 Rlinked_image_page = linked_image_page.read()
                 linked_page_soup = BeautifulSoup(Rlinked_image_page)
-                src_links2 = linked_page_soup.findAll('img', src=rJpgSrc)
+                src_links2 = linked_page_soup.findAll('img', id='thepic')
                 imagevenue_src = []
                 for src in src_links2:
-                    print src
                     imagevenue_src.append(src)
-                print li_without_loc
+
+                linked_image_page.close()
+
                 print imagevenue_src[0]
-                # TODO:
-                # usercash doesn't works
-
-
-                savefile = basedir + str(saveExtension[1])
+                imagevenue_split = re.split('img.php\?image=', li) # remove the unneeded parts
+                try:
+                    # make up the real image url
+                    download_url = str(imagevenue_split[0]) + str(imagevenue_src[0])
+                except IndexError:
+                    # if we get an IndexError just continue (it may means 
+                    #that the image can't be downloaded from the server 
+                    #or there is a host's glitch
+                    continue
+                # generate just the filename of the image to be locally saved
+                save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
+                print save_extension
+                savefile = basedir + str(imagevenue_src[0])
+                download_url = str(imagevenue_split[0]) + str(imagevenue_src[0])
                 # finally save the image on the desidered directory
                 urlretrieve(downloadUrl, savefile) 
 
