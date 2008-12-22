@@ -9,8 +9,6 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.0"
-__date__ = "10102008"
 __email__ = "forod.g@gmail.com"
 
 import re
@@ -18,31 +16,6 @@ import shutil
 import os
 from urllib import FancyURLopener, urlretrieve
 from BeautifulSoup import BeautifulSoup, SoupStrainer
-
-# +---------------------------------------------------------------------------+
-# | GPL license block                                                         |
-# |                                                                           |
-# | This program is free software; you can redistribute it and/or modify      |
-# | it under the terms of the GNU General Public License as published by      |
-# | the Free Software Foundation; either version 2 of the License, or         |
-# | (at your option) any later version.                                       |
-# |                                                                           |
-# | This program is distributed in the hope that it will be useful,           |
-# | but WITHOUT ANY WARRANTY; without even the implied warranty of            |
-# | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             |
-# | GNU General Public License for more details.                              |
-# |                                                                           |
-# | You should have received a copy of the GNU General Public License         |
-# | along with this program; if not, write to the Free Software               |
-# | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA |
-# +---------------------------------------------------------------------------+
-# +---------------------------------------------------------------------------+
-# | Release Log                                                               |
-# |                                                                           |
-# | 1.0 : first release. Support for imagevenue, imagebam, imageshack,        |
-# |       upmyphoto, uppix and imgshed                                        |
-# +---------------------------------------------------------------------------+
-
 
 
 # The regexp we'll need to find the link
@@ -66,16 +39,17 @@ def save_source(page):
     Rpage_title = page_title.read()
     page_title_soup = BeautifulSoup(Rpage_title)
     # purge the title of troublesome characters
-    neat_title = re.sub('[\|\.\&\,\'\:\!\@]', '', page_title_soup.title.string)
+    neat_title = re.sub('[\|\.\&\,\'\:\!\@\/]', '', page_title_soup.title.string)
     # and substitutes spaces with underscores
     neat_title = re.sub('\s', '_', neat_title)
     neat_title = re.sub('quot;', '', neat_title) # &quot; removing
     print neat_title
     output_dir = basedir + neat_title
-    try:
-        os.mkdir(output_dir, 0740)
+
+    if os.path.isdir(output_dir):
         os.chdir(output_dir)
-    except OSError:
+    else:
+        os.mkdir(output_dir, 0740)
         os.chdir(output_dir)
     # save the source url in a file
     source_file = open('source.txt', "w")

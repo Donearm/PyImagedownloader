@@ -64,6 +64,7 @@ rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 #rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=', re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
+rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -107,6 +108,8 @@ class ImageHostParser():
             elif rSkinsBe.search(stringl):
                 print "We found a link!"
                 skinsbe.skinsbe_parse(L)
+            elif rShareapic.search(stringl):
+                shareapic.shareapic_parse(L)
             else:
                 continue
 
