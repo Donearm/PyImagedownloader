@@ -9,8 +9,8 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.0"
-__date__ = "10102008"
+__version__ = "1.1"
+__date__ = "22122008"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -41,6 +41,7 @@ import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven,
 # +---------------------------------------------------------------------------+
 # | Release Log                                                               |
 # |                                                                           |
+# | 1.1 : Added shareapic and usercash support. Some bugfixes.
 # | 1.0 : first release. Support for imagevenue, imagebam, imageshack,        |
 # |       upmyphoto, uppix and imgshed                                        |
 # +---------------------------------------------------------------------------+
