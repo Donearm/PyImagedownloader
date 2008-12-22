@@ -35,24 +35,26 @@ def skinsbe_parse(link):
     skinsbe_list = [] # the list that will contain the href tags
     skinsbe_list.append(link['href'])
     for i in skinsbe_list:
-        print i
         # get every page linked from the skinsbe links
         image_page = myopener.open(i)
         Rimage_page = image_page.read()
         page_soup = BeautifulSoup(Rimage_page)
         # find the src attribute which contains the real link of skinsbe's images
-        src_links = page_soup.findAll('img', id='theimage')
+        src_links = page_soup.findAll('img', id='wallpaper_image')
         skinsbe_src = []
         for li in src_links:
-            print li
             skinsbe_src.append(li['src']) # add all the src part to a list
 
         # Close the page
         image_page.close()
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.sub('^\./files/', '', skinsbe_src[0]) 
-        download_url = 'http://skinsbe.com/files/' + save_extension
+        #save_extension = re.sub('^\./files/', '', skinsbe_src[0]) 
+        #download_url = 'http://skinsbe.com/files/' + save_extension
+
+        download_url = skinsbe_src[0]
+
+        save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
 
         savefile = basedir + save_extension
         # finally save the image on the desidered directory
