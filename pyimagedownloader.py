@@ -19,7 +19,7 @@ import urllib2
 from urllib import FancyURLopener, urlretrieve
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic
+import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic, upmyphoto
 
 # +---------------------------------------------------------------------------+
 # | GPL license block                                                         |
