@@ -18,7 +18,7 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rUpmyphoto = re.compile("href=\"?http://www\.upmyphoto\.com", re.IGNORECASE)
+rUpmyphoto = re.compile("http://www\.upmyphoto\.com/img", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -48,7 +48,9 @@ def upmyphoto_parse(link):
         image_page.close()
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('img/dir[0-9]+/loc[0-9]+/',  upmyphoto_src[0]) 
+        # First save_extension is for the old links?
+        #save_extension = re.split('img/dir[0-9]+/loc[0-9]+/',  upmyphoto_src[0]) 
+        save_extension = re.split('/img/', upmyphoto_src[0])
         savefile = basedir + str(save_extension[1])
         download_url = upmyphoto_src[0]
         # finally save the image on the desidered directory
