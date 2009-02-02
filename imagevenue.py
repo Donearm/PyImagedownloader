@@ -32,6 +32,9 @@ class MyUrlOpener(FancyURLopener):
 
 # Instanciate the UrlOpener
 myopener = MyUrlOpener()
+# Disable proper parsing thus correcting the HtmlParseError on scr+ipt tags
+# Doesn't work atm
+myopener.CDATA_CONTENT_ELEMENTS = ()
 
 def imagevenue_parse(link):
     """For parsing normal imagevenue's links"""
@@ -40,9 +43,9 @@ def imagevenue_parse(link):
     imagevenue_list.append(link['href'])
     for i in imagevenue_list:
         # get every page linked from the imagevenue links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagevenue's images
         src_links = page_soup.findAll('img', id='thepic')
         imagevenue_src = []
@@ -50,7 +53,7 @@ def imagevenue_parse(link):
             imagevenue_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         imagevenue_split = re.split('img.php\?image=', i) # remove the unneeded parts
         try:

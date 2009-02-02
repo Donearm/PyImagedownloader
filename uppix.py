@@ -36,9 +36,9 @@ def uppix_parse(link):
     uppix_list.append(link['href'])
     for i in uppix_list:
         # get every page linked from the uppix links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of uppix's images
         src_links = page_soup.findAll('img', id='dpic')
         uppix_src = []
@@ -46,7 +46,7 @@ def uppix_parse(link):
             uppix_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         # generate just the filename of the image to be locally saved
         save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 

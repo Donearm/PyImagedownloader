@@ -37,9 +37,9 @@ def imgshed_parse(link):
     imgshed_list.append(link['href'])
     for i in imgshed_list:
         # get every page linked from the imgshed links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imgshed's images
         src_links = page_soup.findAll('img', id='theimage')
         imgshed_src = []
@@ -47,7 +47,7 @@ def imgshed_parse(link):
             imgshed_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         # generate just the filename of the image to be locally saved
         save_extension = re.sub('^\./files/', '', imgshed_src[0]) 

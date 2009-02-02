@@ -35,9 +35,9 @@ def upmyphoto_parse(link):
     upmyphoto_list.append(link['href'])
     for i in upmyphoto_list:
         # get every page linked from the upmyphoto links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of upmyphoto's images
         src_links = page_soup.findAll('img', src=rUpmyphoto)
         upmyphoto_src = []
@@ -45,7 +45,7 @@ def upmyphoto_parse(link):
             upmyphoto_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         # generate just the filename of the image to be locally saved
         # First save_extension is for the old links?

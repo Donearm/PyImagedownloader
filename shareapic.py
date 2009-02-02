@@ -41,9 +41,9 @@ def shareapic_parse(link):
     for i in shareapic_list:
         print i
         # get every page linked from the shareapic links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of shareapic's images
         src_links = page_soup.findAll('img', src=rSrcShareapic)
         shareapic_fullsize = []
@@ -53,7 +53,7 @@ def shareapic_parse(link):
             shareapic_fullsize.append(fullsize_li) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         download_url = shareapic_fullsize[0]
         # generate just the filename of the image to be locally saved

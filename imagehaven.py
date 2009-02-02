@@ -37,9 +37,9 @@ def imagehaven_parse(link):
     imagehaven_list.append(link['href'])
     for i in imagehaven_list:
         # get every page linked from the imagehaven links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagehaven's images
         src_links = page_soup.findAll('img', src=rSrcImagehaven)
         imagehaven_src = []
@@ -47,7 +47,7 @@ def imagehaven_parse(link):
             imagehaven_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         imagehaven_split = re.split('img\.php\?id=', i) # remove the unneeded parts
         imagehaven_split2 = re.split('\.\/', imagehaven_src[0]) 

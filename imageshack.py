@@ -38,9 +38,9 @@ def imageshack_parse(link):
     imageshack_list.append(link['href'])
     for i in imageshack_list:
         # get every page linked from the imageshack links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imageshack's images
         src_links = page_soup.findAll('img', src=rSrcImageshack)
         imageshack_src = []
@@ -48,7 +48,7 @@ def imageshack_parse(link):
             imageshack_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         # generate just the filename of the image to be locally saved
         save_extension = re.split('img[0-9]{,3}/[0-9]+/', imageshack_src[0]) 

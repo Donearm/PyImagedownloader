@@ -37,9 +37,9 @@ def imagebam_parse(link):
     imagebam_list.append(link['href'])
     for i in imagebam_list:
         # get every page linked from the imagebam links
-        image_page = myopener.open(i)
-        Rimage_page = image_page.read()
-        page_soup = BeautifulSoup(Rimage_page)
+        image_page = myopener.open(i).read()
+        #Rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagebam's images
         src_links = page_soup.findAll('img', src=rSrcImagebam)
         imagebam_src = []
@@ -47,7 +47,7 @@ def imagebam_parse(link):
             imagebam_src.append(li['src']) # add all the src part to a list
 
         # Close the page
-        image_page.close()
+        #image_page.close()
 
         imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
         download_url = imagebam_src[0]

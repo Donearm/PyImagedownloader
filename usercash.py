@@ -38,9 +38,9 @@ def usercash_parse(link):
     usercash_list.append(link['href'])
     for images in usercash_list:
         # get every page linked from the usercash links
-        image_page = myopener.open(images)
-        rimage_page = image_page.read()
-        page_soup = BeautifulSoup(rimage_page)
+        image_page = myopener.open(images).read()
+        #rimage_page = image_page.read()
+        page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagevenue's images
         src_links = page_soup.findAll('frame', src=rJpgSrc)
 
@@ -52,5 +52,5 @@ def usercash_parse(link):
             imagevenue_embed(correct_link)
 
         # Close the first page
-        image_page.close()
+        #image_page.close()
 
