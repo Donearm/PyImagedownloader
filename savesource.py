@@ -53,7 +53,7 @@ def save_source(page):
         os.chdir(output_dir)
     # save the source url in a file
     source_file = open('source.txt', "w")
-    source_file.write('fonte:' + page + "\n\n\n")
+    source_file.write("\n\n\n" + 'fonte:' + page + "\n")
     source_file.close()
     # move all the images in basedir in the output_dir
     files_in_basedir = os.listdir(basedir)
