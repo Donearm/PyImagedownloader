@@ -35,9 +35,8 @@ def save_source(page):
     """ the method to save the original page link to a file """
 
     # get the page's title
-    page_title = myopener.open(page)
-    Rpage_title = page_title.read()
-    page_title_soup = BeautifulSoup(Rpage_title)
+    page_title = myopener.open(page).read()
+    page_title_soup = BeautifulSoup(page_title)
     # purge the title of troublesome characters
     neat_title = re.sub('[\|\.\&\,\'\:\!\@\/]', '', page_title_soup.title.string)
     # and substitutes spaces with underscores
