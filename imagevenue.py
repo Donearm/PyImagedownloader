@@ -21,6 +21,7 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
+rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -42,9 +43,9 @@ def imagevenue_parse(link):
     imagevenue_list = [] # the list that will contain the href tags
     imagevenue_list.append(link['href'])
     for i in imagevenue_list:
-        # get every page linked from the imagevenue links
-        image_page = myopener.open(i).read()
-        #Rimage_page = image_page.read()
+        # get every page linked from the imagevenue links, removing those
+        # damned '<scr'+'ipt> tags
+        image_page = rScript.sub('', myopener.open(i).read())
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagevenue's images
         src_links = page_soup.findAll('img', id='thepic')
