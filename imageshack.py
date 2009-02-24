@@ -33,30 +33,27 @@ class MyUrlOpener(FancyURLopener):
 myopener = MyUrlOpener()
 
 def imageshack_parse(link):
-    #rSrcImageshack = re.compile('http://img([0-9]{,3})\.imageshack\.us/img\1/[0-9]+/[0-9a-z]+\.jpg')
-    rSrcImageshack = re.compile('my_img[0-9]+/[0-9]+/[0-9a-z]+\.[jpg|gif|png]', re.IGNORECASE)
+    rSrcImageshack = re.compile('http://www\.yfrog\.com/\?url=http://img([0-9]{,3})\.imageshack\.us/img[0-9]+/[0-9]+/[0-9a-z]+\.[jpg|gif|png]')
     imageshack_list = [] # the list that will contain the href tags
     imageshack_list.append(link['href'])
     for i in imageshack_list:
-        print(i)
         # get every page linked from the imageshack links
         image_page = myopener.open(i).read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imageshack's images
-        src_links = page_soup.findAll('input', value=rSrcImageshack)
+        src_links = page_soup.findAll('a', href=rSrcImageshack)
         imageshack_src = []
         for li in src_links:
-            imageshack_src.append(li['value']) # add all the src part to a list
-        print(imageshack_src[0])
+            imageshack_src.append(li['href']) # add all the src part to a list
 
         # Close the page
         #image_page.close()
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('my_img[0-9]{,3}/[0-9]+/', imageshack_src[0]) 
-        # Get the first part of the imageshack url, before the 'img' part
-        starting_url = re.split('my\.php', i)
+        save_extension = re.split('img[0-9]{,3}/[0-9]+/', imageshack_src[0]) 
+        # Get the real imageshack url, before the '?url=' part
+        imageshack_url = re.split('\?url=', imageshack_src[0])
         savefile = basedir + str(save_extension[1])
-        download_url = starting_url[0] + imageshack_src[0]
+        download_url = imageshack_url[1]
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
