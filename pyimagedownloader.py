@@ -16,7 +16,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import urllib2
-from urllib import FancyURLopener, urlretrieve
+from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic, upmyphoto
@@ -70,11 +70,6 @@ rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
-
 
 class ImageHostParser():
     """ The main parser class """
@@ -115,19 +110,16 @@ class ImageHostParser():
 
 
 
-# Instanciate the UrlOpener
-myopener = MyUrlOpener()
 
+values = {}
 user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
 headers = { 'User-Agent' : user_agent }
 
 # Open and read the page contents
-request = urllib2.Request(sys.argv[1], headers)
+data = urlencode(values)
+request = urllib2.Request(sys.argv[1], data, headers)
 response = urllib2.urlopen(request)
 Rpage = response.read()
-#page = myopener.open(sys.argv[1])
-#Rpage = page.read()
-#page.close()
 
 # Parse the page for images
 parser = ImageHostParser(Rpage, 'a', )
