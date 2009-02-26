@@ -12,10 +12,9 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import FancyURLopener, urlretrieve
+import urllib2
+from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
-
-
 
 
 # The regexp we'll need to find the link
@@ -26,16 +25,10 @@ rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # ide
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
-
-# Instanciate the UrlOpener
-myopener = MyUrlOpener()
-# Disable proper parsing thus correcting the HtmlParseError on scr+ipt tags
-# Doesn't work atm
-myopener.CDATA_CONTENT_ELEMENTS = ()
+values = {}
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+headers = { 'User-Agent' : user_agent }
+data = urlencode(values)
 
 def imagevenue_parse(link):
     """For parsing normal imagevenue's links"""
@@ -43,9 +36,12 @@ def imagevenue_parse(link):
     imagevenue_list = [] # the list that will contain the href tags
     imagevenue_list.append(link['href'])
     for i in imagevenue_list:
+        request = urllib2.Request(i, data, headers)
+        response = urllib2.urlopen(request)
         # get every page linked from the imagevenue links, removing those
         # damned '<scr'+'ipt> tags
-        image_page = rScript.sub('', myopener.open(i).read())
+        image_page = rScript.sub('', response.read())
+
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagevenue's images
         src_links = page_soup.findAll('img', id='thepic')
@@ -53,8 +49,6 @@ def imagevenue_parse(link):
         for li in src_links:
             imagevenue_src.append(li['src']) # add all the src part to a list
 
-        # Close the page
-        #image_page.close()
 
         imagevenue_split = re.split('img.php\?image=', i) # remove the unneeded parts
         try:
@@ -74,17 +68,16 @@ def imagevenue_embed(link):
     """For parsing the links coming from paid host images like usercash"""
 
     # get every page linked from the imagevenue links
-    image_page = myopener.open(link)
-    Rimage_page = image_page.read()
-    page_soup = BeautifulSoup(Rimage_page)
+    request = urllib2.Request(link, data, headers)
+    response = urllib2.urlopen(request)
+    image_page = response.read()
+    page_soup = BeautifulSoup(image_page)
     # find the src attribute which contains the real link of imagevenue's images
     src_links = page_soup.findAll('img', id='thepic')
     imagevenue_src = []
     for li in src_links:
         imagevenue_src.append(li['src']) # add all the src part to a list
 
-        # Close the page
-        image_page.close()
 
         imagevenue_split = re.split('img.php\?image=', link) # remove the unneeded parts
         try:

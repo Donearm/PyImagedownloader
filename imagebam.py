@@ -12,7 +12,8 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import FancyURLopener, urlretrieve
+import urllib2
+from urllib import urlencode, urlretrieve 
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 
@@ -23,12 +24,10 @@ rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
-
-myopener = MyUrlOpener()
+values = {}
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+headers = { 'User-Agent' : user_agent }
+data = urlencode(values)
 
 
 def imagebam_parse(link):
@@ -37,8 +36,10 @@ def imagebam_parse(link):
     imagebam_list.append(link['href'])
     for i in imagebam_list:
         # get every page linked from the imagebam links
-        image_page = myopener.open(i).read()
-        #Rimage_page = image_page.read()
+        request = urllib2.Request(i, data, headers)
+        response = urllib2.urlopen(request)
+        image_page = response.read()
+        #image_page = myopener.open(i).read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagebam's images
         src_links = page_soup.findAll('img', src=rSrcImagebam)
@@ -46,8 +47,6 @@ def imagebam_parse(link):
         for li in src_links:
             imagebam_src.append(li['src']) # add all the src part to a list
 
-        # Close the page
-        #image_page.close()
 
         imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
         download_url = imagebam_src[0]

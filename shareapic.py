@@ -12,10 +12,9 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import FancyURLopener, urlretrieve
+import urllib2
+from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
-
-
 
 
 # The regexp we'll need to find the link
@@ -26,13 +25,10 @@ rSrcShareapic = re.compile('http://images\.shareapic\.net')
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
-
-# Instanciate the UrlOpener
-myopener = MyUrlOpener()
+values = {}
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+headers = { 'User-Agent' : user_agent }
+data = urlencode(values)
 
 def shareapic_parse(link):
 
@@ -41,8 +37,9 @@ def shareapic_parse(link):
     for i in shareapic_list:
         print i
         # get every page linked from the shareapic links
-        image_page = myopener.open(i).read()
-        #Rimage_page = image_page.read()
+        request = urllib2.Request(i, data, headers)
+        response = urllib2.urlopen(request)
+        image_page = response.read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of shareapic's images
         src_links = page_soup.findAll('img', src=rSrcShareapic)
@@ -51,9 +48,6 @@ def shareapic_parse(link):
             fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li['src'])
             print fullsize_li
             shareapic_fullsize.append(fullsize_li) # add all the src part to a list
-
-        # Close the page
-        #image_page.close()
 
         download_url = shareapic_fullsize[0]
         # generate just the filename of the image to be locally saved

@@ -14,7 +14,8 @@ __email__ = "forod.g@gmail.com"
 import re
 import shutil
 import os
-from urllib import FancyURLopener, urlretrieve
+import urllib2
+from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 
@@ -24,18 +25,18 @@ rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attribu
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
-
-myopener = MyUrlOpener()
+values = {}
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+headers = { 'User-Agent' : user_agent }
+data = urlencode(values)
 
 def save_source(page):
     """ the method to save the original page link to a file """
 
     # get the page's title
-    page_title = myopener.open(page).read()
+    request = urllib2.Request(page, data, headers)
+    response = urllib2.urlopen(request)
+    page_title = response.read()
     page_title_soup = BeautifulSoup(page_title)
     # purge the title of troublesome characters
     neat_title = re.sub('[\|\.\&\,\'\:\!\@\/]', '', page_title_soup.title.string)
@@ -61,7 +62,4 @@ def save_source(page):
             src_name = os.path.join(basedir, f)
             dst_name = os.path.join(output_dir, f)
             shutil.move(src_name, dst_name)
-
-
-
 
