@@ -16,6 +16,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import urllib2
+from socket import setdefaulttimeout
 from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
@@ -71,6 +72,7 @@ rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
 basedir = '/mnt/documents/Maidens/Uploads/'
 
 
+
 class ImageHostParser():
     """ The main parser class """
 
@@ -111,9 +113,13 @@ class ImageHostParser():
 
 
 
+# Some variables for the connection
 values = {}
 user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
 headers = { 'User-Agent' : user_agent }
+# Change the timeout
+timeout = 60
+setdefaulttimeout(timeout)
 
 # Open and read the page contents
 data = urlencode(values)

@@ -40,9 +40,9 @@ def imagevenue_parse(link):
         try:
             response = urllib2.urlopen(request)
         except urllib2.HTTPError, e:
-            break
+            return
         except urllib2.URLError, e:
-            break
+            return
         # get every page linked from the imagevenue links, removing those
         # damned '<scr'+'ipt> tags
         image_page = rScript.sub('', response.read())
@@ -77,9 +77,9 @@ def imagevenue_embed(link):
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError, e:
-        break
+        return
     except urllib2.URLError, e:
-        break
+        return
     image_page = response.read()
     page_soup = BeautifulSoup(image_page)
     # find the src attribute which contains the real link of imagevenue's images
