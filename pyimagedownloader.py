@@ -107,7 +107,6 @@ class ImageHostParser():
             elif rBellazon.search(stringl):
                 bellazon.bellazon_parse(L)
             elif rSkinsBe.search(stringl):
-                print "We found a link!"
                 skinsbe.skinsbe_parse(L)
             elif rShareapic.search(stringl):
                 shareapic.shareapic_parse(L)
@@ -119,10 +118,16 @@ class ImageHostParser():
 # Instanciate the UrlOpener
 myopener = MyUrlOpener()
 
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
+headers = { 'User-Agent' : user_agent }
+
 # Open and read the page contents
-page = myopener.open(sys.argv[1])
-Rpage = page.read()
-page.close()
+request = urllib2.Request(sys.argv[1], headers)
+response = urllib2.urlopen(request)
+Rpage = response.read()
+#page = myopener.open(sys.argv[1])
+#Rpage = page.read()
+#page.close()
 
 # Parse the page for images
 parser = ImageHostParser(Rpage, 'a', )
