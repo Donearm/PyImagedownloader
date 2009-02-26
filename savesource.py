@@ -35,7 +35,12 @@ def save_source(page):
 
     # get the page's title
     request = urllib2.Request(page, data, headers)
-    response = urllib2.urlopen(request)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError, e:
+        break
+    except urllib2.URLError, e:
+        break
     page_title = response.read()
     page_title_soup = BeautifulSoup(page_title)
     # purge the title of troublesome characters

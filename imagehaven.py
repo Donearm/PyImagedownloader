@@ -38,7 +38,12 @@ def imagehaven_parse(link):
     for i in imagehaven_list:
         # get every page linked from the imagehaven links
         request = urllib2.Request(i, data, headers)
-        response = urllib2.urlopen(request)
+        try:
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError, e:
+            break
+        except urllib2.URLError, e:
+            break
         image_page = response.read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagehaven's images

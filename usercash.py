@@ -36,7 +36,12 @@ def usercash_parse(link):
     for images in usercash_list:
         # get every page linked from the usercash links
         request = urllib2.Request(images, data, headers)
-        response = urllib2.urlopen(request)
+        try:
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError, e:
+            break
+        except urllib2.URLError, e:
+            break
         image_page = response.read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imagevenue's images

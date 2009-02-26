@@ -37,7 +37,12 @@ def imagebam_parse(link):
     for i in imagebam_list:
         # get every page linked from the imagebam links
         request = urllib2.Request(i, data, headers)
-        response = urllib2.urlopen(request)
+        try:
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError, e:
+            break
+        except urllib2.URLError, e:
+            break
         image_page = response.read()
         #image_page = myopener.open(i).read()
         page_soup = BeautifulSoup(image_page)

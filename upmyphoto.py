@@ -13,7 +13,7 @@ __email__ = "forod.g@gmail.com"
 
 import re
 import urllib2
-from urllib import urlretrieve, urlopen
+from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 
@@ -35,7 +35,12 @@ def upmyphoto_parse(link):
     for i in upmyphoto_list:
         # get every page linked from the upmyphoto links
         request = urllib2.Request(i, data, headers)
-        response = urllib2.urlopen(request)
+        try: 
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError, e:
+            break
+        except urllib2.URLError, e:
+            break
         image_page = response.read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of upmyphoto's images
