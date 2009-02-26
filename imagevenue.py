@@ -40,9 +40,9 @@ def imagevenue_parse(link):
         try:
             response = urllib2.urlopen(request)
         except urllib2.HTTPError, e:
-            return
+            break
         except urllib2.URLError, e:
-            return
+            break
         # get every page linked from the imagevenue links, removing those
         # damned '<scr'+'ipt> tags
         image_page = rScript.sub('', response.read())
@@ -65,9 +65,13 @@ def imagevenue_parse(link):
             continue
         # generate just the filename of the image to be locally saved
         save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
-        savefile = basedir + str(save_extension[1])
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
+        try:
+            savefile = basedir + str(save_extension[1])
+            # finally save the image on the desidered directory
+            urlretrieve(download_url, savefile) 
+        except IndexError:
+            break
+
 
 def imagevenue_embed(link):
     """For parsing the links coming from paid host images like usercash"""
