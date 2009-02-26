@@ -60,7 +60,7 @@ rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNO
 rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
-rUpmyphoto = re.compile("href=\"?http://www\.upmyphoto\.com", re.IGNORECASE)
+rUpmyphoto = re.compile("href=\"?http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
 rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 #rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=', re.IGNORECASE)
