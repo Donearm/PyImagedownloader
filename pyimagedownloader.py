@@ -17,6 +17,7 @@ import sys
 import re
 import urllib2
 from socket import setdefaulttimeout
+from cookielib import CookieJar
 from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
@@ -120,9 +121,13 @@ headers = { 'User-Agent' : user_agent }
 # Change the timeout
 timeout = 60
 setdefaulttimeout(timeout)
+# prepare the cookies handler
+cj = CookieJar()
 
 # Open and read the page contents
 data = urlencode(values)
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+urllib2.install_opener(opener)
 request = urllib2.Request(sys.argv[1], data, headers)
 response = urllib2.urlopen(request)
 Rpage = response.read()
