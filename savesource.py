@@ -40,6 +40,7 @@ def save_source(page):
     except urllib2.HTTPError, e:
         if e.code == 405:
             request = urllib2.Request(page)
+            request.add_header('User-Agent', user_agent)
             response = urllib2.urlopen(request)
         else:
             print("Some error happened")
