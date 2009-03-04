@@ -129,7 +129,18 @@ data = urlencode(values)
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 urllib2.install_opener(opener)
 request = urllib2.Request(sys.argv[1], data, headers)
-response = urllib2.urlopen(request)
+try:
+    response = urllib2.urlopen(request)
+except urllib2.HTTPError, e:
+    # if the site doesn't accept a POST request, make a GET instead
+    if e.code == 405:
+        request = urllib2.Request(sys.argv[1])
+        response = urllib2.urlopen(request)
+    else:
+        print(e.code)
+        print(e.reason)
+        sys.exit(1)
+
 Rpage = response.read()
 
 # Parse the page for images
