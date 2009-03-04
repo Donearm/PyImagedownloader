@@ -12,7 +12,10 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import FancyURLopener, urlretrieve
+import urllib2
+from cookielib import CookieJar
+from socket import setdefaulttimeout
+from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 
@@ -26,12 +29,17 @@ rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
-# Create a class from urllib because it's better to substitute the default 
-# User-Agent with something more common (google won't get angry and so on)
-class MyUrlOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+# Some variables for the connection
+values = {}
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
+headers = { 'User-Agent' : user_agent }
+# Change the timeout
+timeout = 60
+setdefaulttimeout(timeout)
+# prepare the cookies handler
+cj = CookieJar()
 
-myopener = MyUrlOpener()
+
 
 def bellazon_parse(link):
     bellazon_list = []
@@ -42,4 +50,16 @@ def bellazon_parse(link):
     #    print li
     if rBellazon.search(str(link)):
         bellazon_list.append(link)
-        print link
+        print(link)
+
+        # Open and read the page contents
+        data = urlencode(values)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        urllib2.install_opener(opener)
+        request = urllib2.Request(link, data, headers)
+
+        try:
+            respone = urllib2.urlopen(request)
+        except HTTPError, e:
+            print(e.code)
+            print(e.reason)
