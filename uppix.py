@@ -38,9 +38,9 @@ def uppix_parse(link):
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             break
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             break
         image_page = response.read()
         page_soup = BeautifulSoup(image_page)

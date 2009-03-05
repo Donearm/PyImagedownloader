@@ -39,10 +39,10 @@ def imagevenue_parse(link):
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
-        except urllib2.HTTPError, e:
-            break
-        except urllib2.URLError, e:
-            break
+        except urllib2.URLError as e:
+            print("Error happened")
+            if e.code == 404:
+                break
         # get every page linked from the imagevenue links, removing those
         # damned '<scr'+'ipt> tags
         image_page = rScript.sub('', response.read())
@@ -62,6 +62,7 @@ def imagevenue_parse(link):
         except IndexError:
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
+            print("error here")
             continue
         # generate just the filename of the image to be locally saved
         save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
@@ -80,9 +81,9 @@ def imagevenue_embed(link):
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
         return
-    except urllib2.URLError, e:
+    except urllib2.URLError as e:
         return
     image_page = response.read()
     page_soup = BeautifulSoup(image_page)

@@ -49,7 +49,7 @@ def bellazon_parse(link):
     #    bellazon_href.append(li['href'])
     #    print li
     if rBellazon.search(str(link)):
-        bellazon_list.append(link)
+        bellazon_list.append(link['href'])
         print(link)
 
         # Open and read the page contents
@@ -60,6 +60,6 @@ def bellazon_parse(link):
 
         try:
             respone = urllib2.urlopen(request)
-        except HTTPError, e:
+        except HTTPError as e:
             print(e.code)
             print(e.reason)

@@ -103,6 +103,7 @@ class ImageHostParser():
             elif rUppix.search(stringl):
                 uppix.uppix_parse(L)
             elif rBellazon.search(stringl):
+                print(stringl)
                 bellazon.bellazon_parse(L)
             elif rSkinsBe.search(stringl):
                 skinsbe.skinsbe_parse(L)
@@ -131,7 +132,7 @@ urllib2.install_opener(opener)
 request = urllib2.Request(sys.argv[1], data, headers)
 try:
     response = urllib2.urlopen(request)
-except urllib2.HTTPError, e:
+except urllib2.HTTPError as e:
     # if the site doesn't accept a POST request, make a GET instead
     if e.code == 405:
         request = urllib2.Request(sys.argv[1])
