@@ -68,6 +68,7 @@ rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
+rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -113,39 +114,52 @@ class ImageHostParser():
                 continue
 
 
+def http_connector(url):
+    """connect to a url and get the page"""
 
+    # Some variables for the connection
+    values = {}
+    user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
+    headers = { 'User-Agent' : user_agent }
+    # Change the timeout
+    timeout = 60
+    setdefaulttimeout(timeout)
 
-# Some variables for the connection
-values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
-headers = { 'User-Agent' : user_agent }
-# Change the timeout
-timeout = 60
-setdefaulttimeout(timeout)
-# prepare the cookies handler
-cj = CookieJar()
+    if rCelebutopia.search(url):
+        # for Celebutopia links we need a cookie handler
+        print("Celebutopia links!")
+        cj = CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        urllib2.install_opener(opener)
 
-# Open and read the page contents
-data = urlencode(values)
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-urllib2.install_opener(opener)
-request = urllib2.Request(sys.argv[1], data, headers)
-try:
-    response = urllib2.urlopen(request)
-except urllib2.HTTPError as e:
-    # if the site doesn't accept a POST request, make a GET instead
-    if e.code == 405:
-        request = urllib2.Request(sys.argv[1])
-        # adding the User-Agent in case it wasn't
-        request.add_header('User-Agent', user_agent)
+    # Open and read the page contents
+    data = urlencode(values)
+    request = urllib2.Request(url, data, headers)
+
+    try:
         response = urllib2.urlopen(request)
-    else:
-        print(e.code)
-        print(e.reason)
-        sys.exit(1)
+    except urllib2.HTTPError as e:
+        # if the site doesn't accept a POST request, make a GET instead
+        if e.code == 405:
+            print("GET request")
+            request = urllib2.Request(sys.argv[1])
+            # adding the User-Agent in case it wasn't
+            request.add_header('User-Agent', user_agent)
+            response = urllib2.urlopen(request)
+        else:
+            print(e.code)
+            print(e.reason)
+            sys.exit(1)
 
-Rpage = response.read()
+    Rpage = response.read()
+    return Rpage
 
+
+
+
+
+
+Rpage = http_connector(sys.argv[1])
 # Parse the page for images
 parser = ImageHostParser(Rpage, 'a', )
 # Generate the directory for the source file and the images downloaded
