@@ -21,6 +21,7 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
+rRedirects = re.compile("tempfull-default", re.IGNORECASE) # for rewriting the "Continue to image" links to the real image page
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -36,9 +37,19 @@ def imagevenue_parse(link):
     imagevenue_list = [] # the list that will contain the href tags
     imagevenue_list.append(link['href'])
     for i in imagevenue_list:
+        #print("Link: %s" % i)
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
+            # search if the image link goes to a "Continue to image" page. If so substitute the url part with the real image one and request the page again
+            redirect = re.search(rRedirects, response.geturl())
+            if redirect:
+                realurl = rRedirects.sub('img', response.geturl())
+                try:
+                    response = urllib2.urlopen(realurl)
+                except urllib.URLError as e:
+                    if e.code == 404:
+                        break
         except urllib2.URLError as e:
             if e.code == 404:
                 break
