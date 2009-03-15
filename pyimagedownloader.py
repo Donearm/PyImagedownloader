@@ -127,7 +127,6 @@ def http_connector(url):
 
     if rCelebutopia.search(url):
         # for Celebutopia links we need a cookie handler
-        print("Celebutopia links!")
         cj = CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         urllib2.install_opener(opener)

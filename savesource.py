@@ -20,7 +20,7 @@ from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+rImages = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # image files
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -69,7 +69,7 @@ def save_source(page):
     # move all the images in basedir in the output_dir
     files_in_basedir = os.listdir(basedir)
     for f in files_in_basedir:
-        if rJpgSrc.search(f):
+        if rImages.search(f):
             src_name = os.path.join(basedir, f)
             dst_name = os.path.join(output_dir, f)
             shutil.move(src_name, dst_name)
