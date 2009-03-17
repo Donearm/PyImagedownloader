@@ -15,7 +15,7 @@ import re
 import shutil
 import os
 import urllib2
-import string
+from os.path import splitext
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
@@ -76,5 +76,9 @@ def save_source(page):
         if rImages.search(f):
             src_name = os.path.join(basedir, f)
             dst_name = os.path.join(output_dir, f)
+            # extract the files' extension and make sure all the files have
+            # it as lowercase
+            dst_filename, dst_ext = splitext(dst_name)
+            dst_name = dst_filename + dst_ext.lower()
             shutil.move(src_name, dst_name)
 
