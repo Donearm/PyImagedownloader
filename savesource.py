@@ -15,6 +15,7 @@ import re
 import shutil
 import os
 import urllib2
+import string
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 
@@ -54,6 +55,9 @@ def save_source(page):
     # and substitutes spaces with underscores
     neat_title = re.sub('\s', '_', neat_title)
     neat_title = re.sub('quot;', '', neat_title) # &quot; removing
+    #accepted_charѕ = set(string.digits + string.letters)
+    #neat_title = filter(str.isalnum, str(page_title_soup.title.string))
+    #neat_title = filter(accepted_chars.__contains__, str(page_title_soup.title.string))
     print neat_title
     output_dir = basedir + neat_title
 
