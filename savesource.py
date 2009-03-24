@@ -15,9 +15,10 @@ import re
 import shutil
 import os
 import urllib2
+import string
 from os.path import splitext
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from BeautifulSoup import BeautifulSoup
 
 
 # The regexp we'll need to find the link
@@ -50,14 +51,13 @@ def save_source(page):
 
     page_title = response.read()
     page_title_soup = BeautifulSoup(page_title)
+
     # purge the title of troublesome characters
-    neat_title = re.sub('[\|\.\&\,\'\:\!\@\/]', '', page_title_soup.title.string)
-    # and substitutes spaces with underscores
-    neat_title = re.sub('\s', '_', neat_title)
-    neat_title = re.sub('quot;', '', neat_title) # &quot; removing
-    #accepted_charѕ = set(string.digits + string.letters)
-    #neat_title = filter(str.isalnum, str(page_title_soup.title.string))
-    #neat_title = filter(accepted_chars.__contains__, str(page_title_soup.title.string))
+    neat_title = re.sub('quot;', '"', page_title_soup.title.string) # &quot; substitution
+    neat_title = re.sub('&amp;', '&', neat_title) # &amp; substitution
+    accepted_chars = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
+    neat_title = filter(accepted_chars.__contains__, neat_title)
+
     print neat_title
     output_dir = basedir + neat_title
 

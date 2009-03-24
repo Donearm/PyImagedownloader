@@ -47,7 +47,7 @@ def imagevenue_parse(link):
                 realurl = rRedirects.sub('img', response.geturl())
                 try:
                     response = urllib2.urlopen(realurl)
-                except urllib.URLError as e:
+                except urllib2.URLError as e:
                     if e.code == 404:
                         break
         except urllib2.URLError as e:
