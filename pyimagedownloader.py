@@ -21,7 +21,7 @@ from cookielib import CookieJar
 from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic, upmyphoto
+import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic, storeimgs, upmyphoto
 
 # +---------------------------------------------------------------------------+
 # | GPL license block                                                         |
@@ -68,6 +68,7 @@ rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
+rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 
 # Our base directory
@@ -110,6 +111,8 @@ class ImageHostParser():
                 skinsbe.skinsbe_parse(L)
             elif rShareapic.search(stringl):
                 shareapic.shareapic_parse(L)
+            elif rStoreimgs.search(stringl):
+                storeimgs.storeimgs_parse(L)
             else:
                 continue
 
