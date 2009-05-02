@@ -34,30 +34,17 @@ def storeimgs_parse(link):
     for i in storeimgs_list:
         # get every page linked from the storeimgs links
 
-        # make the image url
+        # make the image url by a couple of substitution and then using a split
+        # to dissectate the url and add the 'i' needed before the image name
         download_url = re.sub('show', 'out', i)
         download_url = re.sub('\.html$', '', download_url)
-        download_url = re.sub("out\.php/([0-9]+)", "out\.php/i\1", download_url)
 
+        storeimgs_split = re.split('out.php/', download_url)
 
-        #request = urllib2.Request(i, data, headers)
-        #try:
-        #    response = urllib2.urlopen(request)
-        #except urllib2.HTTPError as e:
-        #    break
-        #except urllib2.URLError as e:
-        #    break
-        #image_page = response.read()
-        #page_soup = BeautifulSoup(image_page)
-        # find the src attribute which contains the real link of storeimgs' images
-        #src_links = page_soup.findAll('img', id='theimage')
-        #imgshed_src = []
-        #for li in src_links:
-        #    imgshed_src.append(li['src']) # add all the src part to a list
+        download_url = storeimgs_split[0] + 'out.php/i' + storeimgs_split[1]
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.sub('out.php/', '', download_url) 
-        #download_url = 'http://imgshed.com/files/' + save_extension
+        save_extension = storeimgs_split[1]
 
         savefile = basedir + save_extension
         # finally save the image on the desidered directory
