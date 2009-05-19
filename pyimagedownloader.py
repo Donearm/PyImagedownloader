@@ -152,8 +152,8 @@ def http_connector(url):
             request.add_header('User-Agent', user_agent)
             response = urllib2.urlopen(request)
         else:
+            print("Error ")
             print(e.code)
-            print(e.reason)
             sys.exit(1)
 
     Rpage = response.read()
