@@ -10,7 +10,7 @@
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __version__ = "1.1"
-__date__ = "22122008"
+__date__ = "19052009"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -21,7 +21,7 @@ from cookielib import CookieJar
 from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, bellazon, skinsbe, shareapic, storeimgs, upmyphoto
+import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto
 
 # +---------------------------------------------------------------------------+
 # | GPL license block                                                         |
@@ -69,6 +69,7 @@ rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
 rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
+rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 
 # Our base directory
@@ -113,6 +114,8 @@ class ImageHostParser():
                 shareapic.shareapic_parse(L)
             elif rStoreimgs.search(stringl):
                 storeimgs.storeimgs_parse(L)
+            elif rImagetitan.search(stringl):
+                imagetitan.imagetitan_parse(L)
             else:
                 continue
 
