@@ -32,7 +32,7 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def imageshack_parse(link):
-    rSrcImageshack = re.compile('http://www\.yfrog\.com/\?url=http://img([0-9]{,3})\.imageshack\.us/img[0-9]+/[0-9]+/[0-9a-z]+\.[jpg|gif|png]')
+    #rSrcImageshack = re.compile('http://www\.yfrog\.com/\?url=http://img([0-9]{,3})\.imageshack\.us/img[0-9]+/[0-9]+/[0-9a-z]+\.[jpg|gif|png]')
     imageshack_list = [] # the list that will contain the href tags
     imageshack_list.append(link['href'])
     for i in imageshack_list:
@@ -47,16 +47,19 @@ def imageshack_parse(link):
         image_page = response.read()
         page_soup = BeautifulSoup(image_page)
         # find the src attribute which contains the real link of imageshack's images
-        src_links = page_soup.findAll('a', href=rSrcImageshack)
+        #src_links = page_soup.findAll('a', href=rSrcImageshack)
+        src_links = page_soup.findAll('link', rel='image_src')
         imageshack_src = []
         for li in src_links:
             imageshack_src.append(li['href']) # add all the src part to a list
 
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split('img[0-9]{,3}/[0-9]+/', imageshack_src[0]) 
-        # Get the real imageshack url, before the '?url=' part
-        imageshack_url = re.split('\?url=', imageshack_src[0])
-        savefile = basedir + str(save_extension[1])
-        download_url = imageshack_url[1]
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
+        try:
+            # generate just the filename of the image to be locally saved
+            save_extension = re.split('img[0-9]{,3}/[0-9]+/', imageshack_src[0])
+
+            savefile = basedir + str(save_extension[1])
+            download_url = imageshack_src[0]
+            # finally save the image on the desidered directory
+            urlretrieve(download_url, savefile) 
+        except IndexError:
+            break
