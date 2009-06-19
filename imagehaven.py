@@ -15,12 +15,16 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+from cookielib import CookieJar
 
 
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
+#rSponsoredContent = re.compile("^Sponsored content: This image is brought to you by adultfriendfinder.com - the place to meet hottest women!$", re.IGNORECASE)
+rSponsoredContent = re.compile("adultfriendfinder\.com", re.IGNORECASE)
+
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -30,6 +34,10 @@ values = {}
 user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
+cj = CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+urllib2.install_opener(opener)
+
 
 def imagehaven_parse(link):
     rSrcImagehaven = re.compile("\./images") # regexp for the src link
@@ -45,7 +53,14 @@ def imagehaven_parse(link):
         except urllib2.URLError as e:
             break
         image_page = response.read()
+
+        if re.search(rSponsoredContent, image_page):
+            # if there are ads on the page, resubmit the link to the parser
+            imagehaven_parse(link)
+            break
+
         page_soup = BeautifulSoup(image_page)
+
         # find the src attribute which contains the real link of imagehaven's images
         src_links = page_soup.findAll('img', src=rSrcImagehaven)
         imagehaven_src = []
