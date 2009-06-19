@@ -22,7 +22,6 @@ from cookielib import CookieJar
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
-#rSponsoredContent = re.compile("^Sponsored content: This image is brought to you by adultfriendfinder.com - the place to meet hottest women!$", re.IGNORECASE)
 rSponsoredContent = re.compile("adultfriendfinder\.com", re.IGNORECASE)
 
 

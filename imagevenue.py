@@ -15,13 +15,14 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+from cookielib import CookieJar
 
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
-rRedirects = re.compile("tempfull-default", re.IGNORECASE) # for rewriting the "Continue to image" links to the real image page
+rRedirects = re.compile("uploadimg\-streamate\.php", re.IGNORECASE) # to find the page with streamate ads
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -30,6 +31,9 @@ values = {}
 user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
+cj = CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+urllib2.install_opener(opener)
 
 def imagevenue_parse(link):
     """For parsing normal imagevenue's links"""
@@ -37,19 +41,19 @@ def imagevenue_parse(link):
     imagevenue_list = [] # the list that will contain the href tags
     imagevenue_list.append(link['href'])
     for i in imagevenue_list:
-        #print("Link: %s" % i)
+        print("Link: %s" % i)
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
             # search if the image link goes to a "Continue to image" page. If so substitute the url part with the real image one and request the page again
-            redirect = re.search(rRedirects, response.geturl())
-            if redirect:
-                realurl = rRedirects.sub('img', response.geturl())
-                try:
-                    response = urllib2.urlopen(realurl)
-                except urllib2.URLError as e:
-                    if e.code == 404:
-                        break
+            #redirect = re.search(rRedirects, response.geturl())
+            #if redirect:
+            #    realurl = rRedirects.sub('img', response.geturl())
+            #    try:
+            #        response = urllib2.urlopen(realurl)
+            #    except urllib2.URLError as e:
+            #        if e.code == 404:
+            #            break
         except urllib2.URLError as e:
             if e.code == 404:
                 break
@@ -57,7 +61,14 @@ def imagevenue_parse(link):
         # damned '<scr'+'ipt>' tags
         image_page = rScript.sub('', response.read())
 
+
+        # if there are ads on the page, resubmit the link to the parser
+        if re.search(rRedirects, image_page):
+            imagevenue_parse(link)
+            break
+
         page_soup = BeautifulSoup(image_page)
+
         # find the src attribute which contains the real link of imagevenue's images
         src_links = page_soup.findAll('img', id='thepic')
         imagevenue_src = []
