@@ -53,7 +53,7 @@ def upmyphoto_parse(link):
         # generate just the filename of the image to be locally saved
         # First save_extension is for the old links?
         #save_extension = re.split('img/dir[0-9]+/loc[0-9]+/',  upmyphoto_src[0]) 
-        save_extension = re.split('/loc[0-9]+/', upmyphoto_src[0])
+        save_extension = re.split('/img/', upmyphoto_src[0])
         savefile = basedir + str(save_extension[1])
         download_url = upmyphoto_src[0]
         # finally save the image on the desidered directory

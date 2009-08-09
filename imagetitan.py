@@ -34,7 +34,6 @@ data = urlencode(values)
 def imagetitan_parse(link):
     imagetitan_list = [] # the list that will contain the href tags
     imagetitan_list.append(link['href'])
-    print("We are here!")
     for i in imagetitan_list:
         # get every page linked from the imagetitan links
         request = urllib2.Request(i, data, headers)
