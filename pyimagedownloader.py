@@ -20,6 +20,7 @@ from socket import setdefaulttimeout
 from cookielib import CookieJar
 from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+from optparse import OptionParser
 # importing local modules
 import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs
 
@@ -50,9 +51,9 @@ import savesource, imageshack, imagevenue, usercash, uppix, imgshed, imagehaven,
 
 
 # If no arguments were given, print a helpful message
-if len(sys.argv)!=2:
-    print 'Usage: pyimagedownloader url'
-    sys.exit(0)
+#if len(sys.argv)!=2:
+#    print 'Usage: pyimagedownloader url'
+#    sys.exit(0)
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
@@ -163,13 +164,23 @@ def http_connector(url):
     return Rpage
 
 
+# Generate the argument parser
+def argument_parser():
+    usage_message = "usage: %prog [options] url"
+    cli_parser = OptionParser(usage=usage_message)
+    cli_parser.add_option("-c", "--credit",
+            help="optionally save the name of the poster of the images in a file",
+            dest="poster")
+    (options, args) = cli_parser.parse_args()
+    return options.poster, args
 
 
 
-
-Rpage = http_connector(sys.argv[1])
-# Parse the page for images
-parser = ImageHostParser(Rpage, 'a', )
-# Generate the directory for the source file and the images downloaded
-savesource.save_source(sys.argv[1])
-sys.exit(0)
+if __name__ == "__main__":
+    (poster, url) = argument_parser()
+    Rpage = http_connector(url[0])
+    # Parse the page for images
+    parser = ImageHostParser(Rpage, 'a', )
+    # Generate the directory for the source file and the images downloaded
+    savesource.save_source(url[0], creditor=poster)
+    sys.exit(0)

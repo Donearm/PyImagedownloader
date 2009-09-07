@@ -32,7 +32,12 @@ user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/200807
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def save_source(page):
+def extract_domain(url):
+    """Given an url extract only the domain name (without 'www' and 'com' for example)"""
+    domain = re.split('\.', url)
+    return domain[1]
+
+def save_source(page, creditor=""):
     """ the method to save the original page link to a file """
 
     # get the page's title
@@ -70,6 +75,16 @@ def save_source(page):
     source_file = open('source.txt', "w")
     source_file.write("\n\n\n" + 'fonte:' + page + "\n")
     source_file.close()
+
+    # check if we need to save a "credits" file too
+    #
+    if creditor is not None:
+        # get the domain name with its apposite function
+        domain_name = extract_domain(page)
+        credits_file = open('credits', "w")
+        credits_file.write('credits:' + creditor + ' @' + domain_name + "\n")
+        credits_file.close()
+
     # move all the images in basedir in the output_dir
     files_in_basedir = os.listdir(basedir)
     for f in files_in_basedir:
