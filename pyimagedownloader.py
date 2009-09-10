@@ -57,7 +57,7 @@ import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam,
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rUsercash = re.compile("href=\"?http://[0-9]+\.usercash\.com", re.IGNORECASE)
+#rUsercash = re.compile("href=\"?http://[0-9]+\.usercash\.com", re.IGNORECASE)
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
@@ -73,6 +73,7 @@ rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
 rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
+rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -91,9 +92,7 @@ class ImageHostParser():
         all_tags = self.page.findAll(tag)
         for L in all_tags:
             stringl = str(L)
-            if rUsercash.search(stringl):
-                usercash.usercash_parse(L)
-            elif rImagevenue.search(stringl):
+            if rImagevenue.search(stringl):
                 imagevenue.imagevenue_parse(L)
             elif rImagebam.search(stringl):
                 imagebam.imagebam_parse(L)
@@ -120,6 +119,8 @@ class ImageHostParser():
                 imagetitan.imagetitan_parse(L)
             elif rSharenxs.search(stringl):
                 sharenxs.sharenxs_parse(L)
+            #elif rUsercash.search(stringl):
+            #    usercash.usercash_parse(L)
             else:
                 continue
 
@@ -141,6 +142,15 @@ def http_connector(url):
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         urllib2.install_opener(opener)
 
+    if rUsemycomputer.search(url):
+        # We got a login user/pwd for usemycomputer, let's first login then
+        cj = CookieJar()
+        umc_name = 'nirari'
+        umc_pwd = 'MFdoutzen'
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        urllib2.install_opener(opener)
+        values = {'user' : umc_name, 'password' : umc_pwd}
+
     # Open and read the page contents
     data = urlencode(values)
     request = urllib2.Request(url, data, headers)
@@ -151,7 +161,7 @@ def http_connector(url):
         # if the site doesn't accept a POST request, make a GET instead
         if e.code == 405:
             print("GET request")
-            request = urllib2.Request(sys.argv[1])
+            request = urllib2.Request(url)
             # adding the User-Agent in case it wasn't
             request.add_header('User-Agent', user_agent)
             response = urllib2.urlopen(request)
