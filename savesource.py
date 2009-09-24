@@ -82,7 +82,7 @@ def save_source(page, creditor=""):
         # get the domain name with its apposite function
         domain_name = extract_domain(page)
         credits_file = open('credits', "w")
-        credits_file.write('credits:' + creditor + ' @' + domain_name + "\n")
+        credits_file.write('credits: ' + creditor + ' @' + domain_name + "\n")
         credits_file.close()
 
     # move all the images in basedir in the output_dir
