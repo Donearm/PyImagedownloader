@@ -9,8 +9,8 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.1"
-__date__ = "19052009"
+__version__ = "1.2"
+__date__ = "01102009"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -22,7 +22,7 @@ from urllib import urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from optparse import OptionParser
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs
+import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
 
 # +---------------------------------------------------------------------------+
 # | GPL license block                                                         |
@@ -71,6 +71,7 @@ rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("href=\"http://www\.shareapic\.net", re.IGNORECASE)
 rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
+rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
 rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
@@ -119,6 +120,8 @@ class ImageHostParser():
                 imagetitan.imagetitan_parse(L)
             elif rSharenxs.search(stringl):
                 sharenxs.sharenxs_parse(L)
+            elif rBlogspot.search(stringl):
+                blogspot.blogspot_parse(L)
             #elif rUsercash.search(stringl):
             #    usercash.usercash_parse(L)
             else:
