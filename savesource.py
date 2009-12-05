@@ -43,41 +43,27 @@ def extract_domain(url):
     domain = re.split('\.', url)
     return domain[1]
 
-def strip_html_entities(text):
-    """Removes HTML or XML character references and entities from a string"""
-    def fix(m):
-        text = m.group(0)
-        if text[:2] == "&#":
-            try:
-                if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
-                else:
-                    return unichr(int(text[2:-1]))
-            except ValueError:
-                pass
+def decode_htmlentities(s):
+    # Thanks to http://github.com/sku/python-twitter-ircbot/blob/321d94e0e40d0acc92f5bf57d126b57369da70de/html%5Fdecode.py
+    def substitute_entity(match):
+        ent = match.group(3)
+        if match.group(1) == "#":
+            # decoding by number
+            if match.group(2) == '':
+                # number is in decimal
+                return unichr(int(ent))
+            elif match.group(2) == 'x':
+                # number is in hex
+                return unichr(int('0x'+ent, 16))
         else:
-            try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
-            except KeyError:
-                pass
-        return text
-    return re.sub("&#?\w+;", fix, text)
-
-def htmlentitydecode(s):
-    # Thanks to http://sebsauvage.net/python/snyppets/
-    # First convert alpha entities (such as &oacute;)
-    def entity2char(m):
-        entity = m.group(1)
-        if entity in htmlentitydefs.name2codepoint:
-            return unichr(htmlentitydefs.name2codepoint[entity])
-        return u" " # empty space for unknown entities
-    t = re.sub(u'&(%s);' % u'|'.join(htmlentitydefs.name2codepoint), entity2char, s)
-
-    # Convert numerical entities (such as &#233;)
-    t = re.sub(u'&#(\d+);', lambda x: unichr(int(x.group(1))), t)
-
-    # Lastly convert hexadecimal entities (such as &#x00E9;)
-    return re.sub(u'&#x(\w+);', lambda x: unichr(int(x.group(1), 16)), t)
+            # using a name
+            cp = htmlentitydefs.name2codepoint.get(ent)
+            if cp:
+                return unichr(cp)
+            else:
+                return match.group()
+    entity_re = re.compile(r'&(#?)(x?)(\w+);')
+    return entity_re.subn(substitute_entity, s)[0]
 
 
 
@@ -101,17 +87,18 @@ def save_source(page, creditor=""):
     page_title = response.read()
     page_title_soup = BeautifulSoup(page_title)
 
+
+    neat_title = page_title_soup.title.string
+    # Clean title from html entities
+    neat_title = decode_htmlentities(neat_title)
     # purge the title of troublesome characters
-    neat_title = re.sub('quot;', '"', page_title_soup.title.string) # &quot; substitution
-    neat_title = re.sub('&amp;', '&', neat_title) # &amp; substitution
+    #neat_title = re.sub('quot;', '"', page_title_soup.title.string) # &quot; substitution
+    #neat_title = re.sub('&amp;', '&', neat_title) # &amp; substitution
     accepted_chars = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
     neat_title = filter(accepted_chars.__contains__, neat_title)
 
-    # Clean title from html entities (not quite working)
-    #neat_title = strip_html_entities(neat_title)
-    #neat_title = htmlentitydecode(neat_title)
-
     print neat_title
+
     output_dir = basedir + neat_title
 
     if os.path.isdir(output_dir):
