@@ -77,7 +77,7 @@ rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
-rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
+#rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
@@ -142,50 +142,42 @@ def http_connector(url):
     timeout = 60
     setdefaulttimeout(timeout)
 
-    if rCelebutopia.search(url):
-        # for Celebutopia links we need a cookie handler
-        cj = CookieJar()
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        urllib2.install_opener(opener)
-    elif rUsemycomputer.search(url):
+    # set a cookie handler and install the opener
+    cj = CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    urllib2.install_opener(opener)
+
+    # for some sites we need to login first....
+    if rUsemycomputer.search(url):
         # We got a login user/pwd for usemycomputer, let's first login then
-        cj = CookieJar()
         umc_name = 'nirari'
         umc_pwd = 'MFdoutzen'
-        login1_page = 'http://forum.usemycomputer.com/index.php?action=login'
+        #login1_page = 'http://forum.usemycomputer.com/index.php?action=login'
         login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
         values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
 
-        # encode values and build the opener
+        # encode values
         data = urlencode(values)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        urllib2.install_opener(opener)
 
-        # first request to the login1 page
-        request1 = urllib2.Request(login1_page, data)
-        response1 = opener.open(request1)
+        # first request to the login1 page. Not needed?
+        #request1 = urllib2.Request(login1_page, data)
+        #response1 = opener.open(request1)
 
         # second request to the login2 page
         request2 = urllib2.Request(login2_page, data)
         response1 = opener.open(request2)
     elif rImc.search(url):
         # Login credentials for Imc website
-        cj = CookieJar()
         imc_name = 'nirari'
         imc_pwd = 'Ninxtapes'
         login_page = 'http://project-xtapes.com/main/magazine/login.php'
         values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
 
-        # login page request
         data = urlencode(values)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        urllib2.install_opener(opener)
 
+        # login page request
         request = urllib2.Request(login_page, data)
         response = opener.open(request)
-
-
-
 
 
     # Open and read the page contents
