@@ -62,7 +62,6 @@ import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam,
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rUsercash = re.compile("href=\"?http://[0-9]+\.usercash\.com", re.IGNORECASE)
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
@@ -80,6 +79,7 @@ rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
 rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
+rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -127,8 +127,6 @@ class ImageHostParser():
                 sharenxs.sharenxs_parse(L)
             elif rBlogspot.search(stringl):
                 blogspot.blogspot_parse(L)
-            #elif rUsercash.search(stringl):
-            #    usercash.usercash_parse(L)
             else:
                 continue
 
