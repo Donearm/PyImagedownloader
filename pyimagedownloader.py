@@ -147,15 +147,46 @@ def http_connector(url):
         cj = CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         urllib2.install_opener(opener)
-
-    if rUsemycomputer.search(url):
+    elif rUsemycomputer.search(url):
         # We got a login user/pwd for usemycomputer, let's first login then
         cj = CookieJar()
         umc_name = 'nirari'
         umc_pwd = 'MFdoutzen'
+        login1_page = 'http://forum.usemycomputer.com/index.php?action=login'
+        login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
+        values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
+
+        # encode values and build the opener
+        data = urlencode(values)
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         urllib2.install_opener(opener)
-        values = {'user' : umc_name, 'password' : umc_pwd}
+
+        # first request to the login1 page
+        request1 = urllib2.Request(login1_page, data)
+        response1 = opener.open(request1)
+
+        # second request to the login2 page
+        request2 = urllib2.Request(login2_page, data)
+        response1 = opener.open(request2)
+    elif rImc.search(url):
+        # Login credentials for Imc website
+        cj = CookieJar()
+        imc_name = 'nirari'
+        imc_pwd = 'Ninxtapes'
+        login_page = 'http://project-xtapes.com/main/magazine/login.php'
+        values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
+
+        # login page request
+        data = urlencode(values)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        urllib2.install_opener(opener)
+
+        request = urllib2.Request(login_page, data)
+        response = opener.open(request)
+
+
+
+
 
     # Open and read the page contents
     data = urlencode(values)
