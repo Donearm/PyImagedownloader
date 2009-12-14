@@ -23,6 +23,7 @@ import urllib2
 import string
 import htmlentitydefs
 from os.path import splitext
+from urlparse import urlparse
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup
 
@@ -40,8 +41,13 @@ data = urlencode(values)
 
 def extract_domain(url):
     """Given an url extract only the domain name (without 'www' and 'com' for example)"""
-    domain = re.split('\.', url)
-    return domain[1]
+    u = urlparse(url)[1].split('.')
+    if len(u) > 3: # for tld like co.uk or com.br
+        return u[1] + '.' + u[2] + '.' + u[3]
+    else:
+        return u[1] + '.' + u[2]
+    #domain = re.split('\.', url)
+    #return domain[1]
 
 def decode_htmlentities(s):
     # Thanks to http://github.com/sku/python-twitter-ircbot/blob/321d94e0e40d0acc92f5bf57d126b57369da70de/html%5Fdecode.py
