@@ -75,7 +75,8 @@ rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 #rShareapic = re.compile("href=\"http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
-rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
+#rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
+rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
@@ -131,7 +132,8 @@ class ImageHostParser():
                 #shareapic.shareapic_parse(L)
                 shareapic.shareapic_parse(stringl)
             elif rStoreimgs.search(stringl):
-                storeimgs.storeimgs_parse(L)
+                #storeimgs.storeimgs_parse(L)
+                storeimgs.storeimgs_parse(stringl)
             elif rImagetitan.search(stringl):
                 imagetitan.imagetitan_parse(L)
             elif rSharenxs.search(stringl):

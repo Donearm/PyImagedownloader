@@ -19,11 +19,12 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+#rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -35,7 +36,8 @@ data = urlencode(values)
 
 def storeimgs_parse(link):
     storeimgs_list = [] # the list that will contain the href tags
-    storeimgs_list.append(link['href'])
+    #storeimgs_list.append(link['href'])
+    storeimgs_list.append(link)
     for i in storeimgs_list:
         # get every page linked from the storeimgs links
 
