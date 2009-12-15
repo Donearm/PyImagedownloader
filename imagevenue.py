@@ -121,12 +121,15 @@ def imagevenue_embed(link):
     except urllib2.URLError as e:
         return
     image_page = response.read()
-    page_soup = BeautifulSoup(image_page)
+    #page_soup = BeautifulSoup(image_page)
+    page = lxml.html.fromstring(image_page)
     # find the src attribute which contains the real link of imagevenue's images
-    src_links = page_soup.findAll('img', id='thepic')
+    #src_links = page_soup.findAll('img', id='thepic')
+    src_links = page.xpath("//img[@id='thepic']")
     imagevenue_src = []
     for li in src_links:
-        imagevenue_src.append(li['src']) # add all the src part to a list
+        imagevenue_src.append(li.get('src', None))
+        #imagevenue_src.append(li['src']) # add all the src part to a list
 
 
         imagevenue_split = re.split('img.php\?image=', link) # remove the unneeded parts
