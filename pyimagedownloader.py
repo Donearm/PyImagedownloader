@@ -24,6 +24,7 @@ import urllib2
 from socket import setdefaulttimeout
 from cookielib import CookieJar
 from urllib import urlencode
+import lxml.html
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from optparse import OptionParser
 # importing local modules
@@ -63,7 +64,8 @@ import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam,
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
-rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
+#rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
+rImagebam = re.compile("http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 rUpmyphoto = re.compile("href=\"?http://(www\.)?upmyphoto\.com", re.IGNORECASE)
@@ -90,18 +92,23 @@ class ImageHostParser():
     """ The main parser class """
 
     def __init__(self, page, tag):
-        self.page = BeautifulSoup(page)
+        #self.page = BeautifulSoup(page)
+        self.page = lxml.html.fromstring(page)
         self.tag = tag
         self.which_host(tag)
 
     def which_host(self, tag):
-        all_tags = self.page.findAll(tag)
+        #all_tags = self.page.findAll(tag)
+        all_tags = self.page.xpath('//a[@href]')
         for L in all_tags:
-            stringl = str(L)
+            #stringl = str(L)
+            stringl = str(L.get('href', None))
+            print(stringl)
             if rImagevenue.search(stringl):
                 imagevenue.imagevenue_parse(L)
             elif rImagebam.search(stringl):
-                imagebam.imagebam_parse(L)
+                #imagebam.imagebam_parse(L)
+                imagebam.imagebam_parse(stringl)
             elif rImagehaven.search(stringl):
                 imagehaven.imagehaven_parse(L)
             elif rImageshack.search(stringl):
