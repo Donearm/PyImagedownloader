@@ -19,13 +19,14 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+#rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -37,7 +38,8 @@ data = urlencode(values)
 
 def uppix_parse(link):
     uppix_list = [] # the list that will contain the href tags
-    uppix_list.append(link['href'])
+    #uppix_list.append(link['href'])
+    uppix_list.append(link)
     for i in uppix_list:
         # get every page linked from the uppix links
         request = urllib2.Request(i, data, headers)
@@ -48,12 +50,15 @@ def uppix_parse(link):
         except urllib2.URLError as e:
             break
         image_page = response.read()
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
         # find the src attribute which contains the real link of uppix's images
-        src_links = page_soup.findAll('img', id='dpic')
+        #src_links = page_soup.findAll('img', id='dpic')
+        src_links = page.xpath("//img[@id='dpic']")
         uppix_src = []
         for li in src_links:
-            uppix_src.append(li['src']) # add all the src part to a list
+            #uppix_src.append(li['src']) # add all the src part to a list
+            uppix_src.append(li.get('src', None))
 
         # generate just the filename of the image to be locally saved
         save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 
