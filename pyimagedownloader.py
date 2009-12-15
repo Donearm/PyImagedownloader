@@ -67,7 +67,8 @@ rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attribu
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 #rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image", re.IGNORECASE)
-rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
+#rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
+rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 rUpmyphoto = re.compile("href=\"?http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
@@ -111,7 +112,8 @@ class ImageHostParser():
                 #imagebam.imagebam_parse(L)
                 imagebam.imagebam_parse(stringl)
             elif rImagehaven.search(stringl):
-                imagehaven.imagehaven_parse(L)
+                #imagehaven.imagehaven_parse(L)
+                imagehaven.imagehaven_parse(stringl)
             elif rImageshack.search(stringl):
                 imageshack.imageshack_parse(L)
             elif rUpmyphoto.search(stringl):

@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
 from cookielib import CookieJar
+import lxml.html
 
 
 
@@ -46,7 +47,8 @@ urllib2.install_opener(opener)
 def imagehaven_parse(link):
     rSrcImagehaven = re.compile("\./images") # regexp for the src link
     imagehaven_list = [] # the list that will contain the href tags
-    imagehaven_list.append(link['href'])
+    #imagehaven_list.append(link['href'])
+    imagehaven_list.append(link)
     for i in imagehaven_list:
         # get every page linked from the imagehaven links
         request = urllib2.Request(i, data, headers)
@@ -63,13 +65,16 @@ def imagehaven_parse(link):
             imagehaven_parse(link)
             break
 
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
 
         # find the src attribute which contains the real link of imagehaven's images
-        src_links = page_soup.findAll('img', src=rSrcImagehaven)
+        #src_links = page_soup.findAll('img', src=rSrcImagehaven)
+        src_links = page.xpath("//img[@id='image']")
         imagehaven_src = []
         for li in src_links:
-            imagehaven_src.append(li['src']) # add all the src part to a list
+            #imagehaven_src.append(li['src']) # add all the src part to a list
+            imagehaven_src.append(li.get('src', None))
 
         # Close the page
         #image_page.close()
