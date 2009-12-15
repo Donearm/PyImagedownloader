@@ -63,7 +63,8 @@ import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam,
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
+#rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
+rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 #rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
@@ -103,9 +104,9 @@ class ImageHostParser():
         for L in all_tags:
             #stringl = str(L)
             stringl = str(L.get('href', None))
-            print(stringl)
             if rImagevenue.search(stringl):
-                imagevenue.imagevenue_parse(L)
+                #imagevenue.imagevenue_parse(L)
+                imagevenue.imagevenue_parse(stringl)
             elif rImagebam.search(stringl):
                 #imagebam.imagebam_parse(L)
                 imagebam.imagebam_parse(stringl)

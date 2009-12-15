@@ -21,6 +21,7 @@ import urllib2
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from cookielib import CookieJar
+import lxml.html
 
 
 # The regexp we'll need to find the link
@@ -46,7 +47,8 @@ def imagevenue_parse(link):
     """For parsing normal imagevenue's links"""
     
     imagevenue_list = [] # the list that will contain the href tags
-    imagevenue_list.append(link['href'])
+    #imagevenue_list.append(link['href'])
+    imagevenue_list.append(link)
     for i in imagevenue_list:
         request = urllib2.Request(i, data, headers)
         try:
@@ -65,7 +67,8 @@ def imagevenue_parse(link):
                 break
         # get every page linked from the imagevenue links, removing those
         # damned '<scr'+'ipt>' tags
-        image_page = rScript.sub('', response.read())
+        #image_page = rScript.sub('', response.read())
+        image_page = response.read()
 
 
         # if there are ads on the page, resubmit the link to the parser
@@ -76,13 +79,16 @@ def imagevenue_parse(link):
             imageveneue_parse(link)
             break
 
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
 
         # find the src attribute which contains the real link of imagevenue's images
-        src_links = page_soup.findAll('img', id='thepic')
+        #src_links = page_soup.findAll('img', id='thepic')
+        src_links = page.xpath("//img[@id='thepic']")
         imagevenue_src = []
         for li in src_links:
-            imagevenue_src.append(li['src']) # add all the src part to a list
+            #imagevenue_src.append(li['src']) # add all the src part to a list
+            imagevenue_src.append(li.get('src', None))
 
 
         imagevenue_split = re.split('img.php\?image=', i) # remove the unneeded parts
