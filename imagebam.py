@@ -20,6 +20,7 @@ import re
 import urllib2
 from urllib import urlencode, urlretrieve 
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 
 # The regexp we'll need to find the link
@@ -38,8 +39,10 @@ data = urlencode(values)
 def imagebam_parse(link):
     rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
     imagebam_list = [] # the list that will contain the href tags
-    imagebam_list.append(link['href'])
+    #imagebam_list.append(link['href'])
+    imagebam_list.append(link)
     for i in imagebam_list:
+        #print("This is the string: %s" % lxml.html.tostring(i))
         # get every page linked from the imagebam links
         request = urllib2.Request(i, data, headers)
         try:
