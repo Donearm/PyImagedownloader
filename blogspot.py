@@ -19,11 +19,12 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 
 # Regexp needed for the src links
-rSrcBlogspot = re.compile('http://[0-9]\.bp\.blogspot\.com/.*\.(jpg|jpeg|gif|png)', re.IGNORECASE)
+#rSrcBlogspot = re.compile('http://[0-9]\.bp\.blogspot\.com/.*\.(jpg|jpeg|gif|png)', re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -35,7 +36,8 @@ data = urlencode(values)
 
 def blogspot_parse(link):
     blogspot_list = [] # the list that will contain the href tags
-    blogspot_list.append(link['href'])
+    #blogspot_list.append(link['href'])
+    blogspot_list.append(link)
     for i in blogspot_list:
         request = urllib2.Request(i, data, headers)
         try:
@@ -46,12 +48,15 @@ def blogspot_parse(link):
             break
         # get every page linked from the blogspot links
         image_page = response.read()
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
         # find the src attribute which contains the real link of blogspot's images
-        src_links = page_soup.findAll('img', src=rSrcBlogspot)
+        #src_links = page_soup.findAll('img', src=rSrcBlogspot)
+        src_links = page.xpath('//img[@src]')
         blogspot_src = []
         for li in src_links:
-            blogspot_src.append(li['src']) # add all the src part to a list
+            #blogspot_src.append(li['src']) # add all the src part to a list
+            blogspot_src.append(li.get('src', None))
 
         # generate just the filename of the image to be locally saved
         save_extension = re.split('(/[0-9A-Za-z_-]+/)*', blogspot_src[0])
