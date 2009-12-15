@@ -19,12 +19,13 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve 
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+#rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
 
 # Our base directory
@@ -38,7 +39,8 @@ data = urlencode(values)
 
 def imagetitan_parse(link):
     imagetitan_list = [] # the list that will contain the href tags
-    imagetitan_list.append(link['href'])
+    #imagetitan_list.append(link['href'])
+    imagetitan_list.append(link)
     for i in imagetitan_list:
         # get every page linked from the imagetitan links
         request = urllib2.Request(i, data, headers)
@@ -49,13 +51,15 @@ def imagetitan_parse(link):
         except urllib2.URLError as e:
             break
         image_page = response.read()
-        #image_page = myopener.open(i).read()
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
         # find the src attribute which contains the real link of imagetitan's images
-        src_links = page_soup.findAll('img', src=rSrcImagetitan)
+        #src_links = page_soup.findAll('img', src=rSrcImagetitan)
+        src_links = page.xpath("//img[@id='image']")
         imagetitan_src = []
         for li in src_links:
-            imagetitan_src.append(li['src']) # add all the src part to a list
+            #imagetitan_src.append(li['src']) # add all the src part to a list
+            imagetitan_src.append(li.get('src', None))
 
 
         imgtitanmatch = re.match(rSrcImagetitan, imagetitan_src[0])
