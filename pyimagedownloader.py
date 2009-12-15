@@ -47,13 +47,6 @@ import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam,
 # | along with this program; if not, write to the Free Software               |
 # | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA |
 # +---------------------------------------------------------------------------+
-# +---------------------------------------------------------------------------+
-# | Release Log                                                               |
-# |                                                                           |
-# | 1.1 : Added shareapic and usercash support. Some bugfixes.
-# | 1.0 : first release. Support for imagevenue, imagebam, imageshack,        |
-# |       upmyphoto, uppix and imgshed                                        |
-# +---------------------------------------------------------------------------+
 
 
 # If no arguments were given, print a helpful message
@@ -73,7 +66,7 @@ rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", r
 rImageshack = re.compile("http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 #rUpmyphoto = re.compile("href=\"?http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rUpmyphoto = re.compile("http://(www\.)?upmyphoto\.com", re.IGNORECASE)
-rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
+#rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
 rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 #rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=', re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
@@ -122,8 +115,6 @@ class ImageHostParser():
             elif rUpmyphoto.search(stringl):
                 #upmyphoto.upmyphoto_parse(L)
                 upmyphoto.upmyphoto_parse(stringl)
-            elif rImgshed.search(stringl):
-                imgshed.imgshed_parse(L)
             elif rUppix.search(stringl):
                 uppix.uppix_parse(L)
             elif rBellazon.search(stringl):

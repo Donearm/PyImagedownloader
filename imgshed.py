@@ -19,11 +19,12 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+#rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -35,7 +36,8 @@ data = urlencode(values)
 
 def imgshed_parse(link):
     imgshed_list = [] # the list that will contain the href tags
-    imgshed_list.append(link['href'])
+    #imgshed_list.append(link['href'])
+    imgshed_list.append(link)
     for i in imgshed_list:
         # get every page linked from the imgshed links
         request = urllib2.Request(i, data, headers)
@@ -46,12 +48,15 @@ def imgshed_parse(link):
         except urllib2.URLError as e:
             break
         image_page = response.read()
-        page_soup = BeautifulSoup(image_page)
+        #page_soup = BeautifulSoup(image_page)
+        page = lxml.html.fromstring(image_page)
         # find the src attribute which contains the real link of imgshed's images
-        src_links = page_soup.findAll('img', id='theimage')
+        #src_links = page_soup.findAll('img', id='theimage')
+        src_links = page.xpath("//img[@id='theimage']")
         imgshed_src = []
         for li in src_links:
-            imgshed_src.append(li['src']) # add all the src part to a list
+            #imgshed_src.append(li['src']) # add all the src part to a list
+            imgshed_src.append(li.get('src', None))
 
 
         # generate just the filename of the image to be locally saved
