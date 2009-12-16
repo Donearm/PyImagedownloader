@@ -21,14 +21,13 @@ import urllib2
 from cookielib import CookieJar
 from socket import setdefaulttimeout
 from urllib import urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+import lxml.html
 
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=attach', re.IGNORECASE)
-#rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 # Our base directory

@@ -24,7 +24,6 @@ import lxml.html
 
 
 # The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 #rUpmyphoto = re.compile("http://www\.upmyphoto\.com/img", re.IGNORECASE)
 
 # Our base directory
@@ -48,9 +47,11 @@ def upmyphoto_parse(link):
             break
         except urllib2.URLError as e:
             break
+
         image_page = response.read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of upmyphoto's images
         #src_links = page_soup.findAll('img', src=rUpmyphoto)
         src_links = page.xpath("//img[@id='image']")
@@ -61,10 +62,9 @@ def upmyphoto_parse(link):
 
 
         # generate just the filename of the image to be locally saved
-        # First save_extension is for the old links?
-        #save_extension = re.split('img/dir[0-9]+/loc[0-9]+/',  upmyphoto_src[0]) 
         save_extension = re.split('/img/', upmyphoto_src[0])
         savefile = basedir + str(save_extension[1])
+
         download_url = upmyphoto_src[0]
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 

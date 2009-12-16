@@ -24,10 +24,6 @@ import lxml.html
 
 
 
-# The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
-
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
 
@@ -49,9 +45,11 @@ def uppix_parse(link):
             break
         except urllib2.URLError as e:
             break
+
         image_page = response.read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of uppix's images
         #src_links = page_soup.findAll('img', id='dpic')
         src_links = page.xpath("//img[@id='dpic']")

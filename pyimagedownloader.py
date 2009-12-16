@@ -3,19 +3,25 @@
 ###############################################################################
 # Copyright (c) 2008, Gianluca Fiore
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#   This program is distributed in the hope that it will be useful,          
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of           
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            
+#   GNU General Public License for more details.                           
+#                                                                         
+#   You should have received a copy of the GNU General Public License        
+#   along with this program; if not, write to the Free Software              
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-###############################################################################
-
-
+#############################################################################
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.2"
-__date__ = "01102009"
+__version__ = "1.3"
+__date__ = "16122009"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -24,29 +30,11 @@ import urllib2
 from socket import setdefaulttimeout
 from cookielib import CookieJar
 from urllib import urlencode
-import lxml.html
-from BeautifulSoup import BeautifulSoup, SoupStrainer
 from optparse import OptionParser
+import lxml.html
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
-
-# +---------------------------------------------------------------------------+
-# | GPL license block                                                         |
-# |                                                                           |
-# | This program is free software; you can redistribute it and/or modify      |
-# | it under the terms of the GNU General Public License as published by      |
-# | the Free Software Foundation; either version 2 of the License, or         |
-# | (at your option) any later version.                                       |
-# |                                                                           |
-# | This program is distributed in the hope that it will be useful,           |
-# | but WITHOUT ANY WARRANTY; without even the implied warranty of            |
-# | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             |
-# | GNU General Public License for more details.                              |
-# |                                                                           |
-# | You should have received a copy of the GNU General Public License         |
-# | along with this program; if not, write to the Free Software               |
-# | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA |
-# +---------------------------------------------------------------------------+
 
 
 # If no arguments were given, print a helpful message
@@ -55,7 +43,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetit
 #    sys.exit(0)
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
+#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 #rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 #rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
@@ -155,7 +143,7 @@ def http_connector(url):
 
     # Some variables for the connection
     values = {}
-    user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
+    user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
     headers = { 'User-Agent' : user_agent }
     # Change the timeout
     timeout = 60
@@ -171,16 +159,11 @@ def http_connector(url):
         # We got a login user/pwd for usemycomputer, let's first login then
         umc_name = 'nirari'
         umc_pwd = 'MFdoutzen'
-        #login1_page = 'http://forum.usemycomputer.com/index.php?action=login'
         login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
         values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
 
         # encode values
         data = urlencode(values)
-
-        # first request to the login1 page. Not needed?
-        #request1 = urllib2.Request(login1_page, data)
-        #response1 = opener.open(request1)
 
         # second request to the login2 page
         request2 = urllib2.Request(login2_page, data)

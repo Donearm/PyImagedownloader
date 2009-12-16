@@ -19,15 +19,13 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
 from cookielib import CookieJar
 import lxml.html
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
-rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
+#rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
 rRedirects = re.compile("uploadimg\-streamate\.php", re.IGNORECASE) # to find the page with streamate ads
 rRedirects2 = re.compile("Continue To Your Image", re.IGNORECASE) # to find generical redirects
 rRedirects3 = re.compile("tempfull-default\.php", re.IGNORECASE) # to find the url of the imagevenue's countdown
@@ -45,7 +43,7 @@ urllib2.install_opener(opener)
 
 def imagevenue_parse(link):
     """For parsing normal imagevenue's links"""
-    
+
     imagevenue_list = [] # the list that will contain the href tags
     #imagevenue_list.append(link['href'])
     imagevenue_list.append(link)
@@ -53,7 +51,8 @@ def imagevenue_parse(link):
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
-            # search if the image link goes to a "Continue to image" page. If so substitute the url part with the real image one and request the page again
+            # search if the image link goes to a "Continue to image" page. 
+            # If so substitute the url part with the real image one and request the page again
             redirect = re.search(rRedirects3, response.geturl())
             if redirect:
                 realurl = rRedirects3.sub('img.php', response.geturl())
@@ -120,9 +119,11 @@ def imagevenue_embed(link):
         return
     except urllib2.URLError as e:
         return
+
     image_page = response.read()
     #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
+
     # find the src attribute which contains the real link of imagevenue's images
     #src_links = page_soup.findAll('img', id='thepic')
     src_links = page.xpath("//img[@id='thepic']")
@@ -140,6 +141,7 @@ def imagevenue_embed(link):
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
             continue
+
     # generate just the filename of the image to be locally saved
     save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
     savefile = basedir + str(save_extension[1])

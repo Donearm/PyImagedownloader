@@ -24,8 +24,6 @@ import lxml.html
 
 
 # The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rShareapic = re.compile('http://www\.shareapic\.net', re.IGNORECASE)
 #rSrcShareapic = re.compile('http://images\.shareapic\.net')
 
 # Our base directory
@@ -49,9 +47,11 @@ def shareapic_parse(link):
             break
         except urllib2.URLError as e:
             break
+        
         image_page = response.read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of shareapic's images
         #src_links = page_soup.findAll('img', src=rSrcShareapic)
         src_links = page.xpath("//img[@title='Click to zoom! ::']")

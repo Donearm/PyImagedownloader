@@ -26,9 +26,8 @@ import lxml.html
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rSponsoredContent = re.compile("adultfriendfinder\.com", re.IGNORECASE)
+rSrcImagehaven = re.compile("\./images") # regexp for the src link
 
 
 # Our base directory
@@ -45,7 +44,6 @@ urllib2.install_opener(opener)
 
 
 def imagehaven_parse(link):
-    rSrcImagehaven = re.compile("\./images") # regexp for the src link
     imagehaven_list = [] # the list that will contain the href tags
     #imagehaven_list.append(link['href'])
     imagehaven_list.append(link)
@@ -76,11 +74,9 @@ def imagehaven_parse(link):
             #imagehaven_src.append(li['src']) # add all the src part to a list
             imagehaven_src.append(li.get('src', None))
 
-        # Close the page
-        #image_page.close()
-
         imagehaven_split = re.split('img\.php\?id=', i) # remove the unneeded parts
         imagehaven_split2 = re.split('\.\/', imagehaven_src[0]) 
+
         try:
             # make up the real image url
             download_url = str(imagehaven_split[0]) + str(imagehaven_split2[1])
@@ -88,10 +84,9 @@ def imagehaven_parse(link):
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
             continue
+
         # generate just the filename of the image to be locally saved
         save_extension = re.split('\./images/[0-9A-Za-z]+/[0-9A-Za-z]+/', imagehaven_src[0]) 
         savefile = basedir + str(save_extension[1])
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
-
-

@@ -19,13 +19,12 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve 
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 
 
 # The regexp we'll need to find the link
-rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
+#rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -37,7 +36,6 @@ data = urlencode(values)
 
 
 def imagebam_parse(link):
-    rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
     imagebam_list = [] # the list that will contain the href tags
     #imagebam_list.append(link['href'])
     imagebam_list.append(link)
@@ -51,20 +49,20 @@ def imagebam_parse(link):
             break
         except urllib2.URLError as e:
             break
+
         image_page = response.read()
         #image_page = myopener.open(i).read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of imagebam's images
         #src_links = page_soup.findAll('img', src=rSrcImagebam)
         src_links = page.xpath("//img[@onclick='scale();']")
         #print(src_links.get('src', None))
         imagebam_src = []
         for li in src_links:
-            print(li.get('src', None))
         #    imagebam_src.append(li['src']) # add all the src part to a list
             imagebam_src.append(li.get('src', None))
-
 
         imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
         download_url = imagebam_src[0]

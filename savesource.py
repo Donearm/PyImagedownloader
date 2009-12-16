@@ -25,7 +25,8 @@ import htmlentitydefs
 from os.path import splitext
 from urlparse import urlparse
 from urllib import urlretrieve, urlencode
-from BeautifulSoup import BeautifulSoup
+import lxml.html
+#from BeautifulSoup import BeautifulSoup
 
 
 # The regexp we'll need to find the link
@@ -46,8 +47,6 @@ def extract_domain(url):
         return u[1] + '.' + u[2] + '.' + u[3]
     else:
         return u[1] + '.' + u[2]
-    #domain = re.split('\.', url)
-    #return domain[1]
 
 def decode_htmlentities(s):
     # Thanks to http://github.com/sku/python-twitter-ircbot/blob/321d94e0e40d0acc92f5bf57d126b57369da70de/html%5Fdecode.py
@@ -91,10 +90,12 @@ def save_source(page, creditor=""):
             print(e.reason)
 
     page_title = response.read()
-    page_title_soup = BeautifulSoup(page_title)
+    #page_title_soup = BeautifulSoup(page_title)
+    page_title_parsed = lxml.html.fromstring(page_title)
 
 
-    neat_title = page_title_soup.title.string
+    #neat_title = page_title_soup.title.string
+    neat_title = page_title_parsed.find(".//title").text
     # Clean title from html entities
     neat_title = decode_htmlentities(neat_title)
     # purge the title of troublesome characters

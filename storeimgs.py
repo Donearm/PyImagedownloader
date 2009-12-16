@@ -22,9 +22,6 @@ from urllib import urlretrieve, urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 
-# The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'

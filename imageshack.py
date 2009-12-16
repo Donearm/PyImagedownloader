@@ -26,8 +26,7 @@ import lxml.html
 
 
 # The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
+#rSrcImageshack = re.compile('/img[0-9]+/[0-9]+/[a-zA-Z0-9]+\.[jpg|gif|png]', re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -38,7 +37,6 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def imageshack_parse(link):
-    rSrcImageshack = re.compile('/img[0-9]+/[0-9]+/[a-zA-Z0-9]+\.[jpg|gif|png]', re.IGNORECASE)
     imageshack_list = [] # the list that will contain the href tags
     #imageshack_list.append(link['href'])
     imageshack_list.append(link)
@@ -50,10 +48,12 @@ def imageshack_parse(link):
             break
         except urllib2.URLError as e:
             break
+
         # get every page linked from the imageshack links
         image_page = response.read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of imageshack's images
         #src_links = page_soup.findAll('img', src=rSrcImageshack)
         src_links = page.xpath("//div[@id='main']/img")

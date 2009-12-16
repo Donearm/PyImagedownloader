@@ -22,9 +22,6 @@ from urllib import urlretrieve, urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 
-# The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 
 # Our base directory
 basedir = '/mnt/documents/Maidens/Uploads/'
@@ -47,9 +44,11 @@ def skinsbe_parse(link):
             break
         except urllib2.URLError as e:
             break
+
         image_page = response.read()
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
+
         # find the src attribute which contains the real link of skinsbe's images
         #src_links = page_soup.findAll('img', id='wallpaper_image')
         src_links = page.xpath("//img[@id='wallpaper_image']")
@@ -59,13 +58,9 @@ def skinsbe_parse(link):
             skinsbe_src.append(li.get('src', None))
 
         # generate just the filename of the image to be locally saved
-        #save_extension = re.sub('^\./files/', '', skinsbe_src[0]) 
-        #download_url = 'http://skinsbe.com/files/' + save_extension
+        save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
+        savefile = basedir + save_extension
 
         download_url = skinsbe_src[0]
-
-        save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
-
-        savefile = basedir + save_extension
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
