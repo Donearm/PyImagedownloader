@@ -28,7 +28,7 @@ import lxml.html
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from optparse import OptionParser
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imgshed, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
 
 # +---------------------------------------------------------------------------+
 # | GPL license block                                                         |
