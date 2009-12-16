@@ -35,7 +35,7 @@ basedir = '/mnt/documents/Maidens/Uploads/'
 
 # Some variables for the connection
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.6) Gecko/2009021410 Firefox/3.0.6'
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 # Change the timeout
 timeout = 60

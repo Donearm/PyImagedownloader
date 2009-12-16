@@ -30,7 +30,7 @@ rSharenxsThumb = re.compile("http://sharenxs\.com/thumbnails/sf/", re.IGNORECASE
 basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
+user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
