@@ -115,7 +115,7 @@ def save_source(page, creditor=""):
         os.chdir(output_dir)
     # save the source url in a file
     source_file = open('source.txt', "w")
-    source_file.write("\n\n\n" + 'fonte:' + page + "\n")
+    source_file.write("\n\n\nfonte:%s\n" % page)
     source_file.close()
 
     # check if we need to save a "credits" file too
@@ -124,7 +124,7 @@ def save_source(page, creditor=""):
         # get the domain name with its apposite function
         domain_name = extract_domain(page)
         credits_file = open('credits', "w")
-        credits_file.write('credits: ' + creditor + ' @' + domain_name + "\n")
+        credits_file.write("credits: %s @%s \n" % (creditor, domain_name))
         credits_file.close()
 
     # move all the images in basedir in the output_dir
