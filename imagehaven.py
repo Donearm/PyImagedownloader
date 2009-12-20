@@ -26,7 +26,7 @@ import lxml.html
 
 
 # The regexp we'll need to find the link
-rSponsoredContent = re.compile("adultfriendfinder\.com", re.IGNORECASE)
+rSponsoredContent = re.compile("streamate\.com", re.IGNORECASE)
 rSrcImagehaven = re.compile("\./images") # regexp for the src link
 
 
