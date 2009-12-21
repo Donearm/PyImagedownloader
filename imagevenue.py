@@ -99,9 +99,9 @@ def imagevenue_parse(link):
             # can't be downloaded from the server or there is a host's glitch
             continue
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
+        save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
         try:
-            savefile = basedir + str(save_extension[1])
+            savefile = basedir + str(save_extension[-1])
             # finally save the image on the desidered directory
             urlretrieve(download_url, savefile) 
         except IndexError:
@@ -143,7 +143,7 @@ def imagevenue_embed(link):
             continue
 
     # generate just the filename of the image to be locally saved
-    save_extension = re.split('[0-9a-zA-Z]+-[0-9]+/loc[0-9]{,4}/', imagevenue_src[0]) 
-    savefile = basedir + str(save_extension[1])
+    save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
+    savefile = basedir + str(save_extension[-1])
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 
