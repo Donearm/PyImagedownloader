@@ -35,6 +35,8 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
+# importing config file variables
+from pyimg import *
 
 
 # If no arguments were given, print a helpful message
@@ -74,10 +76,6 @@ rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 #rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
-
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
-
 
 
 class ImageHostParser():
@@ -125,7 +123,7 @@ class ImageHostParser():
             elif rStoreimgs.search(stringl):
                 #storeimgs.storeimgs_parse(L)
                 storeimgs.storeimgs_parse(stringl)
-            elif rImagetitan.search(stringl):
+            elif JImagetitan.search(stringl):
                 #imagetitan.imagetitan_parse(L)
                 imagetitan.imagetitan_parse(stringl)
             elif rSharenxs.search(stringl):
@@ -143,10 +141,8 @@ def http_connector(url):
 
     # Some variables for the connection
     values = {}
-    user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
     headers = { 'User-Agent' : user_agent }
-    # Change the timeout
-    timeout = 60
+    # Set the timeout we chose in the config file
     setdefaulttimeout(timeout)
 
     # set a cookie handler and install the opener
@@ -157,8 +153,6 @@ def http_connector(url):
     # for some sites we need to login first....
     if rUsemycomputer.search(url):
         # We got a login user/pwd for usemycomputer, let's first login then
-        umc_name = 'nirari'
-        umc_pwd = 'MFdoutzen'
         login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
         values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
 
@@ -169,9 +163,7 @@ def http_connector(url):
         request2 = urllib2.Request(login2_page, data)
         response1 = opener.open(request2)
     elif rImc.search(url):
-        # Login credentials for Imc website
-        imc_name = 'nirari'
-        imc_pwd = 'Ninxtapes'
+        # Loging to IMC website
         login_page = 'http://project-xtapes.com/main/magazine/login.php'
         values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
 

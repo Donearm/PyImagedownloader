@@ -23,6 +23,7 @@ from socket import setdefaulttimeout
 from urllib import urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
+from pyimg import *
 
 
 
@@ -30,15 +31,11 @@ import lxml.html
 #rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 # Some variables for the connection
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
-# Change the timeout
-timeout = 60
+# Set the timeout we chose in the config file
 setdefaulttimeout(timeout)
 # prepare the cookies handler
 cj = CookieJar()

@@ -19,9 +19,11 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 from cookielib import CookieJar
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
+from pyimg import *
+
 
 
 # The regexp we'll need to find the link
@@ -30,11 +32,8 @@ rRedirects = re.compile("uploadimg\-streamate\.php", re.IGNORECASE) # to find th
 rRedirects2 = re.compile("Continue To Your Image", re.IGNORECASE) # to find generical redirects
 rRedirects3 = re.compile("tempfull-default\.php", re.IGNORECASE) # to find the url of the imagevenue's countdown
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 cj = CookieJar()

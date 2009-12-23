@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 from cookielib import CookieJar
 import lxml.html
+#from BeautifulSoup import BeautifulSoup, SoupStrainer
+from pyimg import *
 
 
 
@@ -30,12 +31,8 @@ rSponsoredContent = re.compile("streamate\.com", re.IGNORECASE)
 rSrcImagehaven = re.compile("\./images") # regexp for the src link
 
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
-
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 cj = CookieJar()

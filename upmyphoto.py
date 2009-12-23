@@ -21,16 +21,14 @@ import urllib2
 from urllib import urlretrieve, urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
+from pyimg import *
 
 
 # The regexp we'll need to find the link
 #rUpmyphoto = re.compile("http://www\.upmyphoto\.com/img", re.IGNORECASE)
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 

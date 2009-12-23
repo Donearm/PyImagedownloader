@@ -21,6 +21,7 @@ import urllib2
 from urllib import urlencode, urlretrieve
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
+from pyimg import *
 
 
 
@@ -28,11 +29,8 @@ import lxml.html
 # The regexp we'll need to find the link
 #rSrcImageshack = re.compile('/img[0-9]+/[0-9]+/[a-zA-Z0-9]+\.[jpg|gif|png]', re.IGNORECASE)
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2b4) Gecko/20091202 Firefox/3.6b4'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 

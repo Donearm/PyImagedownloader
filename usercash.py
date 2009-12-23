@@ -21,17 +21,15 @@ import urllib2
 from urllib import urlretrieve, urlencode
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from imagevenue import imagevenue_embed
+from pyimg import *
 
 # The regexp we'll need to find the link
 rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rUsercash = re.compile("href=\"?http://[0-9]+\.usercash\.com", re.IGNORECASE)
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
-user_agent = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.1) Gecko/2008072610 GranParadiso/3.0.1'
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
