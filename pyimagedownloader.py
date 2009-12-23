@@ -123,7 +123,7 @@ class ImageHostParser():
             elif rStoreimgs.search(stringl):
                 #storeimgs.storeimgs_parse(L)
                 storeimgs.storeimgs_parse(stringl)
-            elif JImagetitan.search(stringl):
+            elif rImagetitan.search(stringl):
                 #imagetitan.imagetitan_parse(L)
                 imagetitan.imagetitan_parse(stringl)
             elif rSharenxs.search(stringl):
