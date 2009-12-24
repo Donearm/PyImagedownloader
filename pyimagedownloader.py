@@ -135,22 +135,8 @@ class ImageHostParser():
             else:
                 continue
 
-
-def http_connector(url):
-    """connect to a url and get the page"""
-
-    # Some variables for the connection
-    values = {}
-    headers = { 'User-Agent' : user_agent }
-    # Set the timeout we chose in the config file
-    setdefaulttimeout(timeout)
-
-    # set a cookie handler and install the opener
-    cj = CookieJar()
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    urllib2.install_opener(opener)
-
-    # for some sites we need to login first....
+def site_login(url, opener):
+    """check if it's a site or forum we have login credentials for and log-in"""
     if rUsemycomputer.search(url):
         # We got a login user/pwd for usemycomputer, let's first login then
         login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
@@ -173,6 +159,24 @@ def http_connector(url):
         request = urllib2.Request(login_page, data)
         response = opener.open(request)
 
+
+
+def http_connector(url):
+    """connect to a url, get the page and return it"""
+
+    # Some variables for the connection
+    values = {}
+    headers = { 'User-Agent' : user_agent }
+    # Set the timeout we chose in the config file
+    setdefaulttimeout(timeout)
+
+    # set a cookie handler and install the opener
+    cj = CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    urllib2.install_opener(opener)
+
+    # for some sites we need to login first....
+    site_login(url, opener)
 
     # Open and read the page contents
     data = urlencode(values)
