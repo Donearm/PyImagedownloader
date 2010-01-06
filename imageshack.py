@@ -64,8 +64,8 @@ def imageshack_parse(link):
             # generate just the filename of the image to be locally saved
             save_extension = re.split('img[0-9]{,3}/[0-9]+/', imageshack_src[0])
             # extract just the first part of the url to join with imageshack_src
-            #url_extension = re.split('/i/', i)
-            url_extension = re.split('my.php', i)
+            url_extension = re.split('/i/', i)
+            #url_extension = re.split('my.php', i)
 
             savefile = basedir + str(save_extension[1])
             download_url = url_extension[0] + imageshack_src[0]
