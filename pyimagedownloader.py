@@ -34,7 +34,7 @@ from optparse import OptionParser
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage
 # importing config file variables
 from pyimg import *
 
@@ -73,6 +73,7 @@ rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rSharenxs = re.compile("http://sharenxs\.com", re.IGNORECASE)
 #rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
+rPostimage = re.compile("http://www\.postimage\.org/image\.php", re.IGNORECASE)
 #rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
@@ -112,7 +113,6 @@ class ImageHostParser():
                 #uppix.uppix_parse(L)
                 uppix.uppix_parse(stringl)
             elif rBellazon.search(stringl):
-                print(stringl)
                 bellazon.bellazon_parse(L)
             elif rSkinsBe.search(stringl):
                 #skinsbe.skinsbe_parse(L)
@@ -132,6 +132,8 @@ class ImageHostParser():
             elif rBlogspot.search(stringl):
                 #blogspot.blogspot_parse(L)
                 blogspot.blogspot_parse(stringl)
+            elif rPostimage.search(stringl):
+                postimage.postimage_parse(stringl)
             else:
                 continue
 

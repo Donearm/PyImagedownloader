@@ -51,7 +51,6 @@ def bellazon_parse(link):
     #    print li
     if rBellazon.search(str(link)):
         bellazon_list.append(link['href'])
-        print(link)
 
         # Open and read the page contents
         data = urlencode(values)
