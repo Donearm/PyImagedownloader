@@ -51,10 +51,8 @@ def sharenxs_parse(link):
         # find the src attribute which contains the real link of sharenxs's images
         #src_links = page_soup.findAll('img', src=rSharenxsThumb)
         view_links = page.xpath("//div[@align='center']/a[@href]")
-        sharenxs_view = []
-        for li in view_links:
-            #sharenxs_view.append(li['src']) # add all the src part to a list
-            sharenxs_view.append(li.get('href', None))
+
+        sharenxs_view = [li.get('href', None) for li in view_links]
 
         # opening the page with the full-sized image
         request2 = urllib2.Request(sharenxs_view[1], data, headers)
@@ -68,12 +66,10 @@ def sharenxs_parse(link):
 
         # find the image url
         src_links = page2.xpath('//img[@src]')
-        sharenxs_src = []
-        for s in src_links:
-            # add the src link only if it matches the regexp (and thus is what
-            # we are looking for
-            if rSharenxsThumb.search(s.get('src', None)):
-                sharenxs_src.append(s.get('src', None))
+        # add the src link only if it matches the regexp (and thus is what
+        # we are looking for
+        sharenxs_src = [s.get('src', None) for s in src_links if rSharenxsThumb.search(s.get('src', None))]
+
         try:
             # get the extension for the filename
             save_extension = re.split('nxs-', sharenxs_src[0])
