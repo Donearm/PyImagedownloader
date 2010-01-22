@@ -50,27 +50,18 @@ def postimage_parse(link):
         # postimage has two different implementations: the first is for images resized
         # and to be seen full size with a click and the second is for small images
         # already at full size
-        postimage_src = []
-        postimage_alt = []
         try:
             alt_links = page.xpath("//center/a[@href]/img[@alt]")
-            for li in alt_links:
-                # add the alt to a list
-                postimage_alt.append(li.get('alt', None))
+            postimage_alt = [li.get('alt', None) for li in alt_links]
 
             href_links = page.xpath("//center/a[@href]")
-            for li in href_links:
-                # add the href to the other list
-                postimage_src.append(li.get('href', None))
+            postimage_src = [li.get('href', None) for li in href_links]
         except:
             print("Haven't found anything....")
         else:
             src_links = page.xpath("//center/img")
-            print("We are here")
-            for li in src_links:
-                # add the src to a list and the alt to another
-                postimage_src.append(li.get('src', None))
-                postimage_alt.append(li.get('alt', None))
+            postimage_src = [li.get('src', None) for li in src_links]
+            postimage_alt = [li.get('alt', None) for li in src_links]
 
 
         try:
