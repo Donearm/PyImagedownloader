@@ -53,11 +53,8 @@ def upmyphoto_parse(link):
         # find the src attribute which contains the real link of upmyphoto's images
         #src_links = page_soup.findAll('img', src=rUpmyphoto)
         src_links = page.xpath("//img[@id='image']")
-        upmyphoto_src = []
-        for li in src_links:
-            #upmyphoto_src.append(li['src']) # add all the src part to a list
-            upmyphoto_src.append(li.get('src', None))
 
+        upmyphoto_src = [li.get('src', None) for li in src_links]
 
         # generate just the filename of the image to be locally saved
         save_extension = re.split('/img/', upmyphoto_src[0])

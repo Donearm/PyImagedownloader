@@ -54,10 +54,8 @@ def imagetitan_parse(link):
         # find the src attribute which contains the real link of imagetitan's images
         #src_links = page_soup.findAll('img', src=rSrcImagetitan)
         src_links = page.xpath("//img[@id='image']")
-        imagetitan_src = []
-        for li in src_links:
-            #imagetitan_src.append(li['src']) # add all the src part to a list
-            imagetitan_src.append(li.get('src', None))
+
+        imagetitan_src = [li.get('src', None) for li in src_links]
 
 
         imgtitanmatch = re.match(rSrcImagetitan, imagetitan_src[0])

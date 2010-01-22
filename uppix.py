@@ -49,10 +49,8 @@ def uppix_parse(link):
         # find the src attribute which contains the real link of uppix's images
         #src_links = page_soup.findAll('img', id='dpic')
         src_links = page.xpath("//img[@id='dpic']")
-        uppix_src = []
-        for li in src_links:
-            #uppix_src.append(li['src']) # add all the src part to a list
-            uppix_src.append(li.get('src', None))
+
+        uppix_src = [li.get('src', None) for li in src_links]
 
         # generate just the filename of the image to be locally saved
         save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 

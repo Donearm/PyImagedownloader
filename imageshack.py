@@ -55,10 +55,8 @@ def imageshack_parse(link):
         # find the src attribute which contains the real link of imageshack's images
         #src_links = page_soup.findAll('img', src=rSrcImageshack)
         src_links = page.xpath("//img[@id='main_image']")
-        imageshack_src = []
-        for li in src_links:
-            #imageshack_src.append(li['src']) # add all the src part to a list
-            imageshack_src.append(li.get('src', None))
+
+        imageshack_src = [li.get('src', None) for li in src_links]
 
         try:
             # generate just the filename of the image to be locally saved

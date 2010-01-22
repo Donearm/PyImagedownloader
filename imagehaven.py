@@ -66,10 +66,8 @@ def imagehaven_parse(link):
         # find the src attribute which contains the real link of imagehaven's images
         #src_links = page_soup.findAll('img', src=rSrcImagehaven)
         src_links = page.xpath("//img[@id='image']")
-        imagehaven_src = []
-        for li in src_links:
-            #imagehaven_src.append(li['src']) # add all the src part to a list
-            imagehaven_src.append(li.get('src', None))
+
+        imagehaven_src = [li.get('src', None) for li in src_links]
 
         imagehaven_split = re.split('img\.php\?id=', i) # remove the unneeded parts
         imagehaven_split2 = re.split('\.\/', imagehaven_src[0]) 

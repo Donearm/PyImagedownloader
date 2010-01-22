@@ -50,10 +50,8 @@ def skinsbe_parse(link):
         # find the src attribute which contains the real link of skinsbe's images
         #src_links = page_soup.findAll('img', id='wallpaper_image')
         src_links = page.xpath("//img[@id='wallpaper_image']")
-        skinsbe_src = []
-        for li in src_links:
-            #skinsbe_src.append(li['src']) # add all the src part to a list
-            skinsbe_src.append(li.get('src', None))
+
+        skinsbe_src = [li.get('src', None) for li in src_links]
 
         # generate just the filename of the image to be locally saved
         save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
