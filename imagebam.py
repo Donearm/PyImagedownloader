@@ -56,11 +56,8 @@ def imagebam_parse(link):
         # find the src attribute which contains the real link of imagebam's images
         #src_links = page_soup.findAll('img', src=rSrcImagebam)
         src_links = page.xpath("//img[@onclick='scale();']")
-        #print(src_links.get('src', None))
-        imagebam_src = []
-        for li in src_links:
-        #    imagebam_src.append(li['src']) # add all the src part to a list
-            imagebam_src.append(li.get('src', None))
+
+        imagebam_src = [li.get('src', None) for li in src_links]
 
         imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
         download_url = imagebam_src[0]
