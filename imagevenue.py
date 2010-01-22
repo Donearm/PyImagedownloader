@@ -83,10 +83,8 @@ def imagevenue_parse(link):
         # find the src attribute which contains the real link of imagevenue's images
         #src_links = page_soup.findAll('img', id='thepic')
         src_links = page.xpath("//img[@id='thepic']")
-        imagevenue_src = []
-        for li in src_links:
-            #imagevenue_src.append(li['src']) # add all the src part to a list
-            imagevenue_src.append(li.get('src', None))
+
+        imagevenue_src = [li.get('src', None) for li in src_links]
 
 
         imagevenue_split = re.split('img.php\?image=', i) # remove the unneeded parts
