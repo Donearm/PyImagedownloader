@@ -46,22 +46,20 @@ def postimage_parse(link):
         image_page = response.read()
         page = lxml.html.fromstring(image_page)
 
-        # find the src attribute which contains the real link of postimage's images
-        # postimage has two different implementations: the first is for images resized
-        # and to be seen full size with a click and the second is for small images
-        # already at full size
-        try:
+        # Little trick: check if we have an img with an height; that would mean
+        # the image is already fullsized. If there is no height, the image is
+        # resized and we act accordingly
+        height_present = page.xpath("//img[@height]")
+        if height_present:
+            src_links = page.xpath("//center/img")
+            postimage_src = [li.get('src', None) for li in src_links]
+            postimage_alt = [li.get('alt', None) for li in src_links]
+        else:
             alt_links = page.xpath("//center/a[@href]/img[@alt]")
             postimage_alt = [li.get('alt', None) for li in alt_links]
 
             href_links = page.xpath("//center/a[@href]")
             postimage_src = [li.get('href', None) for li in href_links]
-        except:
-            print("Haven't found anything....")
-        else:
-            src_links = page.xpath("//center/img")
-            postimage_src = [li.get('src', None) for li in src_links]
-            postimage_alt = [li.get('alt', None) for li in src_links]
 
 
         try:
