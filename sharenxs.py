@@ -50,7 +50,7 @@ def sharenxs_parse(link):
         page = lxml.html.fromstring(image_page)
         # find the src attribute which contains the real link of sharenxs's images
         #src_links = page_soup.findAll('img', src=rSharenxsThumb)
-        view_links = page.xpath("//div[@align='center']/a[@href]")
+        view_links = page.xpath("//center/table/tr/td/table/tr/td[@align='center']/a[@href]")
 
         sharenxs_view = [li.get('href', None) for li in view_links]
 
