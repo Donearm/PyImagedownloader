@@ -25,7 +25,7 @@ from pyimg import *
 
 
 # The regexp we'll need to find the link
-rSharenxsThumb = re.compile("http://sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
+rSharenxsThumb = re.compile("http://(www\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
 
 
 values = {}
