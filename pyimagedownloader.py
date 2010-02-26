@@ -39,11 +39,6 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetit
 from pyimg import *
 
 
-# If no arguments were given, print a helpful message
-#if len(sys.argv)!=2:
-#    print 'Usage: pyimagedownloader url'
-#    sys.exit(0)
-
 # The regexp we'll need to find the link
 #rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 #rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
@@ -70,7 +65,7 @@ rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
 #rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 #rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
-rSharenxs = re.compile("http://(www\.)?sharenxs\.com", re.IGNORECASE)
+rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 #rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://www\.postimage\.org/image\.php", re.IGNORECASE)
