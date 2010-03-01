@@ -179,8 +179,12 @@ def http_connector(url):
     data = urlencode(values)
     request = urllib2.Request(url, data, headers)
 
+
     try:
         response = urllib2.urlopen(request)
+        #print(response.info())
+        #print(response.geturl())
+        #print(response.getcode())
     except urllib2.HTTPError as e:
         # if the site doesn't accept a POST request, make a GET instead
         if e.code == 405:
@@ -194,6 +198,7 @@ def http_connector(url):
             print(e.reason)
             sys.exit(1)
 
+    #print(cj.make_cookies(response, request))
     Rpage = response.read()
     return Rpage
 
