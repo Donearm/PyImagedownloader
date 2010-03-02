@@ -167,9 +167,15 @@ def http_connector(url):
     # Set the timeout we chose in the config file
     setdefaulttimeout(timeout)
 
+    # Do we need to debug?
+    debug = 1
+
     # set a cookie handler and install the opener
     cj = CookieJar()
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    if debug == 1:
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), urllib2.HTTPHandler(debuglevel=1))
+    else
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     urllib2.install_opener(opener)
 
     # for some sites we need to login first....
@@ -178,6 +184,14 @@ def http_connector(url):
     # Open and read the page contents
     data = urlencode(values)
     request = urllib2.Request(url, data, headers)
+    #request.add_header('Host', 'www.celebutopia.net')
+    #request.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
+    #request.add_header('Accept-Language', 'en-us,en;q=0.5')
+    #request.add_header('Accept-Encoding', 'gzip,deflate')
+    #request.add_header('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7')
+    #request.add_header('Keep-Alive', '115')
+    #request.add_header('Connection', 'keep-alive')
+    #print(request.headers)
 
 
     try:
@@ -195,11 +209,15 @@ def http_connector(url):
             response = urllib2.urlopen(request)
         else:
             print(e.code)
-            print(e.reason)
             sys.exit(1)
+    except urllib2.URLError as e:
+        print(e.reason)
 
     #print(cj.make_cookies(response, request))
     Rpage = response.read()
+    #f = open('response.html', 'w')
+    #f.write(Rpage)
+    #f.close()
     return Rpage
 
 
