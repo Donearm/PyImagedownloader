@@ -168,57 +168,66 @@ def http_connector(url):
     setdefaulttimeout(timeout)
 
     # Do we need to debug?
-    debug = 1
+    debug = 0
 
     # set a cookie handler and install the opener
     cj = CookieJar()
     if debug == 1:
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), urllib2.HTTPHandler(debuglevel=1))
-    else
+    else:
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     urllib2.install_opener(opener)
 
     # for some sites we need to login first....
     site_login(url, opener)
 
-    # Open and read the page contents
+    # Encode values (if any)
     data = urlencode(values)
-    request = urllib2.Request(url, data, headers)
-    #request.add_header('Host', 'www.celebutopia.net')
-    #request.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
-    #request.add_header('Accept-Language', 'en-us,en;q=0.5')
-    #request.add_header('Accept-Encoding', 'gzip,deflate')
-    #request.add_header('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7')
-    #request.add_header('Keep-Alive', '115')
-    #request.add_header('Connection', 'keep-alive')
+
+    # currently used headers
     #print(request.headers)
 
+    if values:
+        # if there are some values it's a POST request
+        request = urllib2.Request(url, data, headers)
+        try:
+            response = urllib2.urlopen(request)
+            # various infos on the response
+            #print(response.info())
+            #print(response.geturl())
+            #print(response.getcode())
+        except urllib2.HTTPError as e:
+            # if the site doesn't accept a POST request, make a GET instead
+            if e.code == 405:
+                response = get_request(url, user_agent)
+            else:
+                print(e.code)
+                sys.exit(1)
+        except urllib2.URLError as e:
+            print(e.reason)
+    else:
+        # no values, then it's a GET request
+        response = get_request(url, user_agent)
 
+
+    #print(cj.make_cookies(response, request)) # show the cookies
+    Rpage = response.read()
+    return Rpage
+
+def get_request(url, ua=user_agent):
+    print("GET request")
+    request = urllib2.Request(url)
+    request.add_header('User-Agent', ua)
     try:
         response = urllib2.urlopen(request)
-        #print(response.info())
-        #print(response.geturl())
-        #print(response.getcode())
     except urllib2.HTTPError as e:
-        # if the site doesn't accept a POST request, make a GET instead
-        if e.code == 405:
-            print("GET request")
-            request = urllib2.Request(url)
-            # adding the User-Agent in case it wasn't
-            request.add_header('User-Agent', user_agent)
-            response = urllib2.urlopen(request)
-        else:
-            print(e.code)
-            sys.exit(1)
+        print(e.code)
+        sys.exit(1)
     except urllib2.URLError as e:
         print(e.reason)
+        sys.exit(1)
 
-    #print(cj.make_cookies(response, request))
-    Rpage = response.read()
-    #f = open('response.html', 'w')
-    #f.write(Rpage)
-    #f.close()
-    return Rpage
+    return response
 
 
 # Generate the argument parser
