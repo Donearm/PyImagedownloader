@@ -34,9 +34,7 @@ from pyimg import *
 rImages = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # image files
 
 
-values = {}
 headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def extract_domain(url):
     """Given an url extract only the domain name (without 'www' and 'com' for example)"""
@@ -74,7 +72,8 @@ def save_source(page, creditor=""):
     """ the method to save the original page link to a file """
 
     # get the page's title
-    request = urllib2.Request(page, data, headers)
+    request = urllib2.Request(page)
+    request.add_header('User-Agent', user_agent)
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
