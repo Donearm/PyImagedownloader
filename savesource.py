@@ -24,7 +24,7 @@ import string
 import htmlentitydefs
 from os.path import splitext
 from urlparse import urlparse
-from urllib import urlretrieve, urlencode
+from urllib import urlretrieve
 import lxml.html
 #from BeautifulSoup import BeautifulSoup
 from pyimg import *
