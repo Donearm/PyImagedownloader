@@ -35,6 +35,7 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage
+from http_connector import *
 # importing config file variables
 from pyimg import *
 
@@ -69,9 +70,6 @@ rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 #rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://www\.postimage\.org/image\.php", re.IGNORECASE)
-#rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
-rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
-rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
 
 class ImageHostParser():
@@ -132,102 +130,6 @@ class ImageHostParser():
             else:
                 continue
 
-def site_login(url, opener):
-    """check if it's a site or forum we have login credentials for and log-in"""
-    if rUsemycomputer.search(url):
-        # We got a login user/pwd for usemycomputer, let's first login then
-        login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
-        values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
-
-        # encode values
-        data = urlencode(values)
-
-        # second request to the login2 page
-        request2 = urllib2.Request(login2_page, data)
-        response1 = opener.open(request2)
-    elif rImc.search(url):
-        # Loging to IMC website
-        login_page = 'http://project-xtapes.com/main/magazine/login.php'
-        values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
-
-        data = urlencode(values)
-
-        # login page request
-        request = urllib2.Request(login_page, data)
-        response = opener.open(request)
-
-
-
-def http_connector(url):
-    """connect to a url, get the page and return it"""
-
-    # Some variables for the connection
-    values = {}
-    headers = { 'User-Agent' : user_agent }
-    # Set the timeout we chose in the config file
-    setdefaulttimeout(timeout)
-
-    # Do we need to debug?
-    debug = 0
-
-    # set a cookie handler and install the opener
-    cj = CookieJar()
-    if debug == 1:
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), urllib2.HTTPHandler(debuglevel=1))
-    else:
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    urllib2.install_opener(opener)
-
-    # for some sites we need to login first....
-    site_login(url, opener)
-
-    # Encode values (if any)
-    data = urlencode(values)
-
-    # currently used headers
-    #print(request.headers)
-
-    if values:
-        # if there are some values it's a POST request
-        request = urllib2.Request(url, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-            # various infos on the response
-            #print(response.info())
-            #print(response.geturl())
-            #print(response.getcode())
-        except urllib2.HTTPError as e:
-            # if the site doesn't accept a POST request, make a GET instead
-            if e.code == 405:
-                response = get_request(url, user_agent)
-            else:
-                print(e.code)
-                sys.exit(1)
-        except urllib2.URLError as e:
-            print(e.reason)
-    else:
-        # no values, then it's a GET request
-        response = get_request(url, user_agent)
-
-
-    #print(cj.make_cookies(response, request)) # show the cookies
-    Rpage = response.read()
-    return Rpage
-
-def get_request(url, ua=user_agent):
-    print("GET request")
-    request = urllib2.Request(url)
-    request.add_header('User-Agent', ua)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print(e.code)
-        sys.exit(1)
-    except urllib2.URLError as e:
-        print(e.reason)
-        sys.exit(1)
-
-    return response
 
 
 # Generate the argument parser

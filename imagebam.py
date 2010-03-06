@@ -22,15 +22,12 @@ from urllib import urlencode, urlretrieve
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
+#from http_connector import get_request
 
 
 # The regexp we'll need to find the link
 #rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
 
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 
 def imagebam_parse(link):
@@ -38,8 +35,8 @@ def imagebam_parse(link):
     #imagebam_list.append(link['href'])
     imagebam_list.append(link)
     for i in imagebam_list:
-        #print("This is the string: %s" % lxml.html.tostring(i))
         # get every page linked from the imagebam links
+        #response = get_request(i)
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)

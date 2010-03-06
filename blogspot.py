@@ -22,21 +22,19 @@ from urllib import urlencode, urlretrieve
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
+#from http_connector import post_request
 
 
 # Regexp needed for the src links
 #rSrcBlogspot = re.compile('http://[0-9]\.bp\.blogspot\.com/.*\.(jpg|jpeg|gif|png)', re.IGNORECASE)
 
 
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
-
 def blogspot_parse(link):
     blogspot_list = [] # the list that will contain the href tags
     #blogspot_list.append(link['href'])
     blogspot_list.append(link)
     for i in blogspot_list:
+        #response = post_request(i, data, headers)
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)

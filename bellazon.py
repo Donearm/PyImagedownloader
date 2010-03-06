@@ -24,6 +24,7 @@ from urllib import urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
+from http_connector import get_request
 
 
 
@@ -31,14 +32,6 @@ from pyimg import *
 #rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
-
-# Some variables for the connection
-values = {}
-headers = { 'User-Agent' : user_agent }
-# Set the timeout we chose in the config file
-setdefaulttimeout(timeout)
-# prepare the cookies handler
-cj = CookieJar()
 
 
 
@@ -52,14 +45,4 @@ def bellazon_parse(link):
     if rBellazon.search(str(link)):
         bellazon_list.append(link['href'])
 
-        # Open and read the page contents
-        data = urlencode(values)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        urllib2.install_opener(opener)
-        request = urllib2.Request(link, data, headers)
-
-        try:
-            respone = urllib2.urlopen(request)
-        except HTTPError as e:
-            print(e.code)
-            print(e.reason)
+        response = get_request(link, headers)
