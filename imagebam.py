@@ -28,6 +28,9 @@ from pyimg import *
 # The regexp we'll need to find the link
 #rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
 
+values = {}
+headers = {'User-Agent': user_agent}
+data = urlencode(values)
 
 
 def imagebam_parse(link):

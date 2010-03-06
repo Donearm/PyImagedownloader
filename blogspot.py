@@ -28,6 +28,9 @@ from pyimg import *
 # Regexp needed for the src links
 #rSrcBlogspot = re.compile('http://[0-9]\.bp\.blogspot\.com/.*\.(jpg|jpeg|gif|png)', re.IGNORECASE)
 
+values = {}
+headers = {'User-Agent': user_agent}
+data = urlencode(values)
 
 def blogspot_parse(link):
     blogspot_list = [] # the list that will contain the href tags
