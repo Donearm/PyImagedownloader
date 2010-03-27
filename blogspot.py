@@ -45,21 +45,16 @@ def blogspot_parse(link):
             break
         except urllib2.URLError as e:
             break
-        # get every page linked from the blogspot links
-        image_page = response.read()
-        #page_soup = BeautifulSoup(image_page)
-        page = lxml.html.fromstring(image_page)
-        # find the src attribute which contains the real link of blogspot's images
-        #src_links = page_soup.findAll('img', src=rSrcBlogspot)
-        src_links = page.xpath('//img[@src]')
 
-        blogspot_src = [li.get('src', None) for li in src_links]
+        # No need for blogspot to call lxml again, the links in blogspot_list
+        # are already the direct urls to the full image
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('(/[0-9A-Za-z_-]+/)*', blogspot_src[0])
+        #save_extension = re.split('(/[0-9A-Za-z_-]+/)*', blogspot_src[0])
+        save_extension = re.split('/s1600/', i)
 
         savefile = basedir + str(save_extension[-1])
 
-        download_url = blogspot_src[0]
+        download_url = i
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
