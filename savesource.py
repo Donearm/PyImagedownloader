@@ -19,6 +19,7 @@ __email__ = "forod.g@gmail.com"
 import re
 import shutil
 import os
+import urllib
 import urllib2
 import string
 import htmlentitydefs
@@ -76,9 +77,9 @@ def save_source(page, creditor=""):
     response = get_request(page, user_agent)
 
     page_title = response.read()
+
     #page_title_soup = BeautifulSoup(page_title)
     page_title_parsed = lxml.html.fromstring(page_title)
-
 
     #neat_title = page_title_soup.title.string
     neat_title = page_title_parsed.find(".//title").text
@@ -90,7 +91,7 @@ def save_source(page, creditor=""):
     accepted_chars = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
     neat_title = filter(accepted_chars.__contains__, neat_title)
 
-    print neat_title
+    print(neat_title)
 
     output_dir = basedir + neat_title
 
