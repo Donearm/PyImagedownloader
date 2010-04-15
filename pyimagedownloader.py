@@ -34,7 +34,7 @@ from optparse import OptionParser
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper
 from http_connector import *
 # importing config file variables
 from pyimg import *
@@ -70,6 +70,7 @@ rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 #rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://www\.postimage\.org/image\.php", re.IGNORECASE)
+rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
 
 
 class ImageHostParser():
@@ -127,6 +128,8 @@ class ImageHostParser():
                 blogspot.blogspot_parse(stringl)
             elif rPostimage.search(stringl):
                 postimage.postimage_parse(stringl)
+            elif rImageUpper.search(stringl):
+                imageupper.imageupper_parse(stringl)
             else:
                 continue
 
