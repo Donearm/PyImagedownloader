@@ -19,6 +19,7 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+import random
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
@@ -29,7 +30,7 @@ from pyimg import *
 # The regexp we'll need to find the link
 #rSrcImageshack = re.compile('/img[0-9]+/[0-9]+/[a-zA-Z0-9]+\.[jpg|gif|png]', re.IGNORECASE)
 # The split regexp
-rImageshackSplit = 'img[0-9]{,3}/[0-9]+/'
+rImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 
 
 values = {}
@@ -41,7 +42,6 @@ def imageshack_parse(link):
     #imageshack_list.append(link['href'])
     imageshack_list.append(link)
     for i in imageshack_list:
-        print(i)
         request = urllib2.Request(i, data, headers)
         try:
             response = urllib2.urlopen(request)
@@ -68,26 +68,30 @@ def imageshack_parse(link):
         imageshack_src = [li.get('src', None) for li in src_links]
 
         try:
-            imageshack_download('img[0-9]{,3}/[0-9]+/', imageshack_src[0], 1)            
+            imageshack_download('/i/', i, imageshack_src[0], 1)            
         except IndexError:
             break
 
-def imageshack_download(regexp, url, extension=0):
+def imageshack_download(regexp, url, src="", htmlpage=0):
     """downloader function for imageshack links. It needs a regexp for re.split
     and of course the url of an imageshack hosted image
-    extension is optional and it's to be enabled only for imageshack's pages
-    containing an image (and not the direct source url)"""
+    htmlpage is optional and it's to be enabled only for imageshack's pages
+    containing an image (and not the direct source url)
+    same for src, it's optional and only for those kind of pages"""
 
     # generate just the filename of the image to be locally saved
     save_extension = re.split(regexp, url)
-    # extract just the first part of the url to join with imageshack_src
-    if extension == 1:
-        url_extension = re.split('/i/', i)
-        download_url = url_extension[0] + url
+    print(save_extension)
+    if htmlpage == 1:
+        download_url = save_extension[0] + src
+        # generate a random number; if not, the images will have the same save_extension[1]
+        # and will overwrite each other   
+        num = random.randrange(1,1000)
+        savefile = basedir + str(num) + str(save_extension[1]).replace('/', '')
     else:
         download_url = url
+        savefile = basedir + str(save_extension[1])
 
-    savefile = basedir + str(save_extension[1])
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 
 
