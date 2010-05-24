@@ -81,7 +81,6 @@ def imageshack_download(regexp, url, src="", htmlpage=0):
 
     # generate just the filename of the image to be locally saved
     save_extension = re.split(regexp, url)
-    print(save_extension)
     if htmlpage == 1:
         download_url = save_extension[0] + src
         # generate a random number; if not, the images will have the same save_extension[1]
