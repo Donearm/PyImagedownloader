@@ -108,7 +108,8 @@ class ImageHostParser():
                 #uppix.uppix_parse(L)
                 uppix.uppix_parse(stringl)
             elif rBellazon.search(stringl):
-                bellazon.bellazon_parse(L)
+                not_supported('Bellazon')
+                #bellazon.bellazon_parse(L)
             elif rSkinsBe.search(stringl):
                 #skinsbe.skinsbe_parse(L)
                 skinsbe.skinsbe_parse(stringl)
@@ -128,7 +129,8 @@ class ImageHostParser():
                 #blogspot.blogspot_parse(L)
                 blogspot.blogspot_parse(stringl)
             elif rPostimage.search(stringl):
-                postimage.postimage_parse(stringl)
+                not_supported('Postimage')
+                #postimage.postimage_parse(stringl)
             elif rImageUpper.search(stringl):
                 imageupper.imageupper_parse(stringl)
             elif rImageSocket.search(stringl):
@@ -148,6 +150,10 @@ def argument_parser():
     (options, args) = cli_parser.parse_args()
     return options.poster, args
 
+# print an advice for hosts not supported
+def not_supported(host):
+    msg = "Sorry but %s isn't supported or isn't working right now" % host
+    print(msg)
 
 
 if __name__ == "__main__":
