@@ -21,7 +21,7 @@
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __version__ = "1.3"
-__date__ = "16122009"
+__date__ = "28052010"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -86,57 +86,63 @@ class ImageHostParser():
     def which_host(self, tag):
         #all_tags = self.page.findAll(tag)
         all_tags = self.page.xpath('//a[@href]')
+        n = 0
         for L in all_tags:
             #stringl = str(L)
             stringl = str(L.get('href', None))
             if rImagevenue.search(stringl):
-                #imagevenue.imagevenue_parse(L)
                 imagevenue.imagevenue_parse(stringl)
+                n = n + 1
             elif rImagebam.search(stringl):
-                #imagebam.imagebam_parse(L)
                 imagebam.imagebam_parse(stringl)
+                n = n + 1
             elif rImagehaven.search(stringl):
-                #imagehaven.imagehaven_parse(L)
                 imagehaven.imagehaven_parse(stringl)
+                n = n + 1
             elif rImageshack.search(stringl):
-                #imageshack.imageshack_parse(L)
                 imageshack.imageshack_parse(stringl)
+                n = n + 1
             elif rUpmyphoto.search(stringl):
-                #upmyphoto.upmyphoto_parse(L)
                 upmyphoto.upmyphoto_parse(stringl)
+                n = n + 1
             elif rUppix.search(stringl):
-                #uppix.uppix_parse(L)
                 uppix.uppix_parse(stringl)
+                n = n + 1
             elif rBellazon.search(stringl):
                 not_supported('Bellazon')
                 #bellazon.bellazon_parse(L)
+                n = n + 1
             elif rSkinsBe.search(stringl):
-                #skinsbe.skinsbe_parse(L)
                 skinsbe.skinsbe_parse(stringl)
+                n = n + 1
             elif rShareapic.search(stringl):
-                #shareapic.shareapic_parse(L)
                 shareapic.shareapic_parse(stringl)
+                n = n + 1
             elif rStoreimgs.search(stringl):
-                #storeimgs.storeimgs_parse(L)
                 storeimgs.storeimgs_parse(stringl)
+                n = n + 1
             elif rImagetitan.search(stringl):
-                #imagetitan.imagetitan_parse(L)
                 imagetitan.imagetitan_parse(stringl)
+                n = n + 1
             elif rSharenxs.search(stringl):
-                #sharenxs.sharenxs_parse(L)
                 sharenxs.sharenxs_parse(stringl)
+                n = n + 1
             elif rBlogspot.search(stringl):
-                #blogspot.blogspot_parse(L)
                 blogspot.blogspot_parse(stringl)
+                n = n + 1
             elif rPostimage.search(stringl):
                 not_supported('Postimage')
                 #postimage.postimage_parse(stringl)
+                n = n + 1
             elif rImageUpper.search(stringl):
                 imageupper.imageupper_parse(stringl)
+                n = n + 1
             elif rImageSocket.search(stringl):
                 imagesocket.imagesocket_parse(stringl)
+                n = n + 1
             else:
                 continue
+        print("%d images were present" % n)
 
 
 
