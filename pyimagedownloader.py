@@ -78,19 +78,21 @@ rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 class ImageHostParser():
     """ The main parser class """
 
-    def __init__(self, page, tag):
+    def __init__(self, page, tag, attr):
         #self.page = BeautifulSoup(page)
         self.page = lxml.html.fromstring(page)
         self.tag = tag
-        self.which_host(tag)
+        self.attr = attr
+        self.which_host(tag, attr)
 
-    def which_host(self, tag):
+    def which_host(self, tag, attr):
         #all_tags = self.page.findAll(tag)
-        all_tags = self.page.xpath('//a[@href]')
+        xpath_search = '//' + tag + '[@' + attr + ']'
+        all_tags = self.page.xpath(xpath_search)
         n = 0
         for L in all_tags:
             #stringl = str(L)
-            stringl = str(L.get('href', None))
+            stringl = str(L.get(attr, None))
             if rImagevenue.search(stringl):
                 imagevenue.imagevenue_parse(stringl)
                 n = n + 1
@@ -157,8 +159,12 @@ def argument_parser():
     cli_parser.add_option("-c", "--credit",
             help="optionally save the name of the poster of the images in a file",
             dest="poster")
+    cli_parser.add_option("-e", "--embed",
+            action="store_true",
+            help="enable search for embedded images too",
+            dest="embed")
     (options, args) = cli_parser.parse_args()
-    return options.poster, args
+    return options.poster, options.embed, args
 
 # print an advice for hosts not supported
 def not_supported(host):
@@ -167,10 +173,16 @@ def not_supported(host):
 
 
 if __name__ == "__main__":
-    (poster, url) = argument_parser()
+    (poster, embed, url) = argument_parser()
     Rpage = http_connector(url[0])
     # Parse the page for images
-    parser = ImageHostParser(Rpage, 'a', )
+    parser = ImageHostParser(Rpage, 'a', 'href')
+    if embed:
+        # do we need to search for embedded images then?
+        # Note: at the moment it downloads thumbnails too
+        print("Searching for embedded images")
+        print("")
+        parser.which_host('img', 'src')
     # Generate the directory for the source file and the images downloaded
     savesource.save_source(url[0], creditor=poster)
     sys.exit(0)
