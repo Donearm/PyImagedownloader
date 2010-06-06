@@ -34,7 +34,7 @@ from optparse import OptionParser
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket
 from http_connector import *
 # importing config file variables
 from pyimg import *
@@ -72,6 +72,7 @@ rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://www\.postimage\.org/image\.php", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
 rImageSocket = re.compile("http://imagesocket\.com", re.IGNORECASE)
+rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 
 
 class ImageHostParser():
@@ -139,6 +140,9 @@ class ImageHostParser():
                 n = n + 1
             elif rImageSocket.search(stringl):
                 imagesocket.imagesocket_parse(stringl)
+                n = n + 1
+            elif rPhotobucket.search(stringl):
+                photobucket.photobucket_parse(stringl)
                 n = n + 1
             else:
                 continue
