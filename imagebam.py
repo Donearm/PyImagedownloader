@@ -55,15 +55,20 @@ def imagebam_parse(link):
 
         # find the src attribute which contains the real link of imagebam's images
         #src_links = page_soup.findAll('img', src=rSrcImagebam)
-        src_links = page.xpath("//img[@onclick='scale();']")
+        src_links = page.xpath("//img[@onclick='scale(this);']")
 
         imagebam_src = [li.get('src', None) for li in src_links]
+
+        # get the image name from the id tag
+        imagename = [li.get('id', None) for i in src_links]
 
         imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
         download_url = imagebam_src[0]
         # generate just the filename of the image to be locally saved
-        # TODO: іf the image is not a jpeg how to get the correct extension?
-        savefile = basedir + str(imagebam_split[1]) + ".jpg"
-        # finally save the image on the desidered directory
+        # not needed anymore since getting the name from the id tag
+        #savefile = basedir + str(imagebam_split[1]) + ".jpg"
+        savefile = basedir + str(imagename[0])
+
+        # finally save the image in the desidered directory
         urlretrieve(download_url, savefile) 
 
