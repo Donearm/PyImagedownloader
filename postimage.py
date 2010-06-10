@@ -31,6 +31,10 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def postimage_parse(link):
+    #TODO: currently this doesn't work, urlretrieve doesn't download the full image
+    # but block itself with an Http error 405 "not allowed". Using POST or GET or checking
+    # the Content-Length header doesn't resolve the issue.
+
     postimage_list = [] # the list that will contain the href tags
     postimage_list.append(link)
     for i in postimage_list:
