@@ -34,7 +34,7 @@ from optparse import OptionParser
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg
 from http_connector import *
 # importing config file variables
 from pyimg import *
@@ -74,6 +74,7 @@ rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
 rImageSocket = re.compile("http://imagesocket\.com", re.IGNORECASE)
 rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
+rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 
 
 class ImageHostParser():
@@ -149,6 +150,9 @@ class ImageHostParser():
                 n = n + 1
             elif rImageban.search(stringl):
                 imageban.imageban_parse(stringl)
+                n = n + 1
+            elif rImagehostorg.search(stringl):
+                imagehostorg.imagehostorg_parse(stringl)
                 n = n + 1
             else:
                 continue
