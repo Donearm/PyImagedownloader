@@ -1,1 +1,1 @@
-__all__ = ["imagevenue", "imagebam", "imageshack", "imagehaven", "imgshed", "uppix", "bellazon", "skinsbe", "savesource", "imagetitan", "shareapic", "storeimgs", "upmyphoto", "sharenxs", "blogspot", "postimage"]
+__all__ = ["imagevenue", "imagebam", "imageshack", "imagehaven", "imgshed", "uppix", "bellazon", "skinsbe", "savesource", "imagetitan", "shareapic", "storeimgs", "upmyphoto", "sharenxs", "blogspot", "postimage", "imageupper", "imagesocket", "photobucket", "imageban", "imagehostorg"]
