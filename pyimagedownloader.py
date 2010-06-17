@@ -27,17 +27,17 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import urllib2
-from socket import setdefaulttimeout
 from cookielib import CookieJar
 from urllib import urlencode
 from optparse import OptionParser
+from os.path import abspath
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg
 from http_connector import *
 # importing config file variables
-from pyimg import *
+from pyimg import basedir, user_agent
 
 
 # The regexp we'll need to find the link
@@ -171,8 +171,11 @@ def argument_parser():
             action="store_true",
             help="enable search for embedded images too",
             dest="embed")
+    cli_parser.add_option("-d", "--directory",
+            help="the directory where to save images",
+            dest="savedirectory")
     (options, args) = cli_parser.parse_args()
-    return options.poster, options.embed, args
+    return options.poster, options.embed, options.savedirectory, args
 
 # print an advice for hosts not supported
 def not_supported(host):
@@ -181,8 +184,14 @@ def not_supported(host):
 
 
 if __name__ == "__main__":
-    (poster, embed, url) = argument_parser()
+    (poster, embed, savedirectory, url) = argument_parser()
     Rpage = http_connector(url[0])
+
+    if savedirectory:
+        # directory given on the command line?
+        basedir = abspath(savedirectory)
+        print(basedir)
+
     # Parse the page for images
     parser = ImageHostParser(Rpage, 'a', 'href')
     if embed:
@@ -191,6 +200,7 @@ if __name__ == "__main__":
         print("Searching for embedded images")
         print("")
         parser.which_host('img', 'src')
+
     # Generate the directory for the source file and the images downloaded
     savesource.save_source(url[0], creditor=poster)
     sys.exit(0)
