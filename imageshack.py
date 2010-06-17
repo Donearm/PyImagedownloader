@@ -22,7 +22,7 @@ from urllib import urlencode, urlretrieve
 import random
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import basedir, user_agent
 
 
 
