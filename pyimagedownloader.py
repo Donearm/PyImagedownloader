@@ -45,7 +45,7 @@ from pyimg import basedir, user_agent
 #rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 #rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
-rImagebam = re.compile("http://www\.imagebam\.com/image", re.IGNORECASE)
+rImagebam = re.compile("http://www\.imagebam\.com/image/", re.IGNORECASE)
 #rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 #rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
