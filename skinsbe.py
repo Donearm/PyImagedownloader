@@ -47,9 +47,11 @@ def skinsbe_parse(link):
         #page_soup = BeautifulSoup(image_page)
         page = lxml.html.fromstring(image_page)
 
+
         # find the src attribute which contains the real link of skinsbe's images
         #src_links = page_soup.findAll('img', id='wallpaper_image')
         src_links = page.xpath("//img[@id='wallpaper_image']")
+
 
         skinsbe_src = [li.get('src', None) for li in src_links]
 

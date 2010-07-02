@@ -26,6 +26,8 @@ from pyimg import *
 
 # The regexp we'll need to find the link
 rSharenxsThumb = re.compile("http://(www\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
+# regexp matching a http:// url
+rSharenxsUrl = re.compile("http://(www\.)?sharenxs\.com", re.IGNORECASE)
 
 
 values = {}
@@ -53,9 +55,12 @@ def sharenxs_parse(link):
         view_links = page.xpath("//center/table/tr/td/table/tr/td[@align='center']/a[@href]")
 
         sharenxs_view = [li.get('href', None) for li in view_links]
+        
+        # list comprehension to check that just the url will be fed to request2
+        sharenxs_url = [u for u in sharenxs_view if rSharenxsUrl.search(u)]
 
         # opening the page with the full-sized image
-        request2 = urllib2.Request(sharenxs_view[1], data, headers)
+        request2 = urllib2.Request(sharenxs_url[0], data, headers)
         try:
             response2 = urllib2.urlopen(request2)
         except urllib2.HTTPError as e:
