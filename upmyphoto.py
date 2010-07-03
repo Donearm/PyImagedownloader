@@ -57,8 +57,8 @@ def upmyphoto_parse(link):
         upmyphoto_src = [li.get('src', None) for li in src_links]
 
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('/img/dir[0-9]+', upmyphoto_src[0])
-        savefile = basedir + str(save_extension[1])
+        save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', upmyphoto_src[0])
+        savefile = basedir + str(save_extension[-1])
 
         download_url = upmyphoto_src[0]
         # finally save the image on the desidered directory
