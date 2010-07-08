@@ -43,7 +43,7 @@ class HttpConnector():
         self.rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
         self. rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
-    def url_connect(self, url, moveon=0, useragent, timeout, debug=0):
+    def url_connect(self, url, useragent, timeout, debug=0, moveon=0):
         """connect to a url, get the page and return it"""
 
         # various default variables
