@@ -24,7 +24,8 @@ from urllib import urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
-from http_connector import get_request
+#from http_connector import get_request
+import http_connector
 
 
 
@@ -45,4 +46,5 @@ def bellazon_parse(link):
     if rBellazon.search(str(link)):
         bellazon_list.append(link['href'])
 
-        response = get_request(link, headers)
+        connector = HttpConnector()
+        response = connector.get_request(link, headers)
