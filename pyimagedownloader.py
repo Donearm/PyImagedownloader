@@ -35,7 +35,8 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg
-from http_connector import *
+#from http_connector import *
+import http_connector
 # importing config file variables
 from pyimg import basedir, user_agent
 
@@ -114,8 +115,8 @@ class ImageHostParser():
                 uppix.uppix_parse(stringl)
                 n = n + 1
             elif rBellazon.search(stringl):
-                not_supported('Bellazon')
-                #bellazon.bellazon_parse(L)
+                #not_supported('Bellazon')
+                bellazon.bellazon_parse(L)
                 n = n + 1
             elif rSkinsBe.search(stringl):
                 skinsbe.skinsbe_parse(stringl)
@@ -185,7 +186,8 @@ def not_supported(host):
 
 if __name__ == "__main__":
     (poster, embed, savedirectory, url) = argument_parser()
-    Rpage = http_connector(url[0])
+    connector = http_connector.HttpConnector(url[0], user_agent)
+    Rpage = connector.url_connect(url[0])
 
     if savedirectory:
         # directory given on the command line?

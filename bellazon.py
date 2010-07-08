@@ -46,5 +46,5 @@ def bellazon_parse(link):
     if rBellazon.search(str(link)):
         bellazon_list.append(link['href'])
 
-        connector = HttpConnector()
+        connector = HttpConnector(link, user_agent)
         response = connector.get_request(link, headers)

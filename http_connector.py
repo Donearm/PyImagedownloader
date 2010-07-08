@@ -38,12 +38,13 @@ class HttpConnector():
     """Class to do all sorts of operations on an url, debugging, login, POST and GET
     HTTP requests and so on"""
 
-    def __init__(self, url):
+    def __init__(self, url, useragent):
         self.url = url
+        self.useragent = useragent
         self.rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
-        self. rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
+        self.rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
-    def url_connect(self, url, useragent, timeout, debug=0, moveon=0):
+    def url_connect(self, url, timeout=60, debug=0, moveon=0):
         """connect to a url, get the page and return it"""
 
         # various default variables
@@ -55,9 +56,9 @@ class HttpConnector():
         # set a cookie handler and install the opener
         self.cj = CookieJar()
         if debug == 1:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), urllib2.HTTPHandler(debuglevel=1))
+            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPHandler(debuglevel=1))
         else:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         urllib2.install_opener(self.opener)
 
         # For some sites we need to log-in first...
@@ -69,10 +70,10 @@ class HttpConnector():
         # Check which kind of HTTP request we are going to do
         if self.values:
             # if there are any values it's a POST request
-            response = self.post_request(url, self.data, useragent)
+            response = self.post_request(url, self.data, self.useragent)
         else:
             # no values, then GET request
-            response = self.get_request(url, useragent)
+            response = self.get_request(url)
 
         #print(self.cj.make_cookies(response, request)) # show the cookies
 
@@ -81,7 +82,7 @@ class HttpConnector():
         return Rpage
 
 
-    def post_request(url, data, headers):
+    def post_request(self, url, data, headers):
         request = urllib2.Request(url, data, headers)
         try:
             response = urllib2.urlopen(request)
@@ -97,9 +98,9 @@ class HttpConnector():
             print(e.reason)
             sys.exit(1)
 
-    def get_request(url, useragent=self.useragent):
+    def get_request(self, url):
         request = urllib2.Request(url)
-        request.add_header('User-Agent', useragent)
+        request.add_header('User-Agent', self.useragent)
         try:
             response = urllib2.urlopen(request)
             return response
@@ -115,7 +116,7 @@ class HttpConnector():
     def site_login(self, url, opener):
         """check if it's a site or forum for which we have login credentials. If yes, do
         the log-in and return a request for the original url after the process"""
-        if rUsemycomputer.search(url):
+        if self.rUsemycomputer.search(url):
             # Login to Usemycomputer forum
             self.login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
             values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
@@ -125,7 +126,7 @@ class HttpConnector():
             # second request to the login2 page
             request2 = urllib2.Request(self.login2_page, data)
             response1 = opener(request2)
-        elif rImc.search(url):
+        elif self.rImc.search(url):
             # Login to IMC website
             self.login_page = 'http://project-xtapes.com/main/magazine/login.php'
             values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}

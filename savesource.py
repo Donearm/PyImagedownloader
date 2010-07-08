@@ -29,7 +29,8 @@ from urllib import urlretrieve
 import lxml.html
 #from BeautifulSoup import BeautifulSoup
 from pyimg import *
-from http_connector import get_request
+#from http_connector import get_request
+import http_connector
 
 
 # The regexp we'll need to find the link
@@ -74,7 +75,8 @@ def save_source(page, creditor=""):
     """ the method to save the original page link to a file """
 
     # get the page's title
-    response = get_request(page, user_agent)
+    connector = http_connector.HttpConnector(page, user_agent)
+    response = connector.get_request(page)
 
     page_title = response.read()
 
