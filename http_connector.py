@@ -112,7 +112,6 @@ class HttpConnector():
             sys.exit(1)
 
 
-
     def site_login(self, url, opener):
         """check if it's a site or forum for which we have login credentials. If yes, do
         the log-in and return a request for the original url after the process"""

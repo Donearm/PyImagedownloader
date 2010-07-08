@@ -22,7 +22,7 @@ from urllib import urlencode, urlretrieve
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import *
-#from http_connector import get_request
+import http_connector
 
 
 # The regexp we'll need to find the link
@@ -39,14 +39,15 @@ def imagebam_parse(link):
     imagebam_list.append(link)
     for i in imagebam_list:
         # get every page linked from the imagebam links
-        #response = get_request(i)
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
+        connector = http_connector.HttpConnector(i, user_agent)
+        response = connector.get_request(i)
+        #request = urllib2.Request(i, data, headers)
+        #try:
+        #    response = urllib2.urlopen(request)
+        #except urllib2.HTTPError as e:
+        #    break
+        #except urllib2.URLError as e:
+        #    break
 
         image_page = response.read()
         #image_page = myopener.open(i).read()
