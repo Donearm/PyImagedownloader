@@ -34,41 +34,45 @@ data = urlencode(values)
 
 
 def imagebam_parse(link):
-    imagebam_list = [] # the list that will contain the href tags
+    #imagebam_list = [] # the list that will contain the href tags
     #imagebam_list.append(link['href'])
-    imagebam_list.append(link)
-    for i in imagebam_list:
-        # get every page linked from the imagebam links
-        #response = get_request(i)
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
+    #imagebam_list.append(link)
+    #for i in imagebam_list:
+    # get every page linked from the imagebam links
+    #response = get_request(i)
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+        #break
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
+        #break
 
-        image_page = response.read()
-        #image_page = myopener.open(i).read()
-        #page_soup = BeautifulSoup(image_page)
-        page = lxml.html.fromstring(image_page)
+    image_page = response.read()
+    #image_page = myopener.open(i).read()
+    #page_soup = BeautifulSoup(image_page)
+    page = lxml.html.fromstring(image_page)
 
-        # find the src attribute which contains the real link of imagebam's images
-        #src_links = page_soup.findAll('img', src=rSrcImagebam)
-        src_links = page.xpath("//img[@onclick='scale(this);']")
+    # find the src attribute which contains the real link of imagebam's images
+    #src_links = page_soup.findAll('img', src=rSrcImagebam)
+    src_links = page.xpath("//img[@onclick='scale(this);']")
 
-        imagebam_src = [li.get('src', None) for li in src_links]
+    imagebam_src = [li.get('src', None) for li in src_links]
 
-        # get the image name from the id tag
-        imagename = [li.get('id', None) for i in src_links]
+    # get the image name from the id tag
+    imagename = [li.get('id', None) for i in src_links]
 
-        imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
-        download_url = imagebam_src[0]
-        # generate just the filename of the image to be locally saved
-        # not needed anymore since getting the name from the id tag
-        #savefile = basedir + str(imagebam_split[1]) + ".jpg"
-        savefile = basedir + str(imagename[0])
+    imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
+    download_url = imagebam_src[0]
+    # generate just the filename of the image to be locally saved
+    # not needed anymore since getting the name from the id tag
+    #savefile = basedir + str(imagebam_split[1]) + ".jpg"
+    savefile = basedir + str(imagename[0])
 
-        # finally save the image in the desidered directory
-        urlretrieve(download_url, savefile) 
+    # finally save the image in the desidered directory
+    urlretrieve(download_url, savefile) 
 
