@@ -92,7 +92,7 @@ def imagevenue_parse(link):
     except IndexError:
         # if we get an IndexError just continue (it may means that the image
         # can't be downloaded from the server or there is a host's glitch
-        continue
+        pass
 
     # generate just the filename of the image to be locally saved
     save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 

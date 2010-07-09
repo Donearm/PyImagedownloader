@@ -46,6 +46,7 @@ def imageshack_parse(link):
             # we could be dealing with an url which is already the image url
             # let's download it right away then
             imageshack_download(rImageshackSplit, link)
+            return
         else:
             print("An image couldn't be downloaded")
             return
