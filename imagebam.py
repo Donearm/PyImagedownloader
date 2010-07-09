@@ -34,26 +34,18 @@ data = urlencode(values)
 
 
 def imagebam_parse(link):
-    #imagebam_list = [] # the list that will contain the href tags
-    #imagebam_list.append(link['href'])
-    #imagebam_list.append(link)
-    #for i in imagebam_list:
     # get every page linked from the imagebam links
-    #response = get_request(i)
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
         print("An image couldn't be downloaded")
         return
-        #break
     except urllib2.URLError as e:
         print("An image couldn't be downloaded")
         return
-        #break
 
     image_page = response.read()
-    #image_page = myopener.open(i).read()
     #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 

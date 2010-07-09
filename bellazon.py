@@ -36,13 +36,5 @@ rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 
 def bellazon_parse(link):
-    bellazon_list = []
-    #bellazon_list.append(page.findAll('a', title=rJpgSrc))
-    #bellazon_href = []
-    #for li in bellazon_href:
-    #    bellazon_href.append(li['href'])
-    #    print li
     if rBellazon.search(str(link)):
-        bellazon_list.append(link['href'])
-
         response = get_request(link, headers)

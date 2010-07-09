@@ -30,21 +30,16 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def photobucket_parse(link):
-    photobucket_list = [] # the list that will contain the href tags
-    photobucket_list.append(link)
+    try:
+        # generate just the filename of the image to be locally saved
+        save_extension = re.split('/', link)
 
-    for i in photobucket_list:
-    
-        try:
-            # generate just the filename of the image to be locally saved
-            save_extension = re.split('/', link)
-
-            savefile = basedir + save_extension[-1]
-            download_url = link
-            # finally save the image on the desidered directory
-            urlretrieve(download_url, savefile) 
-        except IndexError:
-            break
+        savefile = basedir + save_extension[-1]
+        download_url = link
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+    except IndexError:
+        return
 
 
 

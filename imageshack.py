@@ -38,39 +38,36 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def imageshack_parse(link):
-    imageshack_list = [] # the list that will contain the href tags
-    #imageshack_list.append(link['href'])
-    imageshack_list.append(link)
-    for i in imageshack_list:
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            if e.code == 405:
-                # we could be dealing with an url which is already the image url
-                # let's download it right away then
-                imageshack_download(rImageshackSplit, i)
-                break
-            else:
-                break
-        except urllib2.URLError as e:
-            break
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        if e.code == 405:
+            # we could be dealing with an url which is already the image url
+            # let's download it right away then
+            imageshack_download(rImageshackSplit, link)
+        else:
+            print("An image couldn't be downloaded")
+            return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
 
-        # get every page linked from the imageshack links
-        image_page = response.read()
-        #page_soup = BeautifulSoup(image_page)
-        page = lxml.html.fromstring(image_page)
+    # get every page linked from the imageshack links
+    image_page = response.read()
+    #page_soup = BeautifulSoup(image_page)
+    page = lxml.html.fromstring(image_page)
 
-        # find the src attribute which contains the real link of imageshack's images
-        #src_links = page_soup.findAll('img', src=rSrcImageshack)
-        src_links = page.xpath("//img[@id='main_image']")
+    # find the src attribute which contains the real link of imageshack's images
+    #src_links = page_soup.findAll('img', src=rSrcImageshack)
+    src_links = page.xpath("//img[@id='main_image']")
 
-        imageshack_src = [li.get('src', None) for li in src_links]
+    imageshack_src = [li.get('src', None) for li in src_links]
 
-        try:
-            imageshack_download('/i/', i, imageshack_src[0], 1)            
-        except IndexError:
-            break
+    try:
+        imageshack_download('/i/', link, imageshack_src[0], 1)            
+    except IndexError:
+        return
 
 def imageshack_download(regexp, url, src="", htmlpage=0):
     """downloader function for imageshack links. It needs a regexp for re.split
