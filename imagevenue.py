@@ -94,9 +94,9 @@ def imagevenue_parse(link):
         # can't be downloaded from the server or there is a host's glitch
         pass
 
-    # generate just the filename of the image to be locally saved
-    save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
     try:
+        # generate just the filename of the image to be locally saved
+        save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
         savefile = basedir + str(save_extension[-1])
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
