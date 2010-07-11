@@ -100,7 +100,6 @@ class ImageHostParser():
                 imagevenue.imagevenue_parse(stringl, basedir)
                 n = n + 1
             elif rImagebam.search(stringl):
-                print(basedir)
                 imagebam.imagebam_parse(stringl, basedir)
                 n = n + 1
             elif rImagehaven.search(stringl):
@@ -203,5 +202,5 @@ if __name__ == "__main__":
         parser.which_host('img', 'src')
 
     # Generate the directory for the source file and the images downloaded
-    savesource.save_source(url[0], creditor=poster)
+    savesource.save_source(url[0], basedir, creditor=poster)
     sys.exit(0)

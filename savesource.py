@@ -93,7 +93,7 @@ def save_source(page, basedir, creditor=""):
 
     print(neat_title)
 
-    output_dir = basedir + neat_title
+    output_dir = join(basedir, neat_title)
 
     if os.path.isdir(output_dir):
         os.chdir(output_dir)
