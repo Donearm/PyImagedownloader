@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -28,7 +29,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def imageupper_parse(link):
+def imageupper_parse(link, basedir):
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
@@ -51,7 +52,7 @@ def imageupper_parse(link):
         # generate just the filename of the image to be locally saved
         save_extension = re.split('[0-9]+/[0-9]+/', imageupper_src[0])
 
-        savefile = basedir + save_extension[-1]
+        savefile = join(basedir, save_extension[-1])
         download_url = imageupper_src[0]
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 

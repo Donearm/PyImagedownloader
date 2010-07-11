@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve 
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 values = {}
@@ -28,7 +29,7 @@ headers = {'User-Agent': user_agent}
 data = urlencode(values)
 
 
-def imagehostorg_parse(link):
+def imagehostorg_parse(link, basedir):
     # get every page linked from the imagehostorg links
     request = urllib2.Request(link, data, headers)
     try:
@@ -55,7 +56,7 @@ def imagehostorg_parse(link):
         imagehostorg_split = re.split('/', link)
         download_url = re.sub('view', 'secure', link)
 
-        savefile = basedir + str(imagehostorg_split[-1])
+        savefile = join(basedir, str(imagehostorg_split[-1]))
 
         urlretrieve(download_url, savefile)
     else:
@@ -63,7 +64,7 @@ def imagehostorg_parse(link):
         imagehostorg_split = re.split('/', imagehostorg_src[0]) # remove the unneeded parts
         download_url = imagehostorg_src[0]
         # generate just the filename of the image to be locally saved
-        savefile = basedir + str(imagehostorg_split[-1])
+        savefile = join(basedir, str(imagehostorg_split[-1]))
 
         # finally save the image in the desidered directory
         urlretrieve(download_url, savefile) 

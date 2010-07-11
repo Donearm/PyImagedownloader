@@ -20,9 +20,10 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
+from os.path import join
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -40,7 +41,7 @@ opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 urllib2.install_opener(opener)
 
 
-def imagehaven_parse(link):
+def imagehaven_parse(link, basedir):
     # get every page linked from the imagehaven links
     request = urllib2.Request(link, data, headers)
     try:
@@ -79,6 +80,6 @@ def imagehaven_parse(link):
 
     # generate just the filename of the image to be locally saved
     save_extension = re.split('\./images/[0-9A-Za-z]+/[0-9A-Za-z]+/', imagehaven_src[0]) 
-    savefile = basedir + str(save_extension[1])
+    savefile = join(basedir, str(save_extension[1]))
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 

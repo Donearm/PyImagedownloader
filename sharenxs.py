@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
@@ -35,7 +36,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def sharenxs_parse(link):
+def sharenxs_parse(link, basedir):
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
@@ -81,7 +82,7 @@ def sharenxs_parse(link):
     if len(sharenxs_wz) is not 0:
         try:
             save_extension = re.split('/', str(sharenxs_wz[0]))
-            savefile = basedir + str(save_extension[-1])
+            savefile = join(basedir, str(save_extension[-1]))
             download_url = str(sharenxs_wz[0])
             urlretrieve(download_url, savefile)
         except IndexError:
@@ -93,7 +94,7 @@ def sharenxs_parse(link):
         try:
             # get the extension for the filename
             save_extension = re.split('nxs-', sharenxs_src[0])
-            savefile = basedir + str(save_extension[1])
+            savefile = join(basedir, str(save_extension[1]))
             # pick just the src's url part we need
             sharenxs_split = re.split('thumbnails/sf/', save_extension[0])
             # and compose the full-sized image url

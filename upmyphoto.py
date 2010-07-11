@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
@@ -32,7 +33,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def upmyphoto_parse(link):
+def upmyphoto_parse(link, basedir):
     # get every page linked from the upmyphoto links
     request = urllib2.Request(link, data, headers)
     try: 
@@ -56,7 +57,7 @@ def upmyphoto_parse(link):
 
     # generate just the filename of the image to be locally saved
     save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', upmyphoto_src[0])
-    savefile = basedir + str(save_extension[-1])
+    savefile = join(basedir, str(save_extension[-1]))
 
     download_url = upmyphoto_src[0]
     # finally save the image on the desidered directory

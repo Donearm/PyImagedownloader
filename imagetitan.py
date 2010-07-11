@@ -19,23 +19,21 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve 
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
 rSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
-
-# Our base directory
-basedir = '/mnt/documents/Maidens/Uploads/'
 
 values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 
-def imagetitan_parse(link):
+def imagetitan_parse(link, basedir):
     # get every page linked from the imagetitan links
     request = urllib2.Request(link, data, headers)
     try:
@@ -64,7 +62,7 @@ def imagetitan_parse(link):
     imggrp = imgtitanmatch.group(1) # the 'img[0-9]'
 
     # generate just the filename of the image to be locally saved
-    savefile = basedir + imgname
+    savefile = join(basedir, imgname)
     # generate the url of the image
     download_url = 'http://' + imggrp + '.imagetitan.com/' + imggrp + imgmiddle + imgname
     # finally save the image on the desidered directory

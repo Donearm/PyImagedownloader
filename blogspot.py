@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # Regexp needed for the src links
@@ -31,7 +32,7 @@ values = {}
 headers = {'User-Agent': user_agent}
 data = urlencode(values)
 
-def blogspot_parse(link):
+def blogspot_parse(link, basedir):
     #response = post_request(i, data, headers)
     request = urllib2.Request(link, data, headers)
     try:
@@ -50,7 +51,7 @@ def blogspot_parse(link):
     #save_extension = re.split('(/[0-9A-Za-z_-]+/)*', blogspot_src[0])
     save_extension = re.split('/s1600/', link)
 
-    savefile = basedir + str(save_extension[-1])
+    savefile = join(basedir, str(save_extension[-1]))
 
     download_url = link
     # finally save the image on the desidered directory

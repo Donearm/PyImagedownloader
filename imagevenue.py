@@ -20,9 +20,10 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -40,7 +41,7 @@ cj = CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 urllib2.install_opener(opener)
 
-def imagevenue_parse(link):
+def imagevenue_parse(link, basedir):
     """For parsing normal imagevenue's links"""
 
     request = urllib2.Request(link, data, headers)
@@ -103,7 +104,7 @@ def imagevenue_parse(link):
     try:
         # generate just the filename of the image to be locally saved
         save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
-        savefile = basedir + str(save_extension[-1])
+        savefile = join(basedir, str(save_extension[-1]))
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
     except IndexError:

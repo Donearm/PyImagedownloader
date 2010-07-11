@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -29,7 +30,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def storeimgs_parse(link):
+def storeimgs_parse(link, basedir):
     # get every page linked from the storeimgs links
 
     # make the image url by a couple of substitution and then using a split
@@ -44,6 +45,6 @@ def storeimgs_parse(link):
     # generate just the filename of the image to be locally saved
     save_extension = storeimgs_split[1]
 
-    savefile = basedir + save_extension
+    savefile = join(basedir, save_extension)
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 

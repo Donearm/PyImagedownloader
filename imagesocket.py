@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -29,7 +30,7 @@ values = { 'month': '01', 'day' : '1', 'year' : '1978', 'verifyAge' : 'Confirm'}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values, 1)
 
-def imagesocket_parse(link):
+def imagesocket_parse(link, basedir):
     # supply the age verification informations before the first file
     #
     # splitting the url to get only the file name
@@ -60,7 +61,7 @@ def imagesocket_parse(link):
         # generate just the filename of the image to be locally saved
         save_extension = re.split('images/', imagesocket_src[0])
 
-        savefile = basedir + save_extension[-1]
+        savefile = join(basedir, save_extension[-1])
         download_url = imagesocket_src[0]
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 

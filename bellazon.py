@@ -23,7 +23,7 @@ from socket import setdefaulttimeout
 from urllib import urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 from http_connector import get_request
 
 
@@ -35,6 +35,6 @@ rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 
 
-def bellazon_parse(link):
+def bellazon_parse(link, basedir):
     if rBellazon.search(str(link)):
         response = get_request(link, headers)

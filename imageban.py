@@ -19,7 +19,8 @@ __email__ = "forod.g@gmail.com"
 import re
 from urllib import urlencode, urlretrieve 
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
+from os.path import join
 
 
 values = {}
@@ -27,13 +28,13 @@ headers = {'User-Agent': user_agent}
 data = urlencode(values)
 
 
-def imageban_parse(link):
+def imageban_parse(link, basedir):
     imageban_split = re.split('/', link) # get the image file name
 
     download_url = link
 
     # generate the save file name
-    savefile = basedir + str(imageban_split[-1])
+    savefile = join(basedir, str(imageban_split[-1]))
 
     # finally save the image in the desidered directory
     urlretrieve(download_url, savefile) 

@@ -23,12 +23,12 @@ import urllib
 import urllib2
 import string
 import htmlentitydefs
-from os.path import splitext
+from os.path import splitext, join
 from urlparse import urlparse
 from urllib import urlretrieve
 import lxml.html
 #from BeautifulSoup import BeautifulSoup
-from pyimg import *
+from pyimg import user_agent
 from http_connector import get_request
 
 
@@ -70,7 +70,7 @@ def decode_htmlentities(s):
 
 
 
-def save_source(page, creditor=""):
+def save_source(page, basedir, creditor=""):
     """ the method to save the original page link to a file """
 
     # get the page's title
@@ -118,8 +118,8 @@ def save_source(page, creditor=""):
     files_in_basedir = os.listdir(basedir)
     for f in files_in_basedir:
         if rImages.search(f):
-            src_name = os.path.join(basedir, f)
-            dst_name = os.path.join(output_dir, f)
+            src_name = join(basedir, f)
+            dst_name = join(output_dir, f)
             # extract the files' extension and make sure all the files have
             # it as lowercase
             dst_filename, dst_ext = splitext(dst_name)

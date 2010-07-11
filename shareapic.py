@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
@@ -32,7 +33,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def shareapic_parse(link):
+def shareapic_parse(link, basedir):
     # get every page linked from the shareapic links
     request = urllib2.Request(link, data, headers)
     try:
@@ -60,7 +61,7 @@ def shareapic_parse(link):
     download_url = shareapic_fullsize[0]
     # generate just the filename of the image to be locally saved
     save_extension = re.split('fullsize[0-9]', shareapic_fullsize[0]) 
-    savefile = basedir + str(save_extension[1])
+    savefile = join(basedir, str(save_extension[1]))
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 
 

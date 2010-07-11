@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -30,7 +31,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def postimage_parse(link):
+def postimage_parse(link, basedir):
     #TODO: currently this doesn't work, urlretrieve doesn't download the full image
     # but block itself with an Http error 405 "not allowed". Using POST or GET or checking
     # the Content-Length header doesn't resolve the issue.
@@ -71,7 +72,7 @@ def postimage_parse(link):
         save_extension = postimage_alt[0]
 
         #savefile = basedir + str(save_extension[1])
-        savefile = basedir + save_extension
+        savefile = join(basedir, save_extension)
         download_url = postimage_src[0]
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 

@@ -19,10 +19,11 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import random
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import basedir, user_agent
+from pyimg import user_agent
 
 
 
@@ -37,7 +38,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def imageshack_parse(link):
+def imageshack_parse(link, basedir):
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
@@ -66,11 +67,11 @@ def imageshack_parse(link):
     imageshack_src = [li.get('src', None) for li in src_links]
 
     try:
-        imageshack_download('/i/', link, imageshack_src[0], 1)            
+        imageshack_download('/i/', link, basedir, imageshack_src[0], 1)            
     except IndexError:
         return
 
-def imageshack_download(regexp, url, src="", htmlpage=0):
+def imageshack_download(regexp, url, basedir, src="", htmlpage=0):
     """downloader function for imageshack links. It needs a regexp for re.split
     and of course the url of an imageshack hosted image
     htmlpage is optional and it's to be enabled only for imageshack's pages
@@ -84,10 +85,10 @@ def imageshack_download(regexp, url, src="", htmlpage=0):
         # generate a random number; if not, the images will have the same save_extension[1]
         # and will overwrite each other   
         num = random.randrange(1,1000)
-        savefile = basedir + str(num) + str(save_extension[1]).replace('/', '')
+        savefile = join(basedir, str(num) + str(save_extension[1]).replace('/', ''))
     else:
         download_url = url
-        savefile = basedir + str(save_extension[1])
+        savefile = join(basedir, str(save_extension[1]))
 
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 

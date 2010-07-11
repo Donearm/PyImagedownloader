@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -29,7 +30,7 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def skinsbe_parse(link):
+def skinsbe_parse(link, basedir):
     # get every page linked from the skinsbe links
     request = urllib2.Request(link, data, headers)
     try:
@@ -54,7 +55,7 @@ def skinsbe_parse(link):
 
     # generate just the filename of the image to be locally saved
     save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
-    savefile = basedir + save_extension
+    savefile = join(basedir, save_extension)
 
     download_url = skinsbe_src[0]
     # finally save the image on the desidered directory

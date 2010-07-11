@@ -39,9 +39,8 @@ rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
 
-def http_connector(url, moveon=0):
+def connector(url, moveon=0):
     """connect to a url, get the page and return it"""
-
 
     # Some variables for the connection
     values = {}

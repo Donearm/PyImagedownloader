@@ -35,7 +35,8 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg
-from http_connector import *
+#from http_connector import *
+import http_connector
 # importing config file variables
 from pyimg import basedir, user_agent
 
@@ -96,63 +97,64 @@ class ImageHostParser():
             #stringl = str(L)
             stringl = str(L.get(attr, None))
             if rImagevenue.search(stringl):
-                imagevenue.imagevenue_parse(stringl)
+                imagevenue.imagevenue_parse(stringl, basedir)
                 n = n + 1
             elif rImagebam.search(stringl):
-                imagebam.imagebam_parse(stringl)
+                print(basedir)
+                imagebam.imagebam_parse(stringl, basedir)
                 n = n + 1
             elif rImagehaven.search(stringl):
-                imagehaven.imagehaven_parse(stringl)
+                imagehaven.imagehaven_parse(stringl, basedir)
                 n = n + 1
             elif rImageshack.search(stringl):
-                imageshack.imageshack_parse(stringl)
+                imageshack.imageshack_parse(stringl, basedir)
                 n = n + 1
             elif rUpmyphoto.search(stringl):
-                upmyphoto.upmyphoto_parse(stringl)
+                upmyphoto.upmyphoto_parse(stringl, basedir)
                 n = n + 1
             elif rUppix.search(stringl):
-                uppix.uppix_parse(stringl)
+                uppix.uppix_parse(stringl, basedir)
                 n = n + 1
             elif rBellazon.search(stringl):
                 not_supported('Bellazon')
-                #bellazon.bellazon_parse(L)
+                #bellazon.bellazon_parse(L, basedir)
                 n = n + 1
             elif rSkinsBe.search(stringl):
-                skinsbe.skinsbe_parse(stringl)
+                skinsbe.skinsbe_parse(stringl, basedir)
                 n = n + 1
             elif rShareapic.search(stringl):
-                shareapic.shareapic_parse(stringl)
+                shareapic.shareapic_parse(stringl, basedir)
                 n = n + 1
             elif rStoreimgs.search(stringl):
-                storeimgs.storeimgs_parse(stringl)
+                storeimgs.storeimgs_parse(stringl, basedir)
                 n = n + 1
             elif rImagetitan.search(stringl):
-                imagetitan.imagetitan_parse(stringl)
+                imagetitan.imagetitan_parse(stringl, basedir)
                 n = n + 1
             elif rSharenxs.search(stringl):
-                sharenxs.sharenxs_parse(stringl)
+                sharenxs.sharenxs_parse(stringl, basedir)
                 n = n + 1
             elif rBlogspot.search(stringl):
-                blogspot.blogspot_parse(stringl)
+                blogspot.blogspot_parse(stringl, basedir)
                 n = n + 1
             elif rPostimage.search(stringl):
                 not_supported('Postimage')
-                #postimage.postimage_parse(stringl)
+                #postimage.postimage_parse(stringl, basedir)
                 n = n + 1
             elif rImageUpper.search(stringl):
-                imageupper.imageupper_parse(stringl)
+                imageupper.imageupper_parse(stringl, basedir)
                 n = n + 1
             elif rImageSocket.search(stringl):
-                imagesocket.imagesocket_parse(stringl)
+                imagesocket.imagesocket_parse(stringl, basedir)
                 n = n + 1
             elif rPhotobucket.search(stringl):
-                photobucket.photobucket_parse(stringl)
+                photobucket.photobucket_parse(stringl, basedir)
                 n = n + 1
             elif rImageban.search(stringl):
-                imageban.imageban_parse(stringl)
+                imageban.imageban_parse(stringl, basedir)
                 n = n + 1
             elif rImagehostorg.search(stringl):
-                imagehostorg.imagehostorg_parse(stringl)
+                imagehostorg.imagehostorg_parse(stringl, basedir)
                 n = n + 1
             else:
                 continue
@@ -185,12 +187,11 @@ def not_supported(host):
 
 if __name__ == "__main__":
     (poster, embed, savedirectory, url) = argument_parser()
-    Rpage = http_connector(url[0])
+    Rpage = http_connector.connector(url[0])
 
     if savedirectory:
         # directory given on the command line?
         basedir = abspath(savedirectory)
-        print(basedir)
 
     # Parse the page for images
     parser = ImageHostParser(Rpage, 'a', 'href')
