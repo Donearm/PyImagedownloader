@@ -53,14 +53,20 @@ def imagevenue_parse(link):
             realurl = rRedirects3.sub('img.php', response.geturl())
             try:
                 response = urllib2.urlopen(realurl)
-            except urllib2.URLError as e:
+            except urllib2.HTTPError as e:
                 if e.code == 404:
                     print("An image couldn't be downloaded")
                     return
-    except urllib2.URLError as e:
+            except urllib2.URLError as e:
+                print(e.reason)
+                return
+    except urllib2.HTTPError as e:
         if e.code == 404:
             print("An image couldn't be downloaded")
             return
+    except urllib2.URLError as e:
+        print(e.reason)
+        return
 
     # get every page linked from the imagevenue links, removing those
     # damned '<scr'+'ipt>' tags
