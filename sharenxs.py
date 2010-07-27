@@ -53,10 +53,24 @@ def sharenxs_parse(link, basedir):
     # find the src attribute which contains the real link of sharenxs's images
     view_links = page.xpath("//center/table/tr/td/table/tr/td[@align='center']/a[@href]")
 
+
     sharenxs_view = [li.get('href', None) for li in view_links]
     
     # list comprehension to check that just the url will be fed to request2
     sharenxs_url = [u for u in sharenxs_view if rSharenxsUrl.search(u)]
+
+    if len(sharenxs_url) is 0:
+        # perhaps we are already on the page with the full image
+        view_links = page.xpath("//center/table/tr/td[@align='center']/a[@href]/img")
+        src_link = [li.get('src', None) for li in view_links]
+        try:
+            save_extension = re.split('/', str(src_link[0]))
+            savefile = join(basedir, str(save_extension[-1]))
+            download_url = str(src_link[0])
+            urlretrieve(download_url, savefile)
+            return
+        except IndexError:
+            return
 
     # opening the page with the full-sized image
     request2 = urllib2.Request(sharenxs_url[0], data, headers)
