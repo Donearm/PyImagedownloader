@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -28,34 +29,32 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def imageupper_parse(link):
-    imageupper_list = [] # the list that will contain the href tags
-    imageupper_list.append(link)
-    for i in imageupper_list:
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
+def imageupper_parse(link, basedir):
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
 
-        # get every page linked from the imageupper links
-        image_page = response.read()
-        page = lxml.html.fromstring(image_page)
+    # get every page linked from the imageupper links
+    image_page = response.read()
+    page = lxml.html.fromstring(image_page)
 
-        src_links = page.xpath("//img[@id='img']")
-        imageupper_src = [li.get('src', None) for li in src_links]
-
+    src_links = page.xpath("//img[@id='img']")
+    imageupper_src = [li.get('src', None) for li in src_links]
 
 
-        try:
-            # generate just the filename of the image to be locally saved
-            save_extension = re.split('[0-9]+/[0-9]+/', imageupper_src[0])
+    try:
+        # generate just the filename of the image to be locally saved
+        save_extension = re.split('[0-9]+/[0-9]+/', imageupper_src[0])
 
-            savefile = basedir + save_extension[-1]
-            download_url = imageupper_src[0]
-            # finally save the image on the desidered directory
-            urlretrieve(download_url, savefile) 
-        except IndexError:
-            break
+        savefile = join(basedir, save_extension[-1])
+        download_url = imageupper_src[0]
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+    except IndexError:
+        return

@@ -19,9 +19,10 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
@@ -32,37 +33,35 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def shareapic_parse(link):
-    shareapic_list = [] # the list that will contain the href tags
-    #shareapic_list.append(link['href'])
-    shareapic_list.append(link)
-    for i in shareapic_list:
-        # get every page linked from the shareapic links
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
-        
-        image_page = response.read()
-        #page_soup = BeautifulSoup(image_page)
-        page = lxml.html.fromstring(image_page)
+def shareapic_parse(link, basedir):
+    # get every page linked from the shareapic links
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
+    
+    image_page = response.read()
+    #page_soup = BeautifulSoup(image_page)
+    page = lxml.html.fromstring(image_page)
 
-        # find the src attribute which contains the real link of shareapic's images
-        #src_links = page_soup.findAll('img', src=rSrcShareapic)
-        src_links = page.xpath("//img[@title='Click to zoom! ::']")
-        shareapic_fullsize = []
-        for li in src_links:
-            fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
-            #fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li['src'])
-            shareapic_fullsize.append(fullsize_li) # add all the src part to a list
+    # find the src attribute which contains the real link of shareapic's images
+    #src_links = page_soup.findAll('img', src=rSrcShareapic)
+    src_links = page.xpath("//img[@title='Click to zoom! ::']")
+    shareapic_fullsize = []
+    for li in src_links:
+        fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
+        #fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li['src'])
+        shareapic_fullsize.append(fullsize_li) # add all the src part to a list
 
-        download_url = shareapic_fullsize[0]
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split('fullsize[0-9]', shareapic_fullsize[0]) 
-        savefile = basedir + str(save_extension[1])
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
+    download_url = shareapic_fullsize[0]
+    # generate just the filename of the image to be locally saved
+    save_extension = re.split('fullsize[0-9]', shareapic_fullsize[0]) 
+    savefile = join(basedir, str(save_extension[1]))
+    # finally save the image on the desidered directory
+    urlretrieve(download_url, savefile) 
 

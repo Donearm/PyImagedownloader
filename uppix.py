@@ -19,42 +19,41 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlretrieve, urlencode
+from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def uppix_parse(link):
-    uppix_list = [] # the list that will contain the href tags
-    #uppix_list.append(link['href'])
-    uppix_list.append(link)
-    for i in uppix_list:
-        # get every page linked from the uppix links
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
+def uppix_parse(link, basedir):
+    # get every page linked from the uppix links
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
 
-        image_page = response.read()
-        #page_soup = BeautifulSoup(image_page)
-        page = lxml.html.fromstring(image_page)
+    image_page = response.read()
+    #page_soup = BeautifulSoup(image_page)
+    page = lxml.html.fromstring(image_page)
 
-        # find the src attribute which contains the real link of uppix's images
-        #src_links = page_soup.findAll('img', id='dpic')
-        src_links = page.xpath("//img[@id='dpic']")
+    # find the src attribute which contains the real link of uppix's images
+    #src_links = page_soup.findAll('img', id='dpic')
+    src_links = page.xpath("//img[@id='dpic']")
 
-        uppix_src = [li.get('src', None) for li in src_links]
+    uppix_src = [li.get('src', None) for li in src_links]
 
-        # generate just the filename of the image to be locally saved
-        save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 
-        uppix_sub = re.sub('Viewer[a-zA-Z]\.php\?file=', '', i)
-        savefile = basedir + save_extension
-        # finally save the image on the desidered directory
-        urlretrieve(uppix_sub, savefile) 
+    # generate just the filename of the image to be locally saved
+    save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 
+    uppix_sub = re.sub('Viewer[a-zA-Z]\.php\?file=', '', link)
+    savefile = join(basedir, save_extension)
+    # finally save the image on the desidered directory
+    urlretrieve(uppix_sub, savefile) 

@@ -23,9 +23,8 @@ from socket import setdefaulttimeout
 from urllib import urlencode
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import *
-#from http_connector import get_request
-import http_connector
+from pyimg import user_agent
+from http_connector import get_request
 
 
 
@@ -36,15 +35,6 @@ rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 
 
-def bellazon_parse(link):
-    bellazon_list = []
-    #bellazon_list.append(page.findAll('a', title=rJpgSrc))
-    #bellazon_href = []
-    #for li in bellazon_href:
-    #    bellazon_href.append(li['href'])
-    #    print li
+def bellazon_parse(link, basedir):
     if rBellazon.search(str(link)):
-        bellazon_list.append(link['href'])
-
-        connector = HttpConnector(link, user_agent)
-        response = connector.get_request(link, headers)
+        response = get_request(link, headers)

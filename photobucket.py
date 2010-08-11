@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -29,22 +30,17 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def photobucket_parse(link):
-    photobucket_list = [] # the list that will contain the href tags
-    photobucket_list.append(link)
+def photobucket_parse(link, basedir):
+    try:
+        # generate just the filename of the image to be locally saved
+        save_extension = re.split('/', link)
 
-    for i in photobucket_list:
-    
-        try:
-            # generate just the filename of the image to be locally saved
-            save_extension = re.split('/', link)
-
-            savefile = basedir + save_extension[-1]
-            download_url = link
-            # finally save the image on the desidered directory
-            urlretrieve(download_url, savefile) 
-        except IndexError:
-            break
+        savefile = join(basedir, save_extension[-1])
+        download_url = link
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+    except IndexError:
+        return
 
 
 

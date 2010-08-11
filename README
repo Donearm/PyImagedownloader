@@ -1,0 +1,42 @@
+Pyimagedownloader
+
+Purpose of this program
+----
+
+Pyimagedownloader is an image downloader written in Python. It downloads
+all the images hosted on the supported imagehosting sites (see Supported
+List) present on the given url and puts them all in a directory with the
+page title name. It's geared towards those people that download images
+to share them afterwards on their blogs or on forums. It automatically
+saves the link of the page with the images as a source to cite the
+original poster or can optionally save the name of the person to whom
+give credit to in a separate file.
+
+Installation
+----
+
+see INSTALL
+
+
+License
+----
+
+see COPYING
+
+
+Supported List
+----
+Blogspot.com
+Imagebam.com
+Imagehaven.com
+Imageshack.us
+Imagesocket.com
+Imagetitan.com
+Imageupper.com
+Imagevenue.com
+Shareapic.net
+Sharenxs.com
+Skins.be
+Storeimgs.com
+Upmyphoto.com
+Uppix.net

@@ -19,8 +19,9 @@ __email__ = "forod.g@gmail.com"
 import re
 import urllib2
 from urllib import urlencode, urlretrieve
+from os.path import join
 import lxml.html
-from pyimg import *
+from pyimg import user_agent
 
 
 
@@ -29,7 +30,7 @@ values = { 'month': '01', 'day' : '1', 'year' : '1978', 'verifyAge' : 'Confirm'}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values, 1)
 
-def imagesocket_parse(link):
+def imagesocket_parse(link, basedir):
     # supply the age verification informations before the first file
     #
     # splitting the url to get only the file name
@@ -37,32 +38,32 @@ def imagesocket_parse(link):
     age_request = urllib2.Request('http://imagesocket.com/warning/' + filename[-1], data, headers)
     age_response = urllib2.urlopen(age_request)
 
-    imagesocket_list = [] # the list that will contain the href tags
-    imagesocket_list.append(link)
-    for i in imagesocket_list:
-        request = urllib2.Request(i, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
 
-        # get every page linked from the imagesocket links
-        image_page = response.read()
-        page = lxml.html.fromstring(image_page)
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
 
-        src_links = page.xpath("//img[@id='thumb']")
-        imagesocket_src = [li.get('src', None) for li in src_links]
+    # get every page linked from the imagesocket links
+    image_page = response.read()
+    page = lxml.html.fromstring(image_page)
+
+    src_links = page.xpath("//img[@id='thumb']")
+    imagesocket_src = [li.get('src', None) for li in src_links]
 
 
-        try:
-            # generate just the filename of the image to be locally saved
-            save_extension = re.split('images/', imagesocket_src[0])
+    try:
+        # generate just the filename of the image to be locally saved
+        save_extension = re.split('images/', imagesocket_src[0])
 
-            savefile = basedir + save_extension[-1]
-            download_url = imagesocket_src[0]
-            # finally save the image on the desidered directory
-            urlretrieve(download_url, savefile) 
-        except IndexError:
-            break
+        savefile = join(basedir, save_extension[-1])
+        download_url = imagesocket_src[0]
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+    except IndexError:
+        return

@@ -34,27 +34,27 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def usercash_parse(link):    
-    usercash_list = []
-    usercash_list.append(link['href'])
-    for images in usercash_list:
-        # get every page linked from the usercash links
-        request = urllib2.Request(images, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-        except urllib2.HTTPError as e:
-            break
-        except urllib2.URLError as e:
-            break
-        image_page = response.read()
-        page_soup = BeautifulSoup(image_page)
-        # find the src attribute which contains the real link of imagevenue's images
-        src_links = page_soup.findAll('frame', src=rJpgSrc)
+    # get every page linked from the usercash links
+    request = urllib2.Request(link, data, headers)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print("An image couldn't be downloaded")
+        return
+    except urllib2.URLError as e:
+        print("An image couldn't be downloaded")
+        return
 
-        # give imagevenue_embed the correct link
-        correct_link = re.sub("^.*http", 'http', str(src_links))
-        correct_link = re.sub("&amp;ref=.*$", '', correct_link)
+    image_page = response.read()
+    page_soup = BeautifulSoup(image_page)
+    # find the src attribute which contains the real link of imagevenue's images
+    src_links = page_soup.findAll('frame', src=rJpgSrc)
 
-        if rImagevenue.search(correct_link):
-            imagevenue_embed(correct_link)
+    # give imagevenue_embed the correct link
+    correct_link = re.sub("^.*http", 'http', str(src_links))
+    correct_link = re.sub("&amp;ref=.*$", '', correct_link)
+
+    if rImagevenue.search(correct_link):
+        imagevenue_embed(correct_link)
 
 
