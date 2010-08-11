@@ -74,8 +74,7 @@ def save_source(page, basedir, creditor=""):
     """ the method to save the original page link to a file """
 
     # get the page's title
-    connector = http_connector.HttpConnector(page, user_agent)
-    response = connector.get_request(page)
+    response = get_request(page, user_agent)
 
     page_title = response.read()
 
