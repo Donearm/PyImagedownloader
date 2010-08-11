@@ -63,8 +63,12 @@ def imagebam_parse(link, basedir):
     download_url = imagebam_src[0]
     # generate just the filename of the image to be locally saved
     # not needed anymore since getting the name from the id tag
-    #savefile = basedir + str(imagebam_split[1]) + ".jpg"
-    savefile = join(basedir, str(imagename[0]))
+    try: 
+        #savefile = basedir + str(imagebam_split[1]) + ".jpg"
+        savefile = join(basedir, str(imagename[0]))
+    except UnicodeEncodeError:
+        # catch files with strange characters in name
+        savefile = join(basedir, str(imagename[0].encode("utf-8")))
 
     # finally save the image in the desidered directory
     urlretrieve(download_url, savefile) 
