@@ -117,82 +117,23 @@ def post_request(url, data, headers):
         # we were wrong, the url doesn't accept a POST, make a GET then
             response = get_request(url, user_agent)
         else:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
-        urllib2.install_opener(self.opener)
-
-        # For some sites we need to log-in first...
-        self.site_login(url, self.opener)
-
-        # encode values, if any
-        self.data = urlencode(self.values)
-
-        # Check which kind of HTTP request we are going to do
-        if self.values:
-            # if there are any values it's a POST request
-            response = self.post_request(url, self.data, self.useragent)
-        else:
-            # no values, then GET request
-            response = self.get_request(url)
-
-        #print(self.cj.make_cookies(response, request)) # show the cookies
-
-        # read the page contents and return it
-        Rpage = response.read()
-        return Rpage
-
-
-    def post_request(self, url, data, headers):
-        request = urllib2.Request(url, data, headers)
-        try:
-            response = urllib2.urlopen(request)
-            return response
-        except urllib2.HTTPError as e:
-            if e.code == 405:
-                # we were wrong, the url doesn't accept a POST, make a GET then
-                response = self.get_request(url, self.useragent)
-            else:
-                print(e.code)
-                sys.exit(1)
-        except urllib2.URLError as e:
-            print(e.reason)
-            sys.exit(1)
-
-    def get_request(self, url):
-        request = urllib2.Request(url)
-        request.add_header('User-Agent', self.useragent)
-        try:
-            response = urllib2.urlopen(request)
-            return response
-        except urllib2.HTTPError as e:
             print(e.code)
             sys.exit(1)
-        except urllib2.URLError as e:
-            print(e.reason)
-            sys.exit(1)
+    except urllib2.URLError as e:
+        print(e.reason)
 
 
-    def site_login(self, url, opener):
-        """check if it's a site or forum for which we have login credentials. If yes, do
-        the log-in and return a request for the original url after the process"""
-        if self.rUsemycomputer.search(url):
-            # Login to Usemycomputer forum
-            self.login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
-            values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
-            # encode those values
-            data = urlencode(values)
+def get_request(url, ua=user_agent):
+    request = urllib2.Request(url)
+    request.add_header('User-Agent', ua)
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print(e.code)
+        sys.exit(1)
+    except urllib2.URLError as e:
+        print(e.reason)
+        sys.exit(1)
 
-            # second request to the login2 page
-            request2 = urllib2.Request(self.login2_page, data)
-            response1 = opener(request2)
-        elif self.rImc.search(url):
-            # Login to IMC website
-            self.login_page = 'http://project-xtapes.com/main/magazine/login.php'
-            values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
-
-            data = urlencode(values)
-
-            # login page request
-            request = urllib2.Request(self.login_page, data)
-            response = opener.open(request)
-
+    return response
 
