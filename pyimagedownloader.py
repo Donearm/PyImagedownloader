@@ -125,14 +125,17 @@ class Gui():
         self.cut_button = gtk.Button("Cut")
         self.copy_button = gtk.Button("Copy")
         self.paste_button = gtk.Button("Paste")
+        self.start_button = gtk.Button("Start")
         self.cut_button.set_size_request(40, 40)
         self.copy_button.set_size_request(40, 40)
         self.paste_button.set_size_request(40, 40)
+        self.start_button.set_size_request(40, 40)
 
         self.hbox = gtk.HBox(False, 5)
         self.vbox = gtk.VBox(False, 5)
 
         self.vbox.pack_start(self.scrolledwindow, False)
+        self.hbox.pack_start(self.start_button)
         self.hbox.pack_start(self.cut_button)
         self.hbox.pack_start(self.copy_button)
         self.hbox.pack_start(self.paste_button)
@@ -143,6 +146,7 @@ class Gui():
         self.cut_button.connect("clicked", self.copy, "cut")
         self.copy_button.connect("clicked", self.copy, "copy")
         self.paste_button.connect("clicked", self.paste)
+        self.start_button.connect("clicked", download_url(url, basedir, embed, poster))
 
         # Tooltips
         self.cut_button.set_tooltip_text("Cut url(s)")
@@ -278,6 +282,7 @@ def argument_parser():
             help="the directory where to save images",
             dest="savedirectory")
     cli_parser.add_option("-g", "--gui",
+            action="store_true",
             help="start in gui mode",
             dest="gui")
     (options, args) = cli_parser.parse_args()
@@ -288,9 +293,29 @@ def not_supported(host):
     msg = "Sorry but %s isn't supported or isn't working right now" % host
     print(msg)
 
+def download_url(url, savedirectory, embed="", poster=""):
+    """Main function to parse and download images"""
+    
+    Rpage = http_connector.connector(url[0])
+
+    # Parse the page for images
+    parser = ImageHostParser(Rpage, 'a', 'href')
+    if embed:
+        # do we need to search for embedded images then?
+        # Note: at the moment it downloads thumbnails too
+        print("Searching for embedded images")
+        print("")
+        parser.which_host('img', 'src')
+
+    # Generate the directory for the source file and the images downloaded
+    savesource.save_source(url[0], savedirectory, creditor=poster)
 
 if __name__ == "__main__":
     (poster, embed, gui, savedirectory, url) = argument_parser()
+
+    if savedirectory:
+        # directory given on the command line?
+        basedir = abspath(savedirectory)
 
     # do we want a gui?
     if gui:
@@ -308,22 +333,8 @@ if __name__ == "__main__":
             pass
         gui = Gui()
         gtk.main()
+    else:
+        # no gui then
+        download_url(url, basedir, embed, poster)
 
-    if savedirectory:
-        # directory given on the command line?
-        basedir = abspath(savedirectory)
-
-    Rpage = http_connector.connector(url[0])
-
-    # Parse the page for images
-    parser = ImageHostParser(Rpage, 'a', 'href')
-    if embed:
-        # do we need to search for embedded images then?
-        # Note: at the moment it downloads thumbnails too
-        print("Searching for embedded images")
-        print("")
-        parser.which_host('img', 'src')
-
-    # Generate the directory for the source file and the images downloaded
-    savesource.save_source(url[0], basedir, creditor=poster)
     sys.exit(0)
