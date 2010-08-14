@@ -21,7 +21,7 @@
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __version__ = "1.3"
-__date__ = "28052010"
+__date__ = "11082010"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -39,6 +39,9 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetit
 import http_connector
 # importing config file variables
 from pyimg import basedir, user_agent
+
+
+
 
 
 # The regexp we'll need to find the link
@@ -78,6 +81,105 @@ rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 
 
+# PyGtk gui class
+class Gui():
+    def __init__(self):
+        """ Main window class """
+        self.window = gtk.Window()
+        self.window.set_title("Pyimagedownloader %s" % __version__)
+        self.window.set_default_size(500, 200)
+        #self.window.connect("delete-event", gtk.main_quit())
+        self.window.connect("destroy", self.close)
+
+        # let's have a scrobllbar
+        self.scrolledwindow = gtk.ScrolledWindow()
+        self.scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledwindow.set_size_request(400, 150)
+
+        # ListStore and its TreeView
+        self.liststore = gtk.ListStore(str)
+        self.treeview = gtk.TreeView(self.liststore)
+        self.treeview.set_fixed_height_mode(True) # all columns have same height
+        # CellRender to render the data
+        self.cell = gtk.CellRendererText()
+        # TreeViewColumn to display text in a single column
+        self.tvcolumn = gtk.TreeViewColumn('URL', self.cell, text=0)
+        # this must be set for set_fixed_height_mode of TreeView to work
+        self.tvcolumn.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        self.tvcolumn.set_clickable(False) # column header won't be clickable
+        # add column to the treeview
+        self.treeview.append_column(self.tvcolumn)
+        # make treeview searchable and allow sorting
+        self.treeview.set_search_column(0)
+        self.tvcolumn.set_sort_column_id(0)
+
+        # example adding data to ListStore and saving each one as a TreeIter
+        #l = ["uno", "due", "tre"]
+        #for i in l:
+        #    self.liststore.append([i])
+
+        # Clipboard
+        self.clipboard = gtk.Clipboard(gtk.gdk.display_get_default(), "PRIMARY")
+
+        # Buttons
+        self.cut_button = gtk.Button("Cut")
+        self.copy_button = gtk.Button("Copy")
+        self.paste_button = gtk.Button("Paste")
+        self.cut_button.set_size_request(40, 40)
+        self.copy_button.set_size_request(40, 40)
+        self.paste_button.set_size_request(40, 40)
+
+        self.hbox = gtk.HBox(False, 5)
+        self.vbox = gtk.VBox(False, 5)
+
+        self.vbox.pack_start(self.scrolledwindow, False)
+        self.hbox.pack_start(self.cut_button)
+        self.hbox.pack_start(self.copy_button)
+        self.hbox.pack_start(self.paste_button)
+        self.vbox.pack_start(self.hbox)
+        self.scrolledwindow.add(self.treeview)
+        self.window.add(self.vbox)
+
+        self.cut_button.connect("clicked", self.copy, "cut")
+        self.copy_button.connect("clicked", self.copy, "copy")
+        self.paste_button.connect("clicked", self.paste)
+
+        # Tooltips
+        self.cut_button.set_tooltip_text("Cut url(s)")
+        self.copy_button.set_tooltip_text("Copy url(s) into the clipboard")
+        self.paste_button.set_tooltip_text("Paste url(s) from the clipboard")
+
+        self.window.show_all()
+
+    def close(self, widget):
+        gtk.main_quit()
+        sys.exit(1)
+
+    def copy(self, widget, mode):
+        """ copy/cut function for the clipboard"""
+        # get the current selection from TreeView
+        selection = self.treeview.get_selection()
+        result = selection.get_selected()
+        if result:
+            # tuple with the model (ListStore in this case) and TreeIter
+            # referring to the selected row
+            model, iter = result
+        self.clipboard.set_text(model.get_value(iter, 0))
+
+        if mode == "cut":
+            model.remove(iter)
+
+    def paste(self, widget):
+        """ paste function for the clipboard"""
+        text = self.clipboard.wait_for_text()
+        if text != None:
+            self.liststore.append([text])
+
+
+
+
+
+# Main parser class
 class ImageHostParser():
     """ The main parser class """
 
@@ -175,8 +277,11 @@ def argument_parser():
     cli_parser.add_option("-d", "--directory",
             help="the directory where to save images",
             dest="savedirectory")
+    cli_parser.add_option("-g", "--gui",
+            help="start in gui mode",
+            dest="gui")
     (options, args) = cli_parser.parse_args()
-    return options.poster, options.embed, options.savedirectory, args
+    return options.poster, options.embed, options.gui, options.savedirectory, args
 
 # print an advice for hosts not supported
 def not_supported(host):
@@ -185,12 +290,30 @@ def not_supported(host):
 
 
 if __name__ == "__main__":
-    (poster, embed, savedirectory, url) = argument_parser()
-    Rpage = http_connector.connector(url[0])
+    (poster, embed, gui, savedirectory, url) = argument_parser()
+
+    # do we want a gui?
+    if gui:
+        try:
+            import pygtk
+            # Gtk2 if possible
+            pygtk.require("2.0")
+            try:
+                import gtk
+            except:
+                print("Gtk was not available, reverting to command line mode...")
+                pass
+        except:
+            print("PyGtk was not available, reverting to command line mode...")
+            pass
+        gui = Gui()
+        gtk.main()
 
     if savedirectory:
         # directory given on the command line?
         basedir = abspath(savedirectory)
+
+    Rpage = http_connector.connector(url[0])
 
     # Parse the page for images
     parser = ImageHostParser(Rpage, 'a', 'href')
