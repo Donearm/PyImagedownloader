@@ -38,6 +38,18 @@ from pyimg import *
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
 
+def check_string_or_list(url):
+    """check if the url given is a string or a list and always returns a correct url"""
+    if isinstance(url, str):
+        uri = url
+        return uri
+    elif isinstance(url, list):
+        uri = url[0]
+        return uri
+    else:
+        # something else has been passed, exiting
+        sys.exit(1)
+
 
 def connector(url, moveon=0):
     """connect to a url, get the page and return it"""
@@ -56,8 +68,11 @@ def connector(url, moveon=0):
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     urllib2.install_opener(opener)
 
+    # check if the url given is a string or a list
+    uri = check_string_or_list(url)
+
     # for some sites we need to login first....
-    site_login(url, opener)
+    site_login(uri, opener)
 
     # Encode values (if any)
     data = urlencode(values)
@@ -67,10 +82,10 @@ def connector(url, moveon=0):
 
     if values:
         # if there are some values it's a POST request
-        response = post_request(url, data, user_agent)
+        response = post_request(uri, data, user_agent)
     else:
         # no values, then it's a GET request
-        response = get_request(url, user_agent)
+        response = get_request(uri, user_agent)
 
 
     #print(cj.make_cookies(response, request)) # show the cookies

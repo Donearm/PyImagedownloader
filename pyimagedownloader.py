@@ -186,8 +186,11 @@ def argument_parser():
             action="store_true",
             help="start in gui mode",
             dest="gui")
+    cli_parser.add_option("-f", "--filelist",
+            help="a file containing the urls to be downloaded, one per row",
+            dest="filelist")
     (options, args) = cli_parser.parse_args()
-    return options.poster, options.embed, options.gui, options.savedirectory, args
+    return options.poster, options.embed, options.gui, options.savedirectory, options.filelist , args
 
 # print an advice for hosts not supported
 def not_supported(host):
@@ -197,7 +200,7 @@ def not_supported(host):
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
-    Rpage = http_connector.connector(url[0])
+    Rpage = http_connector.connector(url)
 
     # Parse the page for images
     parser = ImageHostParser(Rpage, 'a', 'href')
@@ -209,14 +212,29 @@ def download_url(url, savedirectory, embed="", poster=""):
         parser.which_host('img', 'src')
 
     # Generate the directory for the source file and the images downloaded
-    savesource.save_source(url[0], savedirectory, creditor=poster)
+    savesource.save_source(url, savedirectory, creditor=poster)
+
+def filelist_parse(file):
+    file = open(abspath(file), 'r')
+    return file.readlines()
+
+
 
 if __name__ == "__main__":
-    (poster, embed, gui, savedirectory, url) = argument_parser()
+    (poster, embed, gui, savedirectory, filelist, url) = argument_parser()
 
     if savedirectory:
         # directory given on the command line?
         basedir = abspath(savedirectory)
+
+    if filelist:
+        url = filelist_parse(filelist)
+        for u in url:
+            print(u)
+            download_url(u, basedir, embed, poster)
+
+        # exit now, we don't need to start the gui in this case
+        sys.exit(0)
 
     # do we want a gui?
     if gui:
