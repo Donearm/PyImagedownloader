@@ -59,8 +59,8 @@ class Gui():
 
         self.window = gtk.Window()
         self.window.set_title("Pyimagedownloader %s" % __version__)
-        self.window.set_default_size(500, 200)
-        #self.window.connect("delete-event", gtk.main_quit())
+        self.window.set_size_request(500, 200)
+        self.window.connect("delete-event", self.close)
         self.window.connect("destroy", self.close)
 
         # let's have a scrobllbar
@@ -84,11 +84,12 @@ class Gui():
         # make treeview searchable and allow sorting
         self.treeview.set_search_column(0)
         self.tvcolumn.set_sort_column_id(0)
+        # add grid lines
+        self.treeview.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_HORIZONTAL)
+        # make the column header not clickable
+        self.tvcolumn.set_clickable(False)
+        
 
-        # example adding data to ListStore and saving each one as a TreeIter
-        #l = ["uno", "due", "tre"]
-        #for i in l:
-        #    self.liststore.append([i])
 
         # Clipboard
         self.clipboard = gtk.Clipboard(gtk.gdk.display_get_default(), "PRIMARY")
@@ -99,16 +100,16 @@ class Gui():
         self.paste_button = gtk.Button("Paste")
         self.start_button = gtk.Button("Start")
         self.close_button = gtk.Button("Close")
-        self.cut_button.set_size_request(40, 40)
-        self.copy_button.set_size_request(40, 40)
-        self.paste_button.set_size_request(40, 40)
-        self.start_button.set_size_request(40, 40)
-        self.close_button.set_size_request(40, 40)
+        self.cut_button.set_size_request(50, 50)
+        self.copy_button.set_size_request(50, 50)
+        self.paste_button.set_size_request(50, 50)
+        self.start_button.set_size_request(50, 50)
+        self.close_button.set_size_request(50, 50)
 
         self.hbox = gtk.HBox(False, 5)
         self.vbox = gtk.VBox(False, 5)
 
-        self.vbox.pack_start(self.scrolledwindow, False)
+        self.vbox.pack_start(self.scrolledwindow, True)
         self.hbox.pack_start(self.start_button)
         self.hbox.pack_start(self.cut_button)
         self.hbox.pack_start(self.copy_button)
