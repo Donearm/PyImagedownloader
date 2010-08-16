@@ -26,6 +26,8 @@ __email__ = "forod.g@gmail.com"
 
 import sys
 from os.path import abspath
+import threading
+import gobject
 # importing local modules
 import http_connector
 # importing config file variables
@@ -39,12 +41,18 @@ try:
     pygtk.require("2.0")
     try:
         import gtk
+        import gobject
+        # Enable threading
+        gobject.threads_init()
     except:
         print("Gtk was not available, install it or use command line mode...")
         sys.exit(1)
 except:
     print("PyGtk was not available, install it or use command line mode...")
     sys.exit(1)
+
+
+
 
 
 # PyGtk gui class
@@ -173,6 +181,15 @@ class Gui():
 
         # Generate the directory for the source file and the images downloaded
         save_source(url, basedir, creditor=poster)
+
+
+class GThread(threading.Thread):
+    def __init__(self):
+        super(GThread, self).__init__()
+        self.quit = False
+
+    def run(self, func, *args, **kwargs):
+        gobject.idle_add(func, *args, **kwargs)
 
 
 
