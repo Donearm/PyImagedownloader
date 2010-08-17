@@ -119,6 +119,7 @@ def site_login(url, opener):
         request = urllib2.Request(login_page, data)
         response = opener.open(request)
     elif rCelebrityForum.search(url):
+        login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
         auth_page = 'http://auth.leonardo.it/sso/login'
 
 
