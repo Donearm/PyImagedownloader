@@ -33,7 +33,7 @@ from http_connector import get_request, check_string_or_list
 
 
 # The regexp we'll need to find the link
-rImages = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # image files
+rImages = re.compile('\.(jpg|png|gif|jpeg)', re.IGNORECASE) # image files
 
 
 headers = { 'User-Agent' : user_agent }
@@ -127,4 +127,3 @@ def save_source(page, basedir, creditor=""):
             dst_filename, dst_ext = splitext(dst_name)
             dst_name = dst_filename + dst_ext.lower()
             shutil.move(src_name, dst_name)
-
