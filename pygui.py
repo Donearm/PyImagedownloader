@@ -130,7 +130,8 @@ class Gui():
         self.cut_button.connect("clicked", self.copy, "cut")
         self.copy_button.connect("clicked", self.copy, "copy")
         self.paste_button.connect("clicked", self.paste)
-        self.start_button.connect("clicked", self.download_url, self.url, self.basedir, self.embed, self.poster)
+        #self.start_button.connect("clicked", self.download_url, self.url, self.basedir, self.embed, self.poster)
+        self.start_button.connect("clicked", self.sequential_download_url, self.liststore, self.basedir, self.embed, self.poster)
         self.close_button.connect("clicked", self.close)
 
         # Tooltips
@@ -166,7 +167,13 @@ class Gui():
         if text != None:
             self.liststore.append([text])
 
-    def download_url(self, widget, url, basedir="", embed="", poster=""):
+    def sequential_download_url(self, widget, liststore, basedir="", embed="", poster=""):
+        """given a ListStore object feeds all its contents to download_url"""
+        for row in liststore:
+            self.download_url(row[0], basedir, embed, poster)
+
+
+    def download_url(self, url, basedir="", embed="", poster=""):
 
         Rpage = http_connector.connector(url)
 
