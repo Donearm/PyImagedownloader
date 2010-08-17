@@ -37,6 +37,8 @@ from pyimg import *
 #rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
+rCelebrityForum = re.compile("http://celebrityforum\.freeforumzone\.leonardo\.it", re.IGNORECASE)
+
 
 def check_string_or_list(url):
     """check if the url given is a string or a list and always returns a correct url"""
@@ -116,7 +118,20 @@ def site_login(url, opener):
         # login page request
         request = urllib2.Request(login_page, data)
         response = opener.open(request)
+    elif rCelebrityForum.search(url):
+        auth_page = 'http://auth.leonardo.it/sso/login'
 
+
+        values = {'SSO_cik': 'G9clW564v319FjXGuTXXOVzSKDrUTFAXfI8M0uDx2EoxYiBekWLO7M6fMu99MlpQ',
+                'SSO_USERNAME': cf_name, 'SSO_PASSWORD': cf_pwd, 'SSO_p': 'c',
+                'SSO_CHANNEL': '3', 'SSO_PAUTH': '0', 'SSO_USE_ENC': '0',
+                'SSO_PAYLOAD': '1', 'SSO_SECURE_LOGIN': '1', 'FFZ_LOGIN_RQ': '1',
+                'FFZ_SLOGIN': '1', 'FFZ_HLOGIN': '0', 'SSO_REDIRECT_PATH': login_page}
+        
+        data = urlencode(values)
+
+        request = urllib2.Request(auth_page, data)
+        response = opener.open(request)
 
 def post_request(url, data, headers):
     request = urllib2.Request(url, data, headers)
