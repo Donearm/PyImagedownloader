@@ -57,10 +57,9 @@ except:
 
 # PyGtk gui class
 class Gui():
-    def __init__(self, url, basedir, embed=False, poster=""):
+    def __init__(self, basedir, embed=False, poster=""):
         """ Main window class """
         
-        self.url = url
         self.basedir = basedir
         self.embed = embed
         self.poster = poster
@@ -151,15 +150,11 @@ class Gui():
         """ copy/cut function for the clipboard"""
         # get the current selection from TreeView
         selection = self.treeview.get_selection()
-        result = selection.get_selected()
-        if result:
-            # tuple with the model (ListStore in this case) and TreeIter
-            # referring to the selected row
-            model, iter = result
-        self.clipboard.set_text(model.get_value(iter, 0))
+        model, treeiter = selection.get_selected()
+        self.clipboard.set_text(model.get_value(treeiter, 0))
 
         if mode == "cut":
-            model.remove(iter)
+            model.remove(treeiter)
 
     def paste(self, widget):
         """ paste function for the clipboard"""
@@ -171,6 +166,9 @@ class Gui():
         """given a ListStore object feeds all its contents to download_url"""
         for row in liststore:
             self.download_url(row[0], basedir, embed, poster)
+            #iter = liststore.get_iter(row[0])
+            #liststore.remove(iter)
+            #row.remove(iter)
 
 
     def download_url(self, url, basedir="", embed="", poster=""):

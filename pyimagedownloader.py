@@ -238,7 +238,7 @@ if __name__ == "__main__":
 
     # do we want a gui?
     if gui:
-        pygui = pygui.Gui(url[0], basedir, embed, poster)
+        pygui = pygui.Gui(basedir, embed, poster)
     else:
         # no gui then
         download_url(url, basedir, embed, poster)
