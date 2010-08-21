@@ -164,11 +164,18 @@ class Gui():
 
     def sequential_download_url(self, widget, liststore, basedir="", embed="", poster=""):
         """given a ListStore object feeds all its contents to download_url"""
+        r = 0
+        col = 0
         for row in liststore:
-            self.download_url(row[0], basedir, embed, poster)
-            #iter = liststore.get_iter(row[0])
-            #liststore.remove(iter)
+            self.download_url(liststore[r][col], basedir, embed, poster)
+            #iter = liststore.get_iter(row[r])
             #row.remove(iter)
+            liststore[r][col] = ""
+            r += 1
+        liststore.clear()
+        #i = liststore.get_iter_first()
+        #print(liststore.get_value(i, 0))
+
 
 
     def download_url(self, url, basedir="", embed="", poster=""):
