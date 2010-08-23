@@ -16,7 +16,6 @@ __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
-import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
@@ -25,11 +24,6 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 from pyimg import user_agent
 
-
-
-# The regexp we'll need to find the link
-rSponsoredContent = re.compile("streamate\.com", re.IGNORECASE)
-rSrcImagehaven = re.compile("\./images") # regexp for the src link
 
 
 
@@ -54,15 +48,9 @@ def imagehaven_parse(link, basedir):
         return
     image_page = response.read()
 
-    if re.search(rSponsoredContent, image_page):
-        # if there are ads on the page, resubmit the link to the parser
-        imagehaven_parse(link)
-
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of imagehaven's images
-    #src_links = page_soup.findAll('img', src=rSrcImagehaven)
     src_links = page.xpath("//img[@id='image']")
 
     imagehaven_src = [li.get('src', None) for li in src_links]
