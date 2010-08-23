@@ -27,6 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import urllib2
+import fileinput
 from cookielib import CookieJar
 from urllib import urlencode
 from optparse import OptionParser
@@ -215,9 +216,25 @@ def download_url(url, savedirectory, embed="", poster=""):
     savesource.save_source(url, savedirectory, creditor=poster)
 
 def filelist_parse(file):
+    """parsing a file containing urls and giving back a list of them"""
     file = open(abspath(file), 'r')
     return file.readlines()
 
+def filelist_download(file):
+    """download a serie of urls from a file and comment out them, in another file, as
+    they are being downloaded."""
+    with open(abspath(filelist), 'rw') as f:
+        whole_f = f.readlines()
+        with open('lista.bak', 'w') as o:
+            for u in whole_f:
+                url = u.strip("\n")
+                try:
+                    download_url(url, basedir, embed, poster)
+                except:
+                    # if anything goes wrong, exit without further touching the filelist
+                    sys.exit(0)
+                url = '#' + url + '\n'
+                o.write(url)
 
 
 if __name__ == "__main__":
@@ -228,10 +245,15 @@ if __name__ == "__main__":
         basedir = abspath(savedirectory)
 
     if filelist:
-        url = filelist_parse(filelist)
-        for u in url:
-            print(u)
-            download_url(u, basedir, embed, poster)
+        f = fileinput.input(abspath(filelist), inplace=1)
+        for line in f:
+            try:
+                download_url(line, basedir, embed, poster)
+            except:
+                # if anything goes wrong, exit without further touching the filelist
+                sys.exit(0)
+            l = '#' + line
+            print(l.strip("\n"))
 
         # exit now, we don't need to start the gui in this case
         sys.exit(0)
