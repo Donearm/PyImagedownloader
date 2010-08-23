@@ -16,6 +16,7 @@ __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
+import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
