@@ -196,7 +196,9 @@ def argument_parser():
 # print an advice for hosts not supported
 def not_supported(host):
     msg = "Sorry but %s isn't supported or isn't working right now" % host
+    #print(msg)
     print(msg)
+
 
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
@@ -223,9 +225,10 @@ def filelist_parse(file):
 def filelist_download(file):
     """download a serie of urls from a file and comment out them, in another file, as
     they are being downloaded."""
+    bckp = 'lista.bak'
     with open(abspath(filelist), 'rw') as f:
         whole_f = f.readlines()
-        with open('lista.bak', 'w') as o:
+        with open(bckp, 'w') as o:
             for u in whole_f:
                 url = u.strip("\n")
                 try:
@@ -237,6 +240,21 @@ def filelist_download(file):
                 o.write(url)
 
 
+def filelist_fileinput(file):
+    """download a serie of urls from a file, commenting them as they are being
+    downloaded (using fileinput)"""
+    f = fileinput.input(abspath(file), inplace=1)
+    for line in f:
+        try:
+            download_url(line, basedir, embed, poster)
+        except:
+            # print the line where it stopped
+            print(line)
+            # if anything goes wrong, exit without further touching the filelist
+            sys.exit(0)
+        l = '#' + line
+        print(l.strip("\n"))
+
 if __name__ == "__main__":
     (poster, embed, gui, savedirectory, filelist, url) = argument_parser()
 
@@ -245,15 +263,7 @@ if __name__ == "__main__":
         basedir = abspath(savedirectory)
 
     if filelist:
-        f = fileinput.input(abspath(filelist), inplace=1)
-        for line in f:
-            try:
-                download_url(line, basedir, embed, poster)
-            except:
-                # if anything goes wrong, exit without further touching the filelist
-                sys.exit(0)
-            l = '#' + line
-            print(l.strip("\n"))
+        filelist_download(filelist)
 
         # exit now, we don't need to start the gui in this case
         sys.exit(0)
