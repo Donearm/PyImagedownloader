@@ -31,7 +31,8 @@ import fileinput
 from cookielib import CookieJar
 from urllib import urlencode
 from optparse import OptionParser
-from os.path import abspath
+from os.path import abspath, dirname
+from os import rename
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
@@ -225,19 +226,33 @@ def filelist_parse(file):
 def filelist_download(file):
     """download a serie of urls from a file and comment out them, in another file, as
     they are being downloaded."""
-    bckp = 'lista.bak'
-    with open(abspath(filelist), 'rw') as f:
+    bckp = dirname(abspath(file)) + '/' + 'list.bak'
+    with open(abspath(file), 'rw') as f:
+        # save every line in the filelist
         whole_f = f.readlines()
+        # initiate a list for the downloaded and commented urls
+        bckp_l = []
         with open(bckp, 'w') as o:
             for u in whole_f:
-                url = u.strip("\n")
-                try:
-                    download_url(url, basedir, embed, poster)
-                except:
-                    # if anything goes wrong, exit without further touching the filelist
-                    sys.exit(0)
-                url = '#' + url + '\n'
-                o.write(url)
+                if u.startswith('#'):
+                    # a previously downloaded url? Just save it
+                    bckp_l.append(u)
+                    o.write(u)
+                else:
+                    try:
+                        download_url(u.strip("\n"), basedir, embed, poster)
+                    except:
+                        # if anything goes wrong, add the not downloaded urls to the filelist,
+                        # uncommented, and exit
+                        downloaded_l = [i for i in whole_f if i not in bckp_l]
+                        for i in downloaded_l:
+                            o.write(i)
+                        sys.exit(0)
+                    bckp_l.append(u)
+                    url = '#' + u
+                    o.write(url)
+    # at the end, move the backup file to the filelist's place
+    rename(abspath(o.name), abspath(f.name))
 
 
 def filelist_fileinput(file):
