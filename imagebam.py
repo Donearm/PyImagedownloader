@@ -59,7 +59,14 @@ def imagebam_parse(link, basedir):
     # get the image name from the id tag
     imagename = [li.get('id', None) for i in src_links]
 
-    imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
+    try:
+        imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
+    except IndexError:
+        # if the splitting fails it's possible that that image has problems and can't
+        # really be downloaded, skip it.
+        print("An image couldn't be downloaded")
+        return
+
     download_url = imagebam_src[0]
     # generate just the filename of the image to be locally saved
     # not needed anymore since getting the name from the id tag
