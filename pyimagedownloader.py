@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 ###############################################################################
 # Copyright (c) 2008, Gianluca Fiore
@@ -37,7 +37,6 @@ import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg
-#from http_connector import *
 import http_connector
 import pygui
 # importing config file variables
