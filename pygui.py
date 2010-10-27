@@ -27,7 +27,6 @@ __email__ = "forod.g@gmail.com"
 import sys
 from os.path import abspath
 import threading
-import gobject
 # importing local modules
 import http_connector
 # importing config file variables
