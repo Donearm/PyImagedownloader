@@ -17,31 +17,22 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
 from os.path import join
-import lxml.html
-from pyimg import user_agent
 
 
+def usemycomputer_parse(link, basedir):
 
-# values for age verification
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
+    # no need to connect to the image's url, just rewrite the link to obtain
+    # the uri of the image
+    usemycomputer_split = re.split('show\.html\?i=\/', link)
 
-def photobucket_parse(link, basedir):
-    try:
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split('/', link)
+    # split by '/' so to extract the image name
+    imgname = re.split('/', usemycomputer_split[1])
 
-        savefile = join(basedir, save_extension[-1])
-        download_url = link
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
-    except IndexError:
-        return
+    # generate just the filename of the image to be locally saved
+    savefile = join(basedir, imgname[-1])
 
+    download_url = usemycomputer_split[0] + usemycomputer_split[1]
 
-
-
+    # finally save the image on the desidered directory
+    urlretrieve(download_url, savefile) 

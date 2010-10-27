@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 ###############################################################################
 # Copyright (c) 2008, Gianluca Fiore
@@ -36,11 +36,7 @@ from os import rename
 import lxml.html
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
-        imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, \
-        sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
-        imageban, imagehostorg, turboimagehost
-#from http_connector import *
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg, turboimagehost, usemycomputer
 import http_connector
 import pygui
 # importing config file variables
@@ -86,6 +82,7 @@ rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
+rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
 
 
 
@@ -170,6 +167,9 @@ class ImageHostParser():
                 n = n + 1
             elif rTurboimagehost.search(stringl):
                 turboimagehost.turboimagehost_parse(stringl, basedir)
+                n = n + 1
+            elif rUsemycomputer.search(stringl):
+                usemycomputer.usemycomputer_parse(stringl, basedir)
                 n = n + 1
             else:
                 continue
