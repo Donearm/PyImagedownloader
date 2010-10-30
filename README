@@ -5,12 +5,17 @@ Purpose of this program
 
 Pyimagedownloader is an image downloader written in Python. It downloads
 all the images hosted on the supported imagehosting sites (see Supported
-List) present on the given url and puts them all in a directory with the
+Host List) present on the given url and puts them all in a directory with the
 page title name. It's geared towards those people that download images
 to share them afterwards on their blogs or on forums. It automatically
 saves the link of the page with the images as a source to cite the
 original poster or can optionally save the name of the person to whom
 give credit to in a separate file.
+
+It also downloads images posted in one of the supported forum or sites
+(see Supported Forum/Sites List) given that you have a valid login (user
++ password) and put it in the config file (pyimg.py). Those supported
+are just what I regularly use, more could be added.
 
 Installation
 ----
@@ -24,19 +29,30 @@ License
 see COPYING
 
 
-Supported List
+Supported Host List
 ----
 Blogspot.com
 Imagebam.com
+Imageban.ru
 Imagehaven.com
+Imagehost.org
 Imageshack.us
 Imagesocket.com
 Imagetitan.com
 Imageupper.com
 Imagevenue.com
+Photobucket.com
 Shareapic.net
 Sharenxs.com
 Skins.be
 Storeimgs.com
+Turboimagehost.com
 Upmyphoto.com
 Uppix.net
+Usemycomputer.com
+
+Supported Forum/Sites List
+----
+celebrityforum.freeforumzone.leonardo.it
+forum.usemycomputer.com
+www.project-xtapes.com
