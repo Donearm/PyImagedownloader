@@ -34,6 +34,8 @@ from pyimg import user_agent
 rImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 # the 'a.imageshack.us' type url
 rImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
+# the '/i/' type url
+rImageshackI = re.compile('/i/', re.IGNORECASE)
 
 
 values = {}
