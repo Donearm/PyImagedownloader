@@ -36,7 +36,7 @@ from pyimg import *
 
 #rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
-rImc = re.compile("http://www\.project-xtapes\.com/", re.IGNORECASE)
+rImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
 rCelebrityForum = re.compile("http://celebrityforum\.freeforumzone\.leonardo\.it", re.IGNORECASE)
 
 
@@ -110,7 +110,7 @@ def site_login(url, opener):
         response1 = opener.open(request2)
     elif rImc.search(url):
         # Loging to IMC website
-        login_page = 'http://project-xtapes.com/main/magazine/login.php'
+        login_page = 'http://www.imcmagazine.com/login.php'
         values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
 
         data = urlencode(values)
