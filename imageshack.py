@@ -36,6 +36,8 @@ rImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 rImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
 # the '/i/' type url
 rImageshackI = re.compile('/i/', re.IGNORECASE)
+# a partial url (without http://)
+rImageshackPartial = re.compile('/img[0-9]{,3}/', re.IGNORECASE)
 
 
 values = {}
@@ -90,6 +92,13 @@ def imageshack_download(regexp, url, basedir, src="", htmlpage=0):
     if rImageshackA.search(src):
         save_extension = re.split('img[0-9]+/[0-9]+/', src)
         download_url = src
+        savefile = join(basedir, str(num) + str(save_extension[-1]))
+    # is it a partial url (without http://) ?
+    elif rImageshackPartial.search(src):
+        save_extension = re.split('/img[0-9]+/[0-9]+/', src)
+        # extract the first "imgXXX" part, we'll need it to reconstruct the full url
+        imgxxx = re.split('/', src)
+        download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src
         savefile = join(basedir, str(num) + str(save_extension[-1]))
     else:
         # generate just the filename of the image to be locally saved
