@@ -77,7 +77,7 @@ def imagevenue_parse(link, basedir):
 
     # if there are ads on the page, resubmit the link to the parser
     if re.search(rRedirects, image_page):
-        imagevenue_parse(link)
+        imagevenue_parse(link, basedir)
         return
     elif re.search(rRedirects2, image_page):
         imageveneue_parse(link)
