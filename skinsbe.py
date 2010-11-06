@@ -23,18 +23,23 @@ from os.path import join
 #from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
+import http_connector
 
 
 
 values = {}
-headers = { 'User-Agent' : user_agent }
+headers = { 'User-Agent' : user_agent, 'show_adult': '1' }
 data = urlencode(values)
 
 def skinsbe_parse(link, basedir):
-    # get every page linked from the skinsbe links
-    request = urllib2.Request(link, data, headers)
+    #request = urllib2.Request(link, data, headers)
     try:
-        response = urllib2.urlopen(request)
+# we use the connector from http_connector because it can handle cookies
+# and we'll need them to store the affirmative answer to whether to show
+# adult images or not
+# Without cookies the program will stop at the first adult image found
+        response = http_connector.connector(link)
+    #    response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
         print("An image couldn't be downloaded")
         return
@@ -42,14 +47,15 @@ def skinsbe_parse(link, basedir):
         print("An image couldn't be downloaded")
         return
 
-    image_page = response.read()
+
+    image_page = response
     #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
+
 
     # find the src attribute which contains the real link of skinsbe's images
     #src_links = page_soup.findAll('img', id='wallpaper_image')
     src_links = page.xpath("//img[@id='wallpaper_image']")
-
 
     skinsbe_src = [li.get('src', None) for li in src_links]
 
@@ -58,5 +64,5 @@ def skinsbe_parse(link, basedir):
     savefile = join(basedir, save_extension)
 
     download_url = skinsbe_src[0]
-    # finally save the image on the desidered directory
+    # finally save the image in the desidered directory
     urlretrieve(download_url, savefile) 
