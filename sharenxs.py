@@ -29,7 +29,7 @@ rSharenxsThumb = re.compile("http://(www\.)?sharenxs\.com/thumbnails/sf/", re.IG
 # regexp matching a http:// url
 rSharenxsUrl = re.compile("http://(www\.)?sharenxs\.com", re.IGNORECASE)
 # Regexp matching a full-sized sharenxs src url
-rSharenxsWz = re.compile("http://sharenxs\.com/images/wz", re.IGNORECASE)
+rSharenxsWz = re.compile("http://(www\.)?sharenxs\.com/images/wz", re.IGNORECASE)
 
 
 values = {}
