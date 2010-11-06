@@ -28,7 +28,6 @@ import sys
 import re
 import urllib2
 import fileinput
-from cookielib import CookieJar
 from urllib import urlencode
 from optparse import OptionParser
 from os.path import abspath, dirname
