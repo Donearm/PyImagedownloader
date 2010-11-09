@@ -210,7 +210,12 @@ def not_supported(host):
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
-    Rpage = http_connector.connector(url)
+    try:
+        Rpage = http_connector.connector(url)
+    #except urllib2.HTTPError as e:
+    except:
+        return
+
 
     # Parse the page for images
     parser = ImageHostParser(Rpage, 'a', 'href')

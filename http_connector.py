@@ -145,8 +145,13 @@ def post_request(url, data, headers):
         return response
     except urllib2.HTTPError as e:
         if e.code == 405:
-        # we were wrong, the url doesn't accept a POST, make a GET then
+            # we were wrong, the url doesn't accept a POST, make a GET then
             response = get_request(url, user_agent)
+        elif e.code == 404:
+            # url non-existing, just go on
+            print("%s couldn't be found, skipping it..." % url)
+            response = ''
+            return response
         else:
             print(e.code)
             sys.exit(1)
@@ -160,8 +165,14 @@ def get_request(url, ua=user_agent):
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
-        print(e.code)
-        sys.exit(1)
+        if e.code == 404:
+            # url non-existing, just go on
+            print("%s couldn't be found, skipping it..." % url)
+            response = ''
+            return response
+        else:
+            print(e.code)
+            sys.exit(1)
     except urllib2.URLError as e:
         print(e.reason)
         sys.exit(1)
