@@ -60,7 +60,6 @@ def imagehostorg_parse(link, basedir):
 
         urlretrieve(download_url, savefile)
     else:
-
         imagehostorg_split = re.split('/', imagehostorg_src[0]) # remove the unneeded parts
         download_url = imagehostorg_src[0]
         # generate just the filename of the image to be locally saved

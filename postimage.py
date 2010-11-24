@@ -40,8 +40,16 @@ def postimage_parse(link, basedir):
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
+        if e.code == 405:
+            request = urllib2.Request(link)
+            try:
+                response = urllib2.urlopen(request)
+            except:
+                print("An image couldn't be downloaded")
+                return
+        else:
+            print("An image couldn't be downloaded")
+            return
     except urllib2.URLError as e:
         print("An image couldn't be downloaded")
         return
@@ -58,12 +66,17 @@ def postimage_parse(link, basedir):
         src_links = page.xpath("//center/img")
         postimage_src = [li.get('src', None) for li in src_links]
         postimage_alt = [li.get('alt', None) for li in src_links]
+        print(postimage_src)
+        print(postimage_alt)
     else:
-        alt_links = page.xpath("//center/a[@href]/img[@alt]")
-        postimage_alt = [li.get('alt', None) for li in alt_links]
+         alt_links = page.xpath("//center/a[@href]/img[@alt]")
+         postimage_alt = [li.get('alt', None) for li in alt_links]
+         postimage_href = [li.get('href', None) for li in alt_links]
+         print(postimage_href)
+         postimage_parse(postimage_href[0], basedir)
 
-        href_links = page.xpath("//center/a[@href]")
-        postimage_src = [li.get('href', None) for li in href_links]
+#         href_links = page.xpath("//center/a[@href]")
+#         postimage_src = [li.get('src', None) for li in alt_links]
 
 
     try:
