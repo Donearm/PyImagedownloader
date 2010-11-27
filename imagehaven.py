@@ -22,7 +22,6 @@ from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
 from os.path import join
 import lxml.html
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 from pyimg import user_agent
 
 

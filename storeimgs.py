@@ -20,7 +20,6 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 

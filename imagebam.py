@@ -20,14 +20,9 @@ import re
 import urllib2
 from urllib import urlencode, urlretrieve 
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
-#from http_connector import get_request
 
-
-# The regexp we'll need to find the link
-#rSrcImagebam = re.compile("http://[0-9]+\.imagebam\.com/dl\.php") # regexp for the src link
 
 values = {}
 headers = {'User-Agent': user_agent}
@@ -47,11 +42,9 @@ def imagebam_parse(link, basedir):
         return
 
     image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of imagebam's images
-    #src_links = page_soup.findAll('img', src=rSrcImagebam)
     src_links = page.xpath("//img[@onclick='scale(this);']")
 
     imagebam_src = [li.get('src', None) for li in src_links]
@@ -71,7 +64,6 @@ def imagebam_parse(link, basedir):
     # generate just the filename of the image to be locally saved
     # not needed anymore since getting the name from the id tag
     try: 
-        #savefile = basedir + str(imagebam_split[1]) + ".jpg"
         savefile = join(basedir, str(imagename[0]))
     except UnicodeEncodeError:
         # catch files with strange characters in name

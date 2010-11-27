@@ -20,7 +20,6 @@ import re
 import urllib2
 from urllib import urlencode, urlretrieve 
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 
@@ -46,10 +45,8 @@ def imagetitan_parse(link, basedir):
         return
 
     image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
     # find the src attribute which contains the real link of imagetitan's images
-    #src_links = page_soup.findAll('img', src=rSrcImagetitan)
     src_links = page.xpath("//img[@id='image']")
 
     imagetitan_src = [li.get('src', None) for li in src_links]

@@ -21,7 +21,6 @@ import urllib2
 from cookielib import CookieJar
 from socket import setdefaulttimeout
 from urllib import urlencode
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 from http_connector import get_request
@@ -29,7 +28,6 @@ from http_connector import get_request
 
 
 # The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
 rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 

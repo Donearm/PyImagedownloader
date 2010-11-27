@@ -21,14 +21,12 @@ import urllib2
 from urllib import urlretrieve, urlencode
 from cookielib import CookieJar
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 
 
 
 # The regexp we'll need to find the link
-#rScript = re.compile("<scr'\+'ipt[^>]*>(.*?)</scr'\+'ipt>", re.IGNORECASE) # identify malformed script tags
 rRedirects = re.compile("uploadimg\-streamate\.php", re.IGNORECASE) # to find the page with streamate ads
 rRedirects2 = re.compile("Continue To Your Image", re.IGNORECASE) # to find generical redirects
 rRedirects3 = re.compile("tempfull-default\.php", re.IGNORECASE) # to find the url of the imagevenue's countdown
@@ -69,9 +67,7 @@ def imagevenue_parse(link, basedir):
         print(e.reason)
         return
 
-    # get every page linked from the imagevenue links, removing those
-    # damned '<scr'+'ipt>' tags
-    #image_page = rScript.sub('', response.read())
+    # get every page linked from the imagevenue links
     image_page = response.read()
 
 
@@ -83,11 +79,9 @@ def imagevenue_parse(link, basedir):
         imageveneue_parse(link)
         return
 
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of imagevenue's images
-    #src_links = page_soup.findAll('img', id='thepic')
     src_links = page.xpath("//img[@id='thepic']")
 
     imagevenue_src = [li.get('src', None) for li in src_links]
@@ -124,16 +118,13 @@ def imagevenue_embed(link):
         return
 
     image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of imagevenue's images
-    #src_links = page_soup.findAll('img', id='thepic')
     src_links = page.xpath("//img[@id='thepic']")
     imagevenue_src = []
     for li in src_links:
         imagevenue_src.append(li.get('src', None))
-        #imagevenue_src.append(li['src']) # add all the src part to a list
 
 
         imagevenue_split = re.split('img.php\?image=', link) # remove the unneeded parts

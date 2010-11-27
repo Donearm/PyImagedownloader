@@ -27,13 +27,12 @@ from os.path import splitext, join
 from urlparse import urlparse
 from urllib import urlretrieve
 import lxml.html
-#from BeautifulSoup import BeautifulSoup
 from pyimg import user_agent
 from http_connector import get_request, check_string_or_list
 
 
-# The regexp we'll need to find the link
-rImages = re.compile('\.(jpg|png|gif|jpeg)', re.IGNORECASE) # image files
+# The regexp we'll need to find the images in the destination directory
+rImages = re.compile('\.(jpg|png|gif|jpeg)', re.IGNORECASE) # all most common image files
 
 
 headers = { 'User-Agent' : user_agent }
@@ -80,15 +79,12 @@ def save_source(page, basedir, creditor=""):
 
     page_title = response.read()
 
-    #page_title_soup = BeautifulSoup(page_title)
     page_title_parsed = lxml.html.fromstring(page_title)
 
-    #neat_title = page_title_soup.title.string
     neat_title = page_title_parsed.find(".//title").text
     # Clean title from html entities
     neat_title = decode_htmlentities(neat_title)
     # purge the title of troublesome characters
-    #neat_title = re.sub('quot;', '"', page_title_soup.title.string) # &quot; substitution
     #neat_title = re.sub('&amp;', '&', neat_title) # &amp; substitution
     accepted_chars = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
     neat_title = filter(accepted_chars.__contains__, neat_title)

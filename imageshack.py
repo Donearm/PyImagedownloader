@@ -21,15 +21,11 @@ import urllib2
 from urllib import urlencode, urlretrieve
 from os.path import join
 import random
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 
 
 
-
-# The regexp we'll need to find the link
-#rSrcImageshack = re.compile('/img[0-9]+/[0-9]+/[a-zA-Z0-9]+\.[jpg|gif|png]', re.IGNORECASE)
 # The split regexp
 rImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 # the 'a.imageshack.us' type url
@@ -63,11 +59,9 @@ def imageshack_parse(link, basedir):
 
     # get every page linked from the imageshack links
     image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of imageshack's images
-    #src_links = page_soup.findAll('img', src=rSrcImageshack)
     src_links = page.xpath("//img[@id='main_image']")
 
     imageshack_src = [li.get('src', None) for li in src_links]

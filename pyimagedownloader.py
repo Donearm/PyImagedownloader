@@ -33,7 +33,6 @@ from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
 import lxml.html
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg, turboimagehost, usemycomputer
 import http_connector
@@ -46,33 +45,18 @@ from pyimg import basedir, user_agent
 
 
 # The regexp we'll need to find the link
-#rJpgSrc = re.compile('.(jpg|png|gif|jpeg)', re.IGNORECASE) # generic src attributes regexp
-#rImagevenue = re.compile("href=\"?http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
-#rImagebam = re.compile("href=\"?http://www\.imagebam\.com/image", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image/", re.IGNORECASE)
-#rImagehaven = re.compile("href=\"?http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
-#rImageshack = re.compile("href=\"?http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 rImageshack = re.compile("http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
-#rUpmyphoto = re.compile("href=\"?http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rUpmyphoto = re.compile("http://(www\.)?upmyphoto\.com", re.IGNORECASE)
-#rImgshed = re.compile("href=\"?http://imgshed\.com", re.IGNORECASE)
-#rUppix = re.compile("href=\"?http://www\.uppix\.info", re.IGNORECASE)
 rUppix = re.compile("http://www\.uppix\.info", re.IGNORECASE)
-#rBellazon = re.compile('href=\"?http://www\.bellazon\.com/http://www\.bellazon\.com/main/index\.php\?act=', re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
-#rSkinsBe = re.compile("href=\"?http://image\.skins\.be", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
-#rShareapic = re.compile("href=\"http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
-#rStoreimgs = re.compile("href=\"?http://storeimgs\.com", re.IGNORECASE)
 rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
-#rImagetitan = re.compile("href=\"?http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
-#rSharenxs = re.compile("href=\"?http://sharenxs\.com", re.IGNORECASE)
 rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
-#rBlogspot = re.compile("href=\"?http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://(www\.)?postimage\.org/image/", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
@@ -91,19 +75,16 @@ class ImageHostParser():
     """ The main parser class """
 
     def __init__(self, page, tag, attr):
-        #self.page = BeautifulSoup(page)
         self.page = lxml.html.fromstring(page)
         self.tag = tag
         self.attr = attr
         self.which_host(tag, attr)
 
     def which_host(self, tag, attr):
-        #all_tags = self.page.findAll(tag)
         xpath_search = '//' + tag + '[@' + attr + ']'
         all_tags = self.page.xpath(xpath_search)
         n = 0
         for L in all_tags:
-            #stringl = str(L)
             stringl = str(L.get(attr, None))
             if rImagevenue.search(stringl):
                 imagevenue.imagevenue_parse(stringl, basedir)
@@ -203,7 +184,6 @@ def argument_parser():
 # print an advice for hosts not supported
 def not_supported(host):
     msg = "Sorry but %s isn't supported or isn't working right now" % host
-    #print(msg)
     print(msg)
 
 
@@ -212,7 +192,6 @@ def download_url(url, savedirectory, embed="", poster=""):
     
     try:
         Rpage = http_connector.connector(url)
-    #except urllib2.HTTPError as e:
     except:
         return
 

@@ -20,13 +20,9 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 
-
-# The regexp we'll need to find the link
-#rUpmyphoto = re.compile("http://www\.upmyphoto\.com/img", re.IGNORECASE)
 
 
 values = {}
@@ -46,11 +42,9 @@ def upmyphoto_parse(link, basedir):
         return
 
     image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
     # find the src attribute which contains the real link of upmyphoto's images
-    #src_links = page_soup.findAll('img', src=rUpmyphoto)
     src_links = page.xpath("//img[@id='image']")
 
     upmyphoto_src = [li.get('src', None) for li in src_links]

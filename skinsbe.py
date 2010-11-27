@@ -20,7 +20,6 @@ import re
 import urllib2
 from urllib import urlretrieve, urlencode
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
 from pyimg import user_agent
 import http_connector
@@ -39,7 +38,6 @@ def skinsbe_parse(link, basedir):
 # adult images or not
 # Without cookies the program will stop at the first adult image found
         response = http_connector.connector(link)
-    #    response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
         print("An image couldn't be downloaded")
         return
@@ -49,12 +47,10 @@ def skinsbe_parse(link, basedir):
 
 
     image_page = response
-    #page_soup = BeautifulSoup(image_page)
     page = lxml.html.fromstring(image_page)
 
 
     # find the src attribute which contains the real link of skinsbe's images
-    #src_links = page_soup.findAll('img', id='wallpaper_image')
     src_links = page.xpath("//img[@id='wallpaper_image']")
 
     skinsbe_src = [li.get('src', None) for li in src_links]

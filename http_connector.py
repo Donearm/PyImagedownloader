@@ -34,7 +34,6 @@ from urllib import urlencode
 from pyimg import *
 
 
-#rCelebutopia = re.compile("http://www\.celebutopia\.net/", re.IGNORECASE)
 rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
 rImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
 rCelebrityForum = re.compile("http://celebrityforum\.freeforumzone\.leonardo\.it", re.IGNORECASE)
