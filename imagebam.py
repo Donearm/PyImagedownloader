@@ -33,7 +33,12 @@ def imagebam_parse(link, basedir):
     # get every page linked from the imagebam links
     request = urllib2.Request(link, data, headers)
     try:
-        response = urllib2.urlopen(request)
+         response = urllib2.urlopen(request, None, 8)
+#         response = http_connector.connector(request)
+    except socket.error as e:
+        # timing out...
+        print("An image couldn't be downloaded")
+        return
     except urllib2.HTTPError as e:
         print("An image couldn't be downloaded")
         return
@@ -70,5 +75,9 @@ def imagebam_parse(link, basedir):
         savefile = join(basedir, str(imagename[0].encode("utf-8")))
 
     # finally save the image in the desidered directory
-    urlretrieve(download_url, savefile) 
+    try:
+        urlretrieve(download_url, savefile) 
+    except IOError as e:
+        # image not loading, skipping it
+        return
 

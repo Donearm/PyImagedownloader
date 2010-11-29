@@ -190,10 +190,7 @@ def not_supported(host):
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
-    try:
-        Rpage = http_connector.connector(url)
-    except:
-        return
+    Rpage = http_connector.connector(url)
 
 
     # Parse the page for images
