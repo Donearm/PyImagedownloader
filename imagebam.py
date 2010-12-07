@@ -20,6 +20,8 @@ import re
 import urllib2
 from urllib import urlencode, urlretrieve 
 from os.path import join
+import random
+from os.path import splitext
 import lxml.html
 from pyimg import user_agent
 
@@ -66,8 +68,18 @@ def imagebam_parse(link, basedir):
         return
 
     download_url = imagebam_src[0]
-    # generate just the filename of the image to be locally saved
-    # not needed anymore since getting the name from the id tag
+
+    # generate a random number for the imagename
+    num = random.randrange(1,1000)
+
+    # check if the imagename has an extension (jpg by default)
+    # if not, add it after having inserted the random number too
+    basename, extension = splitext(imagename[0])
+    if not extension:
+        imagename[0] = str(imagename[0]) + str(num) + '.jpg'
+    else:
+        imagename[0] = str(basename) + str(num) + str(extension)
+
     try: 
         savefile = join(basedir, str(imagename[0]))
     except UnicodeEncodeError:
