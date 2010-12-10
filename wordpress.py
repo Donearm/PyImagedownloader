@@ -1,0 +1,44 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+###############################################################################
+# Copyright (c) 2008, Gianluca Fiore
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+###############################################################################
+
+
+
+__author__ = "Gianluca Fiore"
+__license__ = "GPL"
+__email__ = "forod.g@gmail.com"
+
+import re
+#import urllib2
+from urllib import urlencode, urlretrieve
+from os.path import join
+#import lxml.html
+from pyimg import user_agent
+
+
+values = {}
+headers = {'User-Agent': user_agent}
+data = urlencode(values)
+
+def wordpress_parse(link, basedir):
+    # urls of this kind are already the absolute ones of the image
+    # Therefore:
+
+    # grab the filename of the image
+    save_extension = re.split('/[0-9]{,2}/', link)
+    
+    # generate the savefile
+    savefile = join(basedir, str(save_extension[-1]))
+
+    download_url = link
+
+    # download the image
+    urlretrieve(download_url, savefile)

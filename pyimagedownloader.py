@@ -34,7 +34,10 @@ from os.path import abspath, dirname
 from os import rename
 import lxml.html
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, imageban, imagehostorg, turboimagehost, usemycomputer
+import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
+        imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, \
+        sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
+        imageban, imagehostorg, turboimagehost, usemycomputer, wordpress
 import http_connector
 import pygui
 # importing config file variables
@@ -66,6 +69,9 @@ rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
+rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/", re.IGNORECASE)
+rWordpressuploads = re.compile("http://.*/wp-content/uploads/", re.IGNORECASE)
+
 
 
 
@@ -150,6 +156,9 @@ class ImageHostParser():
                 n = n + 1
             elif rUsemycomputer.search(stringl):
                 usemycomputer.usemycomputer_parse(stringl, basedir)
+                n = n + 1
+            elif rWordpress.search(stringl) or rWordpressuploads.search(stringl):
+                wordpress.wordpress_parse(stringl, basedir)
                 n = n + 1
             else:
                 continue
