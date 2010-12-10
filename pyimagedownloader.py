@@ -69,8 +69,8 @@ rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
-rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/", re.IGNORECASE)
-rWordpressuploads = re.compile("http://.*/wp-content/uploads/", re.IGNORECASE)
+rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
+rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
 
 
 
