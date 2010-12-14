@@ -50,7 +50,11 @@ def upmyphoto_parse(link, basedir):
     upmyphoto_src = [li.get('src', None) for li in src_links]
 
     # generate just the filename of the image to be locally saved
-    save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', upmyphoto_src[0])
+    # if this fails, it's possible that the image has been deleted
+    try:
+        save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', upmyphoto_src[0])
+    except IndexError as e:
+        return
     savefile = join(basedir, str(save_extension[-1]))
 
     download_url = upmyphoto_src[0]
