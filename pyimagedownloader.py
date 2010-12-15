@@ -133,8 +133,8 @@ class ImageHostParser():
                 blogspot.blogspot_parse(stringl, basedir)
                 n = n + 1
             elif rPostimage.search(stringl):
-                not_supported('Postimage')
-                #postimage.postimage_parse(stringl, basedir)
+                #not_supported('Postimage')
+                postimage.postimage_parse(stringl, basedir)
                 n = n + 1
             elif rImageUpper.search(stringl):
                 imageupper.imageupper_parse(stringl, basedir)

@@ -21,9 +21,8 @@ import urllib2
 from urllib import urlencode, urlretrieve
 from os.path import join
 import lxml.html
+import http_connector
 from pyimg import user_agent
-
-
 
 
 
@@ -32,10 +31,6 @@ headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
 def postimage_parse(link, basedir):
-    #TODO: currently this doesn't work, urlretrieve doesn't download the full image
-    # but block itself with an Http error 405 "not allowed". Using POST or GET or checking
-    # the Content-Length header doesn't resolve the issue.
-
     request = urllib2.Request(link, data, headers)
     try:
         response = urllib2.urlopen(request)
@@ -66,28 +61,25 @@ def postimage_parse(link, basedir):
         src_links = page.xpath("//center/img")
         postimage_src = [li.get('src', None) for li in src_links]
         postimage_alt = [li.get('alt', None) for li in src_links]
-        print(postimage_src)
-        print(postimage_alt)
     else:
          alt_links = page.xpath("//center/a[@href]/img[@alt]")
          postimage_alt = [li.get('alt', None) for li in alt_links]
-         postimage_href = [li.get('href', None) for li in alt_links]
-         print(postimage_href)
-         postimage_parse(postimage_href[0], basedir)
-
-#         href_links = page.xpath("//center/a[@href]")
-#         postimage_src = [li.get('src', None) for li in alt_links]
+         postimage_src = [li.get('src', None) for li in alt_links]
 
 
     try:
         # generate just the filename of the image to be locally saved
-        #save_extension = re.split('\.org/', postimage_src[0])
-        save_extension = postimage_alt[0]
+        save_extension = re.split('/[a-z0-9]+/', postimage_src[0])
 
-        #savefile = basedir + str(save_extension[1])
-        savefile = join(basedir, save_extension)
+        savefile = join(basedir, save_extension[-1])
         download_url = postimage_src[0]
+
         # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
+        # I'm using http_connector function to make use of its opener,
+        # a simple urllib2.Request doesn't set the desidered User-Agent
+        # header (the first request is ok without an opener)
+        downreq = http_connector.connector(download_url)
+        with open(savefile, 'wb') as f:
+            f.write(downreq)
     except IndexError:
         return
