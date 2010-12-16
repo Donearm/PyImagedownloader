@@ -25,11 +25,11 @@ from pyimg import user_agent
 
 
 # The regexp we'll need to find the link
-rSharenxsThumb = re.compile("http://(www\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
+rSharenxsThumb = re.compile("http://((www|cache)\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
 # regexp matching a http:// url
-rSharenxsUrl = re.compile("http://(www\.)?sharenxs\.com", re.IGNORECASE)
+rSharenxsUrl = re.compile("http://((www|cache)\.)?sharenxs\.com", re.IGNORECASE)
 # Regexp matching a full-sized sharenxs src url
-rSharenxsWz = re.compile("http://(www\.)?sharenxs\.com/images/wz", re.IGNORECASE)
+rSharenxsWz = re.compile("http://((www|cache)\.)?sharenxs\.com/images/wz", re.IGNORECASE)
 
 
 values = {}
@@ -112,7 +112,7 @@ def sharenxs_parse(link, basedir):
             # pick just the src's url part we need
             sharenxs_split = re.split('thumbnails/sf/', save_extension[0])
             # and compose the full-sized image url
-            download_url = 'http://images.sharenxs.com/wz/' + sharenxs_split[1] + save_extension[1]
+            download_url = 'http://cache.sharenxs.com/images/wz/' + sharenxs_split[1] + save_extension[1]
             urlretrieve(download_url, savefile)
         except IndexError:
             return
