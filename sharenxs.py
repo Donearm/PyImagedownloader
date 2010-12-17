@@ -51,8 +51,12 @@ def sharenxs_parse(link, basedir):
             save_extension = re.split('/', str(src_link[0]))
             savefile = join(basedir, str(save_extension[-1]))
             download_url = str(src_link[0])
-            urlretrieve(download_url, savefile)
-            return
+            try:
+                urlretrieve(download_url, savefile)
+                return
+            except IOError:
+                # it's very possible the image isn't available anymore then
+                return
         except IndexError:
             return
 
