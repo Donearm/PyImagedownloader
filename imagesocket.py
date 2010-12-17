@@ -17,7 +17,7 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import urlretrieve
+from urllib import urlretrieve, urlencode
 from os.path import join
 import lxml.html
 from pyimg import user_agent
