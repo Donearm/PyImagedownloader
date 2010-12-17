@@ -86,7 +86,7 @@ class Connector():
         # Regexps needed
         self.rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
         self.rImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
-        self.rCelebrityForum = re.compile("http://celebrityforum\.freeforumzone\.leonardo\.it", re.IGNORECASE)
+        self.rCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
 
         if self.rUsemycomputer.search(url):
             # We got a login user/pwd for usemycomputer, let's first login then
