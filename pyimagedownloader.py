@@ -46,6 +46,7 @@ from pyimg import basedir
 
 
 # The regexp we'll need to find the link
+rHttp = re.compile("http://", re.IGNORECASE)
 rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image/", re.IGNORECASE)
 rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
@@ -82,6 +83,13 @@ class ImageHostParser():
         self.page = lxml.html.fromstring(page)
         self.tag = tag
         self.attr = attr
+# iterlinks() gets all links on the page but it's slower than using xpath
+# (because it catches a whole lot more links)
+#        self.linklist = []
+#        for L in self.page.iterlinks():
+#            if rHttp.search(L[2]):
+#                self.linklist.append(L[2])
+#        print(self.linklist)
         self.which_host(tag, attr)
 
     def which_host(self, tag, attr):
