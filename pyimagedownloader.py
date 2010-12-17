@@ -20,15 +20,13 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.3"
-__date__ = "27082010"
+__version__ = "1.4"
+__date__ = "17122010"
 __email__ = "forod.g@gmail.com"
 
 import sys
 import re
-import urllib2
 import fileinput
-from urllib import urlencode
 from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
@@ -41,7 +39,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
 import http_connector
 import pygui
 # importing config file variables
-from pyimg import basedir, user_agent
+from pyimg import basedir
 
 
 
