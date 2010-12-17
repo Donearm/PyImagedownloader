@@ -17,12 +17,10 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlretrieve, urlencode
-from cookielib import CookieJar
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
 
 
@@ -32,54 +30,21 @@ rRedirects2 = re.compile("Continue To Your Image", re.IGNORECASE) # to find gene
 rRedirects3 = re.compile("tempfull-default\.php", re.IGNORECASE) # to find the url of the imagevenue's countdown
 
 
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
-cj = CookieJar()
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-urllib2.install_opener(opener)
-
 def imagevenue_parse(link, basedir):
     """For parsing normal imagevenue's links"""
 
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-        # search if the image link goes to a "Continue to image" page. 
-        # If so substitute the url part with the real image one and request the page again
-        redirect = re.search(rRedirects3, response.geturl())
-        if redirect:
-            realurl = rRedirects3.sub('img.php', response.geturl())
-            try:
-                response = urllib2.urlopen(realurl)
-            except urllib2.HTTPError as e:
-                if e.code == 404:
-                    print("An image couldn't be downloaded")
-                    return
-            except urllib2.URLError as e:
-                print(e.reason)
-                return
-    except urllib2.HTTPError as e:
-        if e.code == 404:
-            print("An image couldn't be downloaded")
-            return
-    except urllib2.URLError as e:
-        print(e.reason)
-        return
-
-    # get every page linked from the imagevenue links
-    image_page = response.read()
-
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
     # if there are ads on the page, resubmit the link to the parser
-    if re.search(rRedirects, image_page):
+    if re.search(rRedirects, response):
         imagevenue_parse(link, basedir)
         return
-    elif re.search(rRedirects2, image_page):
+    elif re.search(rRedirects2, response):
         imageveneue_parse(link)
         return
 
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     # find the src attribute which contains the real link of imagevenue's images
     src_links = page.xpath("//img[@id='thepic']")
@@ -109,16 +74,10 @@ def imagevenue_embed(link):
     """For parsing the links coming from paid host images like usercash"""
 
     # get every page linked from the imagevenue links
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        return
-    except urllib2.URLError as e:
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     # find the src attribute which contains the real link of imagevenue's images
     src_links = page.xpath("//img[@id='thepic']")

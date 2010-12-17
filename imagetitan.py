@@ -17,35 +17,22 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve 
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
 
 # The regexp we'll need to find the link
 rSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
 
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
-
-
 def imagetitan_parse(link, basedir):
     # get every page linked from the imagetitan links
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
+
     # find the src attribute which contains the real link of imagetitan's images
     src_links = page.xpath("//img[@id='image']")
 

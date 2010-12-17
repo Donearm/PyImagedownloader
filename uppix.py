@@ -17,36 +17,19 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlretrieve, urlencode
+from urllib import urlretrieve
 from os.path import join
-#from BeautifulSoup import BeautifulSoup, SoupStrainer
 import lxml.html
-from pyimg import user_agent
-
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
+import http_connector
 
 def uppix_parse(link, basedir):
     # get every page linked from the uppix links
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    image_page = response.read()
-    #page_soup = BeautifulSoup(image_page)
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     # find the src attribute which contains the real link of uppix's images
-    #src_links = page_soup.findAll('img', id='dpic')
     src_links = page.xpath("//img[@id='dpic']")
 
     uppix_src = [li.get('src', None) for li in src_links]

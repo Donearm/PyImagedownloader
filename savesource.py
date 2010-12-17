@@ -19,23 +19,17 @@ __email__ = "forod.g@gmail.com"
 import re
 import shutil
 import os
-import urllib
-import urllib2
 import string
 import htmlentitydefs
 from os.path import splitext, join
 from urlparse import urlparse
-from urllib import urlretrieve
 import lxml.html
-from pyimg import user_agent
-from http_connector import get_request, check_string_or_list
+import http_connector
 
 
 # The regexp we'll need to find the images in the destination directory
 rImages = re.compile('\.(jpg|png|gif|jpeg)', re.IGNORECASE) # all most common image files
 
-
-headers = { 'User-Agent' : user_agent }
 
 def extract_domain(url):
     """Given an url extract only the domain name (without 'www' and 'com' for example)"""
@@ -72,14 +66,14 @@ def decode_htmlentities(s):
 def save_source(page, basedir, creditor=""):
     """ the method to save the original page link to a file """
 
-    page = check_string_or_list(page)
+    connector = http_connector.Connector()
+
+    page = connector.check_string_or_list(page)
 
     # get the page's title
-    response = get_request(page, user_agent)
+    response = connector.reqhandler(page)
 
-    page_title = response.read()
-
-    page_title_parsed = lxml.html.fromstring(page_title)
+    page_title_parsed = lxml.html.fromstring(response)
 
     neat_title = page_title_parsed.find(".//title").text
     # Clean title from html entities

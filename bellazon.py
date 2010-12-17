@@ -17,13 +17,8 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from cookielib import CookieJar
-from socket import setdefaulttimeout
-from urllib import urlencode
 import lxml.html
-from pyimg import user_agent
-from http_connector import get_request
+import http_connector
 
 
 
@@ -31,8 +26,7 @@ from http_connector import get_request
 rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
 
 
-
-
 def bellazon_parse(link, basedir):
     if rBellazon.search(str(link)):
-        response = get_request(link, headers)
+        connector = http_connector.Connector()
+        response = connector.reqhandler(link)

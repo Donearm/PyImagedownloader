@@ -17,15 +17,9 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import urlencode, urlretrieve 
+from urllib import urlretrieve
 import lxml.html
-from pyimg import user_agent
 from os.path import join
-
-
-values = {}
-headers = {'User-Agent': user_agent}
-data = urlencode(values)
 
 
 def imageban_parse(link, basedir):

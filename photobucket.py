@@ -17,18 +17,10 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
 
-
-
-# values for age verification
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def photobucket_parse(link, basedir):
     try:

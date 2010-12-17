@@ -63,7 +63,7 @@ rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rPostimage = re.compile("http://(www\.)?postimage\.org/image/", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
-rImageSocket = re.compile("http://imagesocket\.com", re.IGNORECASE)
+rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
 rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
@@ -199,7 +199,8 @@ def not_supported(host):
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
-    Rpage = http_connector.connector(url)
+    connector = http_connector.Connector()
+    Rpage = connector.reqhandler(url)
 
 
     # Parse the page for images

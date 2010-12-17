@@ -17,37 +17,17 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlretrieve, urlencode
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
 import http_connector
 
 
-
-values = {}
-headers = { 'User-Agent' : user_agent, 'show_adult': '1' }
-data = urlencode(values)
-
 def skinsbe_parse(link, basedir):
-    #request = urllib2.Request(link, data, headers)
-    try:
-# we use the connector from http_connector because it can handle cookies
-# and we'll need them to store the affirmative answer to whether to show
-# adult images or not
-# Without cookies the program will stop at the first adult image found
-        response = http_connector.connector(link)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-
-    image_page = response
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
 
     # find the src attribute which contains the real link of skinsbe's images

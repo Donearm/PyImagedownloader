@@ -17,11 +17,10 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
 
 # The regexp we'll need to find the link
@@ -31,28 +30,13 @@ rSharenxsUrl = re.compile("http://((www|cache)\.)?sharenxs\.com", re.IGNORECASE)
 # Regexp matching a full-sized sharenxs src url
 rSharenxsWz = re.compile("http://((www|cache)\.)?sharenxs\.com/images/wz", re.IGNORECASE)
 
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
-
 def sharenxs_parse(link, basedir):
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    # get every page linked from the sharenxs links
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
     # find the src attribute which contains the real link of sharenxs's images
     view_links = page.xpath("//center/table/tr/td/table/tr/td[@align='center']/a[@href]")
-
 
     sharenxs_view = [li.get('href', None) for li in view_links]
     
@@ -73,16 +57,9 @@ def sharenxs_parse(link, basedir):
             return
 
     # opening the page with the full-sized image
-    request2 = urllib2.Request(sharenxs_url[0], data, headers)
-    try:
-        response2 = urllib2.urlopen(request2)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
-    page2 = lxml.html.fromstring(response2.read())
+    response2 = connector.reqhandler(sharenxs_url[0])
+
+    page2 = lxml.html.fromstring(response2)
 
     # find the image url
     src_links = page2.xpath('//img[@src]')

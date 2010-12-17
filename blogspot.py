@@ -17,28 +17,16 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
 
-values = {}
-headers = {'User-Agent': user_agent}
-data = urlencode(values)
 
 def blogspot_parse(link, basedir):
-    #response = post_request(i, data, headers)
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
     # No need for blogspot to call lxml again, the links in blogspot_list
     # are already the direct urls to the full image

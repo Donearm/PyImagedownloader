@@ -17,41 +17,16 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
 from os.path import join
 import lxml.html
 import http_connector
-from pyimg import user_agent
 
-
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def postimage_parse(link, basedir):
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        if e.code == 405:
-            request = urllib2.Request(link)
-            try:
-                response = urllib2.urlopen(request)
-            except:
-                print("An image couldn't be downloaded")
-                return
-        else:
-            print("An image couldn't be downloaded")
-            return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    # get every page linked from the postimage links
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     # Little trick: check if we have an img with an height; that would mean
     # the image is already fullsized. If there is no height, the image is
@@ -78,7 +53,7 @@ def postimage_parse(link, basedir):
         # I'm using http_connector function to make use of its opener,
         # a simple urllib2.Request doesn't set the desidered User-Agent
         # header (the first request is ok without an opener)
-        downreq = http_connector.connector(download_url)
+        downreq = connector.reqhandler(download_url)
         with open(savefile, 'wb') as f:
             f.write(downreq)
     except IndexError:

@@ -17,36 +17,20 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlencode, urlretrieve
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
-
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def imageupper_parse(link, basedir):
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    # get every page linked from the imageupper links
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     src_links = page.xpath("//img[@id='img']")
     imageupper_src = [li.get('src', None) for li in src_links]
-
 
     try:
         # generate just the filename of the image to be locally saved

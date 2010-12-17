@@ -17,16 +17,9 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-#import urllib2
-from urllib import urlencode, urlretrieve
+from urllib import urlretrieve
 from os.path import join
-#import lxml.html
-from pyimg import user_agent
 
-
-values = {}
-headers = {'User-Agent': user_agent}
-data = urlencode(values)
 
 def wordpress_parse(link, basedir):
     # urls of this kind are already the absolute ones of the image

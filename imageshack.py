@@ -23,6 +23,7 @@ from os.path import join
 import random
 import lxml.html
 from pyimg import user_agent
+import http_connector
 
 
 
@@ -40,26 +41,41 @@ values = {}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values)
 
-def imageshack_parse(link, basedir):
-    request = urllib2.Request(link, data, headers)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        if e.code == 405:
-            # we could be dealing with an url which is already the image url
-            # let's download it right away then
-            imageshack_download(rImageshackSplit, link, basedir)
-            return
-        else:
-            print("An image couldn't be downloaded")
-            return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+class ShackConnector(http_connector.Connector):
+    """Modified Connector class to deal with 405 HTTP code from ImageShack"""
+    def __init__(self, url):
+        http_connector.Connector.__init__(self)
+        self.values = {}
+        self.headers = { 'User-Agent' : user_agent }
+        self.data = urlencode(self.values)
 
-    # get every page linked from the imageshack links
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+        def post_request(self, url, data, headers):
+            self.request = urllib2.Request(url, data, headers)
+            try:
+                self.response = urllib2.urlopen(self.request)
+                return self.response
+            except urllib2.HTTPError as e:
+                if e.code == 405:
+                    # we could be dealing with an url which is already the image url
+                    # let's download it right away then
+                    imageshack_download(rImageshackSplit, url, basedir)
+
+
+
+
+def imageshack_parse(link, basedir):
+    
+    # check first if it's already the full url of the image
+    if re.search(rImageshackSplit, link):
+        imageshack_download(rImageshackSplit, link, basedir)
+
+    connector = ShackConnector(link)
+    response = connector.reqhandler(link)
+
+    try:
+        page = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        return
 
     # find the src attribute which contains the real link of imageshack's images
     src_links = page.xpath("//img[@id='main_image']")
@@ -106,5 +122,3 @@ def imageshack_download(regexp, url, basedir, src="", htmlpage=0):
 
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 
-
-

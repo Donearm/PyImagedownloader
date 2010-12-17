@@ -17,20 +17,12 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlretrieve, urlencode
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
 
-
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def storeimgs_parse(link, basedir):
-    # get every page linked from the storeimgs links
 
     # make the image url by a couple of substitution and then using a split
     # to dissect the url and add the 'i' needed before the image name

@@ -17,32 +17,18 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-import urllib2
-from urllib import urlretrieve, urlencode
+from urllib import urlretrieve
 from os.path import join
 import lxml.html
-from pyimg import user_agent
+import http_connector
 
-
-
-values = {}
-headers = { 'User-Agent' : user_agent }
-data = urlencode(values)
 
 def upmyphoto_parse(link, basedir):
     # get every page linked from the upmyphoto links
-    request = urllib2.Request(link, data, headers)
-    try: 
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError as e:
-        print("An image couldn't be downloaded")
-        return
-    except urllib2.URLError as e:
-        print("An image couldn't be downloaded")
-        return
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
 
-    image_page = response.read()
-    page = lxml.html.fromstring(image_page)
+    page = lxml.html.fromstring(response)
 
     # find the src attribute which contains the real link of upmyphoto's images
     src_links = page.xpath("//img[@id='image']")
