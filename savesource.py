@@ -116,4 +116,8 @@ def save_source(page, basedir, creditor=""):
             # it as lowercase
             dst_filename, dst_ext = splitext(dst_name)
             dst_name = dst_filename + dst_ext.lower()
-            shutil.move(src_name, dst_name)
+            if os.path.getsize(src_name) <= 1000:
+                # images shorter than 1kb are not really images
+                os.remove(src_name)
+            else:
+                shutil.move(src_name, dst_name)
