@@ -206,7 +206,7 @@ def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
     connector = http_connector.Connector()
-    Rpage = connector.reqhandler(url)
+    Rpage = connector.reqhandler(url, 1)
 
 
     # Parse the page for images

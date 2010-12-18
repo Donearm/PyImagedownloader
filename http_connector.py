@@ -53,19 +53,19 @@ class Connector():
         urllib2.install_opener(self.opener)
     
 
-    def reqhandler(self, url):
+    def reqhandler(self, url, login=0):
         """the attribute that actually starts the request and return the response string"""
 
         # check if the url given is a string or a list
         self.uri = self.check_string_or_list(url)
 
         # for some sites we need to login first....
-        self.site_login(self.uri, self.opener)
-
-        # Encode values (if any)
-        self.data = urlencode(self.values)
+        if login == 1:
+            self.site_login(self.uri, self.opener)
 
         if self.values:
+            # Encode values (if any)
+            self.data = urlencode(self.values)
             # if there are some values it's a POST request
             self.response = self.post_request(self.uri, self.data, user_agent)
         else:
