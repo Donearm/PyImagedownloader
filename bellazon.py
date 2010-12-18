@@ -17,16 +17,30 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
+from os.path import join
+from urllib import urlretrieve
 import lxml.html
 import http_connector
 
 
 
-# The regexp we'll need to find the link
-rBellazon = re.compile("href.*attach\&amp", re.IGNORECASE)
-
-
 def bellazon_parse(link, basedir):
-    if rBellazon.search(str(link)):
-        connector = http_connector.Connector()
-        response = connector.reqhandler(link)
+    connector = http_connector.Connector()
+    response = connector.reqhandler(link)
+
+    page = lxml.html.fromstring(response)
+
+    src_links = page.xpath("//img[@id='thepic']")
+
+    bellazon_src = [li.get('src', None) for li in src_links]
+
+    try:
+        save_extension = re.split('id=', bellazon_src[0])
+        download_url = bellazon_src[0]
+        savefile = join(basedir, str(save_extension[-1]) + '.jpg')
+    except IndexError:
+        return
+
+    # finally save the image on the desidered directory
+    urlretrieve(download_url, savefile) 
+

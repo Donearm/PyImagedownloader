@@ -53,7 +53,7 @@ rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", r
 rImageshack = re.compile("http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 rUpmyphoto = re.compile("http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rUppix = re.compile("http://www\.uppix\.info", re.IGNORECASE)
-rBellazon = re.compile("http://www\.bellazon\.com/", re.IGNORECASE)
+rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
 rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
@@ -117,8 +117,8 @@ class ImageHostParser():
                 uppix.uppix_parse(stringl, basedir)
                 n = n + 1
             elif rBellazon.search(stringl):
-                not_supported('Bellazon')
-                #bellazon.bellazon_parse(L, basedir)
+                #not_supported('Bellazon')
+                bellazon.bellazon_parse(stringl, basedir)
                 n = n + 1
             elif rSkinsBe.search(stringl):
                 skinsbe.skinsbe_parse(stringl, basedir)
