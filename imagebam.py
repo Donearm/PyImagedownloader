@@ -19,8 +19,6 @@ __email__ = "forod.g@gmail.com"
 import re
 from urllib import urlretrieve
 from os.path import join
-import random
-from os.path import splitext
 import lxml.html
 import http_connector
 
@@ -38,34 +36,18 @@ def imagebam_parse(link, basedir):
     imagebam_src = [li.get('src', None) for li in src_links]
 
     # get the image name from the id tag
-    imagename = [li.get('id', None) for i in src_links]
+#    imagename = [li.get('id', None) for i in src_links]
+    # or, better, from the Content-Disposition header
+    imagename = connector.get_filename(imagebam_src[0])
 
-    try:
-        imagebam_split = re.split('dl\.php\?ID=', imagebam_src[0]) # remove the unneeded parts
-    except IndexError:
-        # if the splitting fails it's possible that that image has problems and can't
-        # really be downloaded, skip it.
-        print("An image couldn't be downloaded")
-        return
 
     download_url = imagebam_src[0]
 
-    # generate a random number for the imagename
-    num = random.randrange(1,1000)
-
-    # check if the imagename has an extension (jpg by default)
-    # if not, add it after having inserted the random number too
-    basename, extension = splitext(imagename[0])
-    if not extension:
-        imagename[0] = str(imagename[0]) + str(num) + '.jpg'
-    else:
-        imagename[0] = str(basename) + str(num) + str(extension)
-
     try: 
-        savefile = join(basedir, str(imagename[0]))
+        savefile = join(basedir, imagename)
     except UnicodeEncodeError:
         # catch files with strange characters in name
-        savefile = join(basedir, str(imagename[0].encode("utf-8")))
+        savefile = join(basedir, imagename.encode("utf-8"))
 
     # finally save the image in the desidered directory
     try:
