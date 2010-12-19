@@ -71,7 +71,7 @@ def save_source(page, basedir, creditor=""):
     page = connector.check_string_or_list(page)
 
     # get the page's title
-    response = connector.reqhandler(page)
+    response = connector.reqhandler(page, 1)
 
     page_title_parsed = lxml.html.fromstring(response)
 
