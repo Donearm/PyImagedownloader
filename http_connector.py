@@ -179,6 +179,27 @@ class Connector():
             return response
             #sys.exit(1)
 
+    def get_filename(self, url, split=''):
+        self.request = urllib2.Request(url)
+        try:
+            self.response = urllib2.urlopen(self.request)
+            try:
+                self.filename = self.response.headers['Content-Disposition'].split('=')[1]
+                # remove single or double quotes from the filename
+                if self.filename[0] == '"' or self.filename[0] == "'":
+                    self.filename = self.filename[1:-1]
+                return self.filename
+            except:
+                # no Content-Disposition header, make filename from url
+                # if a split string has been given
+                if split:
+                    self.filename = re.split(split, url)
+                    return self.filename
+                else:
+                    return
+        except:
+            pass
+
 
     def check_string_or_list(self, url):
         """check if the url given is a string or a list and always returns a correct url"""
