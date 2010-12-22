@@ -42,8 +42,7 @@ def imagebam_parse(link, basedir):
     # get the image name from the id tag
 #    imagename = [li.get('id', None) for i in src_links]
     # or, better, from the Content-Disposition header
-    imagename = connector.get_filename(imagebam_src[0])
-
+    imagename = connector.get_filename(imagebam_src[0], 'filename=')
 
     download_url = imagebam_src[0]
 
@@ -52,6 +51,10 @@ def imagebam_parse(link, basedir):
     except UnicodeEncodeError:
         # catch files with strange characters in name
         savefile = join(basedir, imagename.encode("utf-8"))
+    except AttributeError:
+        # perhaps we have used the split in getting an imagename and thus
+        # we now have a list and not a string
+        savefile = join(basedir, imagename[-1])
 
     # finally save the image in the desidered directory
     try:
