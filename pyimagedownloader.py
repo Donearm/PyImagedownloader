@@ -92,6 +92,8 @@ class ImageHostParser():
 #        print(self.linklist)
         self.which_host(tag, attr)
 
+
+
     def which_host(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
         all_tags = self.page.xpath(xpath_search)
@@ -168,6 +170,7 @@ class ImageHostParser():
                 n = n + 1
             else:
                 continue
+
         print("%d images were present" % n)
 
 

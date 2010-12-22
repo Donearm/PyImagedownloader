@@ -27,7 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import urllib2
-#from socket import setdefaulttimeout
+import socket
 from cookielib import CookieJar
 from urllib import urlencode
 # importing config file variables
@@ -41,8 +41,9 @@ class Connector():
         # Some variables for the connection
         self.values = {}
         self.headers = { 'User-Agent' : user_agent }
+        self.timeout = timeout
         # Set the timeout we chose in the config file
-#        setdefaulttimeout(timeout)
+        socket.setdefaulttimeout(self.timeout)
 
         # set a cookie handler and install the opener
         self.cj = CookieJar()
@@ -128,7 +129,7 @@ class Connector():
     def post_request(self, url, data, headers):
         request = urllib2.Request(url, data, headers)
         try:
-            response = urllib2.urlopen(request, data, timeout)
+            response = urllib2.urlopen(request, data)
             # various infos on the response
             #print(response.info())
             #print(response.geturl())
@@ -147,11 +148,15 @@ class Connector():
                 print("An image couldn't be downloaded.")
                 print(e.code)
                 return response
-                #sys.exit(1)
         except urllib2.URLError as e:
             response = ''
             print("An image couldn't be downloaded.")
             print(e.reason)
+            return response
+        except socket.error as e:
+            response = ''
+            print("An image couldn't be downloaded.")
+            print(e)
             return response
 
 
@@ -159,7 +164,7 @@ class Connector():
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
         try:
-            response = urllib2.urlopen(request, None, timeout)
+            response = urllib2.urlopen(request, None)
             return response.read()
         except urllib2.HTTPError as e:
             response = ''
@@ -171,13 +176,16 @@ class Connector():
                 print("An image couldn't be downloaded.")
                 print(e.code)
                 return response
-                #sys.exit(1)
         except urllib2.URLError as e:
             response = ''
             print("An image couldn't be downloaded.")
             print(e.reason)
             return response
-            #sys.exit(1)
+        except socket.error as e:
+            response = ''
+            print("An image couldn't be downloaded.")
+            print(e)
+            return response
 
     def get_filename(self, url, split=''):
         self.request = urllib2.Request(url)
@@ -198,7 +206,10 @@ class Connector():
                 else:
                     return
         except:
-            pass
+            # it's possible that the url is currently not available,
+            # use the url and the split string then
+            self.filename = re.split(split, url)
+            return self.filename
 
 
     def check_string_or_list(self, url):
