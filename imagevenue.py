@@ -44,7 +44,11 @@ def imagevenue_parse(link, basedir):
         imageveneue_parse(link)
         return
 
-    page = lxml.html.fromstring(response)
+    try:
+        page = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        # most of the time we can simply ignore parsing errors
+        pass
 
     # find the src attribute which contains the real link of imagevenue's images
     src_links = page.xpath("//img[@id='thepic']")
