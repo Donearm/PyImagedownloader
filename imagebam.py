@@ -32,7 +32,7 @@ def imagebam_parse(link, basedir):
         page = lxml.html.fromstring(response)
     except lxml.etree.XMLSyntaxError as e:
         # most of the time we can simply ignore parsing errors
-        pass
+        return
 
     # find the src attribute which contains the real link of imagebam's images
     src_links = page.xpath("//img[@onclick='scale(this);']")
