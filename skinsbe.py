@@ -41,4 +41,7 @@ def skinsbe_parse(link, basedir):
 
     download_url = skinsbe_src[0]
     # finally save the image in the desidered directory
-    urlretrieve(download_url, savefile) 
+    try:
+        urlretrieve(download_url, savefile) 
+    except :
+        return
