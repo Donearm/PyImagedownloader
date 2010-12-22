@@ -92,7 +92,11 @@ class ImageHostParser():
 #        print(self.linklist)
         self.which_host(tag, attr)
 
-
+    def uniquify(self, seq):
+        """Given a sequence of items, returns them only once, purging
+        those presents more than one time, preserving the order"""
+        self.seen = set()
+        return [x for x in seq if x not in self.seen and not self.seen.add(x)]
 
     def which_host(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
