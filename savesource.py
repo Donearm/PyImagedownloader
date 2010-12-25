@@ -16,19 +16,13 @@ __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
-import re
-import shutil
 import os
 import string
 import htmlentitydefs
-from os.path import splitext, join
+from os.path import join
 from urlparse import urlparse
 import lxml.html
 import http_connector
-
-
-# The regexp we'll need to find the images in the destination directory
-rImages = re.compile('\.(jpg|png|gif|jpeg)', re.IGNORECASE) # all most common image files
 
 
 def extract_domain(url):
@@ -79,7 +73,6 @@ def save_source(page, basedir, creditor=""):
     # Clean title from html entities
     neat_title = decode_htmlentities(neat_title)
     # purge the title of troublesome characters
-    #neat_title = re.sub('&amp;', '&', neat_title) # &amp; substitution
     accepted_chars = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
     neat_title = filter(accepted_chars.__contains__, neat_title)
 
@@ -106,18 +99,5 @@ def save_source(page, basedir, creditor=""):
         credits_file.write("credits: %s @%s \n" % (creditor, domain_name))
         credits_file.close()
 
-    # move all the images in basedir in the output_dir
-    files_in_basedir = os.listdir(basedir)
-    for f in files_in_basedir:
-        if rImages.search(f):
-            src_name = join(basedir, f)
-            dst_name = join(output_dir, f)
-            # extract the files' extension and make sure all the files have
-            # it as lowercase
-            dst_filename, dst_ext = splitext(dst_name)
-            dst_name = dst_filename + dst_ext.lower()
-            if os.path.getsize(src_name) <= 1000:
-                # images shorter than 1kb are not really images
-                os.remove(src_name)
-            else:
-                shutil.move(src_name, dst_name)
+    return output_dir
+

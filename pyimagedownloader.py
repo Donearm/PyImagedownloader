@@ -105,10 +105,11 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
 class ImageHostParser():
     """ The main parser class """
 
-    def __init__(self, page, tag, attr):
+    def __init__(self, page, tag, attr, basedir):
         self.page = lxml.html.fromstring(page)
         self.tag = tag
         self.attr = attr
+        self.basedir = basedir
 # iterlinks() gets all links on the page but it's slower than using xpath
 # (because it catches a whole lot more links)
 #        self.linklist = []
@@ -129,7 +130,7 @@ class ImageHostParser():
             self.stringl = str(L.get(attr, None))
             for k, v in sorted(regexp_dict.items()):
                 if k.search(self.stringl):
-                    v(self.stringl, basedir)
+                    v(self.stringl, self.basedir)
                     n = n + 1
                 else:
                     continue
@@ -190,8 +191,13 @@ def download_url(url, savedirectory, embed="", poster=""):
     Rpage = connector.reqhandler(url, 1)
 
 
+    # Generate the directory for the source file and the images downloaded
+    # Plus, return savedirectory as basedir + page title, so to save images
+    # on a per-site basis
+    savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
+
     # Parse the page for images
-    parser = ImageHostParser(Rpage, 'a', 'href')
+    parser = ImageHostParser(Rpage, 'a', 'href', savedirectory)
     if embed:
         # do we need to search for embedded images then?
         # Note: at the moment it downloads thumbnails too
@@ -199,8 +205,7 @@ def download_url(url, savedirectory, embed="", poster=""):
         print("")
         parser.which_host('img', 'src')
 
-    # Generate the directory for the source file and the images downloaded
-    savesource.save_source(url, savedirectory, creditor=poster)
+
 
 def filelist_parse(file):
     """parsing a file containing urls and giving back a list of them"""
