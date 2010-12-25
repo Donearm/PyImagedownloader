@@ -98,9 +98,6 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
 
 
 
-
-
-
 # Main parser class
 class ImageHostParser():
     """ The main parser class """
@@ -121,24 +118,22 @@ class ImageHostParser():
         self.which_host(self.urllist, self.attr)
 
     def which_host(self, urllist, attr):
-        """check every url in the given list against all regular expressions"""
+        """check every url in the given list against all regular expressions
+        and extract the value of the chosen html attribute"""
         n = 0
-        # basically: for each url in urllist get a string based on the given
-        # attribute and iterate over the regexp dictionary; if there is a match
-        # act accordingly
         for L in urllist:
             self.stringl = str(L.get(attr, None))
-            for k, v in sorted(regexp_dict.items()):
+            # iterate over the regexp dictionary items; when found a url matching,
+            # spawn a new process for the download
+            for k, v in regexp_dict.items():
                 if k.search(self.stringl):
-                    v(self.stringl, self.basedir)
+                    p = Process(target=v, args=(self.stringl, self.basedir))
+                    p.start()
+                    # without multiprocessing
+#                    v(self.stringl, self.basedir)
                     n = n + 1
                 else:
                     continue
-#            print(self.stringl)
-#            p = Process(target=self.dict_regexp, args=(regexp_dict, self.stringl))
-#            print(p.name)
-#            p.daemon
-#            p.start()
 
         print("%d images were present" % n)
 
