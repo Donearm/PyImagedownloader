@@ -27,6 +27,8 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import fileinput
+import threading
+import Queue
 from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
@@ -40,7 +42,6 @@ import http_connector
 import pygui
 # importing config file variables
 from pyimg import basedir
-
 
 
 
@@ -70,9 +71,50 @@ rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
 rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
+# putting them all in a list
+regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
+        rImagebam : imagebam.imagebam_parse,
+        rImagehaven : imagehaven.imagehaven_parse,
+        rImageshack : imageshack.imageshack_parse,
+        rUpmyphoto : upmyphoto.upmyphoto_parse,
+        rUppix : uppix.uppix_parse,
+        rBellazon : bellazon.bellazon_parse,
+        rSkinsBe : skinsbe.skinsbe_parse,
+        rShareapic : shareapic.shareapic_parse,
+        rStoreimgs : storeimgs.storeimgs_parse,
+        rImagetitan : imagetitan.imagetitan_parse,
+        rSharenxs : sharenxs.sharenxs_parse,
+        rBlogspot : blogspot.blogspot_parse,
+        rPostimage : postimage.postimage_parse,
+        rImageUpper : imageupper.imageupper_parse,
+        rImageSocket : imagesocket.imagesocket_parse,
+        rPhotobucket : photobucket.photobucket_parse,
+        rImageban : imageban.imageban_parse,
+        rImagehostorg : imagehostorg.imagehostorg_parse,
+        rTurboimagehost : turboimagehost.turboimagehost_parse,
+        rUsemycomputer : usemycomputer.usemycomputer_parse,
+        rWordpress : wordpress.wordpress_parse,
+        rWordpressuploads : wordpress.wordpress_parse
+        }
 
 
 
+
+#class ThreadParser(threading.Thread):
+#    """Threaded Url Parser"""
+#    def __init__(self, queue):
+#        threading.Thread.__init__(self)
+#        self.queue = queue
+    
+#    def run(self):
+#        while True:
+#            url = self.queue.get()
+
+#            self.
+
+#            self.queue.task_done()
+
+#    def which_host(self, 
 
 
 # Main parser class
@@ -90,7 +132,28 @@ class ImageHostParser():
 #            if rHttp.search(L[2]):
 #                self.linklist.append(L[2])
 #        print(self.linklist)
-        self.which_host(tag, attr)
+#        self.old_which_host(tag, attr)
+        self.urllist = self.get_all_links(self.tag, self.attr)
+        self.which_host(self.urllist, regexp_dict, self.attr)
+
+    def which_host(self, urllist, regexps, attr):
+        """check every url in the given list against all regular expressions"""
+        n = 0
+        for L in urllist:
+            stringl = str(L.get(attr, None))
+            for k, v in regexps.iteritems():
+                if k.search(stringl):
+                    v(stringl, basedir)
+                    n = n + 1
+                else:
+                    continue
+
+        print("%d images were present" % n)
+            
+    def get_all_links(self, tag, attr):
+        xpath_search = '//' + tag + '[@' + attr + ']'
+        all_tags = self.page.xpath(xpath_search)
+        return all_tags
 
     def uniquify(self, seq):
         """Given a sequence of items, returns them only once, purging
@@ -98,7 +161,7 @@ class ImageHostParser():
         self.seen = set()
         return [x for x in seq if x not in self.seen and not self.seen.add(x)]
 
-    def which_host(self, tag, attr):
+    def old_which_host(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
         all_tags = self.page.xpath(xpath_search)
         n = 0
