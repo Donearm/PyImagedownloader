@@ -27,7 +27,11 @@ def skinsbe_parse(link, basedir):
     connector = http_connector.Connector()
     response = connector.reqhandler(link)
 
-    page = lxml.html.fromstring(response)
+    try:
+        page = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        # most of the time we can simply ignore parsing errors
+        return
 
 
     # find the src attribute which contains the real link of skinsbe's images

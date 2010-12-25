@@ -40,7 +40,11 @@ def imagesocket_parse(link, basedir):
     try:
         response = connector.reqhandler(link)
 
-        page = lxml.html.fromstring(response)
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
         src_links = page.xpath("//img[@id='thumb']")
         imagesocket_src = [li.get('src', None) for li in src_links]

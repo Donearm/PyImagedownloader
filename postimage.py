@@ -26,7 +26,11 @@ def postimage_parse(link, basedir):
     connector = http_connector.Connector()
     response = connector.reqhandler(link)
 
-    page = lxml.html.fromstring(response)
+    try:
+        page = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        # most of the time we can simply ignore parsing errors
+        return
 
     # Little trick: check if we have an img with an height; that would mean
     # the image is already fullsized. If there is no height, the image is

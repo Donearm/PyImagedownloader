@@ -34,7 +34,12 @@ def sharenxs_parse(link, basedir):
     connector = http_connector.Connector()
     response = connector.reqhandler(link)
 
-    page = lxml.html.fromstring(response)
+    try:
+        page = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        # most of the time we can simply ignore parsing errors
+        return
+
     # find the src attribute which contains the real link of sharenxs's images
     view_links = page.xpath("//center/table/tr/td/table/tr/td[@align='center']/a[@href]")
 
@@ -63,7 +68,11 @@ def sharenxs_parse(link, basedir):
     # opening the page with the full-sized image
     response2 = connector.reqhandler(sharenxs_url[0])
 
-    page2 = lxml.html.fromstring(response2)
+    try:
+        page2 = lxml.html.fromstring(response)
+    except lxml.etree.XMLSyntaxError as e:
+        # most of the time we can simply ignore parsing errors
+        return
 
     # find the image url
     src_links = page2.xpath('//img[@src]')

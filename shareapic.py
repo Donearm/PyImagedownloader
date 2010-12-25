@@ -30,7 +30,11 @@ def shareapic_parse(link, basedir):
     try:
         response = connector.reqhandler(link)
 
-        page = lxml.html.fromstring(response)
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
         # find the src attribute which contains the real link of shareapic's images
         src_links = page.xpath("//img[@title='Click to zoom! ::']")
