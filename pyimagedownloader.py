@@ -52,6 +52,9 @@ rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image/", re.IGNORECASE)
 rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImageshack = re.compile("http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
+rPostimage = re.compile("http://(www\.)?postimage\.org/image/", re.IGNORECASE)
+rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
+rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rUpmyphoto = re.compile("http://(www\.)?upmyphoto\.com", re.IGNORECASE)
 rUppix = re.compile("http://www\.uppix\.info", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
@@ -59,9 +62,6 @@ rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
 rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
-rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
-rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
-rPostimage = re.compile("http://(www\.)?postimage\.org/image/", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
 rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
 rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
@@ -71,11 +71,14 @@ rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
 rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
-# putting them all in a list
+# putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rImagebam : imagebam.imagebam_parse,
         rImagehaven : imagehaven.imagehaven_parse,
         rImageshack : imageshack.imageshack_parse,
+        rPostimage : postimage.postimage_parse,
+        rSharenxs : sharenxs.sharenxs_parse,
+        rBlogspot : blogspot.blogspot_parse,
         rUpmyphoto : upmyphoto.upmyphoto_parse,
         rUppix : uppix.uppix_parse,
         rBellazon : bellazon.bellazon_parse,
@@ -83,9 +86,6 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rShareapic : shareapic.shareapic_parse,
         rStoreimgs : storeimgs.storeimgs_parse,
         rImagetitan : imagetitan.imagetitan_parse,
-        rSharenxs : sharenxs.sharenxs_parse,
-        rBlogspot : blogspot.blogspot_parse,
-        rPostimage : postimage.postimage_parse,
         rImageUpper : imageupper.imageupper_parse,
         rImageSocket : imagesocket.imagesocket_parse,
         rPhotobucket : photobucket.photobucket_parse,
@@ -132,16 +132,18 @@ class ImageHostParser():
 #            if rHttp.search(L[2]):
 #                self.linklist.append(L[2])
 #        print(self.linklist)
-#        self.old_which_host(tag, attr)
         self.urllist = self.get_all_links(self.tag, self.attr)
         self.which_host(self.urllist, regexp_dict, self.attr)
 
     def which_host(self, urllist, regexps, attr):
         """check every url in the given list against all regular expressions"""
         n = 0
+        # basically: for each url in urllist get a string based on the given
+        # attribute and iterate over the regexp dictionary; if there is a match
+        # act accordingly
         for L in urllist:
             stringl = str(L.get(attr, None))
-            for k, v in regexps.iteritems():
+            for k, v in sorted(regexps.items()):
                 if k.search(stringl):
                     v(stringl, basedir)
                     n = n + 1
@@ -160,86 +162,6 @@ class ImageHostParser():
         those presents more than one time, preserving the order"""
         self.seen = set()
         return [x for x in seq if x not in self.seen and not self.seen.add(x)]
-
-    def old_which_host(self, tag, attr):
-        xpath_search = '//' + tag + '[@' + attr + ']'
-        all_tags = self.page.xpath(xpath_search)
-        n = 0
-        for L in all_tags:
-            stringl = str(L.get(attr, None))
-            if rImagevenue.search(stringl):
-                imagevenue.imagevenue_parse(stringl, basedir)
-                n = n + 1
-            elif rImagebam.search(stringl):
-                imagebam.imagebam_parse(stringl, basedir)
-                n = n + 1
-            elif rImagehaven.search(stringl):
-                imagehaven.imagehaven_parse(stringl, basedir)
-                n = n + 1
-            elif rImageshack.search(stringl):
-                imageshack.imageshack_parse(stringl, basedir)
-                n = n + 1
-            elif rUpmyphoto.search(stringl):
-                upmyphoto.upmyphoto_parse(stringl, basedir)
-                n = n + 1
-            elif rUppix.search(stringl):
-                uppix.uppix_parse(stringl, basedir)
-                n = n + 1
-            elif rBellazon.search(stringl):
-                #not_supported('Bellazon')
-                bellazon.bellazon_parse(stringl, basedir)
-                n = n + 1
-            elif rSkinsBe.search(stringl):
-                skinsbe.skinsbe_parse(stringl, basedir)
-                n = n + 1
-            elif rShareapic.search(stringl):
-                shareapic.shareapic_parse(stringl, basedir)
-                n = n + 1
-            elif rStoreimgs.search(stringl):
-                storeimgs.storeimgs_parse(stringl, basedir)
-                n = n + 1
-            elif rImagetitan.search(stringl):
-                imagetitan.imagetitan_parse(stringl, basedir)
-                n = n + 1
-            elif rSharenxs.search(stringl):
-                sharenxs.sharenxs_parse(stringl, basedir)
-                n = n + 1
-            elif rBlogspot.search(stringl):
-                blogspot.blogspot_parse(stringl, basedir)
-                n = n + 1
-            elif rPostimage.search(stringl):
-                #not_supported('Postimage')
-                postimage.postimage_parse(stringl, basedir)
-                n = n + 1
-            elif rImageUpper.search(stringl):
-                imageupper.imageupper_parse(stringl, basedir)
-                n = n + 1
-            elif rImageSocket.search(stringl):
-                imagesocket.imagesocket_parse(stringl, basedir)
-                n = n + 1
-            elif rPhotobucket.search(stringl):
-                photobucket.photobucket_parse(stringl, basedir)
-                n = n + 1
-            elif rImageban.search(stringl):
-                imageban.imageban_parse(stringl, basedir)
-                n = n + 1
-            elif rImagehostorg.search(stringl):
-                imagehostorg.imagehostorg_parse(stringl, basedir)
-                n = n + 1
-            elif rTurboimagehost.search(stringl):
-                turboimagehost.turboimagehost_parse(stringl, basedir)
-                n = n + 1
-            elif rUsemycomputer.search(stringl):
-                usemycomputer.usemycomputer_parse(stringl, basedir)
-                n = n + 1
-            elif rWordpress.search(stringl) or rWordpressuploads.search(stringl):
-                wordpress.wordpress_parse(stringl, basedir)
-                n = n + 1
-            else:
-                continue
-
-        print("%d images were present" % n)
-
 
 
 # Generate the argument parser
