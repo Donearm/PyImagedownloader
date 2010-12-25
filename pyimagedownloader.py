@@ -27,8 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import fileinput
-import threading
-import Queue
+from multiprocessing import Process, Pool
 from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
@@ -100,21 +99,6 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
 
 
 
-#class ThreadParser(threading.Thread):
-#    """Threaded Url Parser"""
-#    def __init__(self, queue):
-#        threading.Thread.__init__(self)
-#        self.queue = queue
-    
-#    def run(self):
-#        while True:
-#            url = self.queue.get()
-
-#            self.
-
-#            self.queue.task_done()
-
-#    def which_host(self, 
 
 
 # Main parser class
@@ -133,25 +117,30 @@ class ImageHostParser():
 #                self.linklist.append(L[2])
 #        print(self.linklist)
         self.urllist = self.get_all_links(self.tag, self.attr)
-        self.which_host(self.urllist, regexp_dict, self.attr)
+        self.which_host(self.urllist, self.attr)
 
-    def which_host(self, urllist, regexps, attr):
+    def which_host(self, urllist, attr):
         """check every url in the given list against all regular expressions"""
         n = 0
         # basically: for each url in urllist get a string based on the given
         # attribute and iterate over the regexp dictionary; if there is a match
         # act accordingly
         for L in urllist:
-            stringl = str(L.get(attr, None))
-            for k, v in sorted(regexps.items()):
-                if k.search(stringl):
-                    v(stringl, basedir)
+            self.stringl = str(L.get(attr, None))
+            for k, v in sorted(regexp_dict.items()):
+                if k.search(self.stringl):
+                    v(self.stringl, basedir)
                     n = n + 1
                 else:
                     continue
+#            print(self.stringl)
+#            p = Process(target=self.dict_regexp, args=(regexp_dict, self.stringl))
+#            print(p.name)
+#            p.daemon
+#            p.start()
 
         print("%d images were present" % n)
-            
+
     def get_all_links(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
         all_tags = self.page.xpath(xpath_search)
