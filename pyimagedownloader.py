@@ -36,7 +36,8 @@ import lxml.html
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
-        imageban, imagehostorg, turboimagehost, usemycomputer, wordpress
+        imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
+        imageboss
 import http_connector
 import pygui
 # importing config file variables
@@ -70,6 +71,7 @@ rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
 rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
+rImageboss = re.compile("http://www\.imageboss\.net", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rImagebam : imagebam.imagebam_parse,
@@ -93,7 +95,8 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rTurboimagehost : turboimagehost.turboimagehost_parse,
         rUsemycomputer : usemycomputer.usemycomputer_parse,
         rWordpress : wordpress.wordpress_parse,
-        rWordpressuploads : wordpress.wordpress_parse
+        rWordpressuploads : wordpress.wordpress_parse,
+        rImageboss : imageboss.imageboss_parse
         }
 
 
