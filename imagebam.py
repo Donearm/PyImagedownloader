@@ -17,8 +17,10 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
+import random
+import string
 from urllib import urlretrieve
-from os.path import join
+from os.path import join, exists
 import lxml.html
 import http_connector
 
@@ -57,9 +59,25 @@ def imagebam_parse(link, basedir):
         savefile = join(basedir, imagename[-1])
 
     # finally save the image in the desidered directory
-    try:
-        urlretrieve(download_url, savefile) 
-    except IOError as e:
-        # image not loading, skipping it
-        return
+    if not exists(savefile):
+        try:
+            urlretrieve(download_url, savefile) 
+        except IOError as e:
+            # image not loading, skipping it
+            return
+    else:
+        randstring = ''.join(random.choice(string.lowercase) for i in range(5))
+        try:
+            savefile = join(basedir, randstring + imagename)
+        except UnicodeEncodeError:
+            savefile = join(basedir, randstring + imagename.encode("uft-8"))
+        except AttributeError:
+            savefile = join(basedir, randstring + imagename[-1])
+        except TypeError:
+            savefile = join(basedir, randstring + imagename[-1])
+        try:
+            urlretrieve(download_url, savefile)
+        except IOError as e:
+            return
+
 
