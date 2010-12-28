@@ -198,7 +198,8 @@ def download_url(url, savedirectory, embed="", poster=""):
         # Note: at the moment it downloads thumbnails too
         print("Searching for embedded images")
         print("")
-        parser.which_host('img', 'src')
+        embed_links = parser.get_all_links('img', 'src')
+        parser.which_host(embed_links, 'src')
 
 
 
@@ -269,6 +270,7 @@ if __name__ == "__main__":
 
     # do we want a gui?
     if gui:
+#        pygui = Process(target=pygui.Gui, args=(basedir, embed, poster))
         pygui = pygui.Gui(basedir, embed, poster)
     else:
         # no gui then
