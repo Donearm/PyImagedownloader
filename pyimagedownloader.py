@@ -70,6 +70,7 @@ rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 rTurboimagehost = re.compile("http://www\.turboimagehost\.com", re.IGNORECASE)
 rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
 rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
+#rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}(\?w=[0-9]+\&amp\;h=[0-9]+)?", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
 rImageboss = re.compile("http://www\.imageboss\.net", re.IGNORECASE)
 # putting them all in a dictionary

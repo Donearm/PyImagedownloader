@@ -29,7 +29,8 @@ def wordpress_parse(link, basedir):
     save_extension = re.split('/[0-9]{,2}/', link)
     
     # generate the savefile
-    savefile = join(basedir, str(save_extension[-1]))
+    # the split is needed to clean image names with added '?w=width&h=height' strings
+    savefile = join(basedir, str(save_extension[-1]).split('?w=')[0])
 
     download_url = link
 
