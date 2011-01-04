@@ -27,6 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 from os.path import abspath
 import threading
+from multiprocessing import Process
 # importing local modules
 import http_connector
 # importing config file variables
@@ -176,22 +177,27 @@ class Gui():
         #print(liststore.get_value(i, 0))
 
 
+    def download_url(self, url, savedirectory, embed="", poster=""):
+        
+        connector = http_connector.Connector()
+        Rpage = connector.reqhandler(url, 1)
 
-    def download_url(self, url, basedir="", embed="", poster=""):
 
-        Rpage = http_connector.connector(url)
+        # Generate the directory for the source file and the images downloaded
+        # Plus, return savedirectory as basedir + page title, so to save images
+        # on a per-site basis
+        savedirectory = save_source(url, savedirectory, creditor=poster)
 
         # Parse the page for images
-        parser = ImageHostParser(Rpage, 'a', 'href')
+        parser = ImageHostParser(Rpage, 'a', 'href', savedirectory)
         if embed:
             # do we need to search for embedded images then?
             # Note: at the moment it downloads thumbnails too
             print("Searching for embedded images")
             print("")
-            parser.which_host('img', 'src')
+            embed_links = parser.get_all_links('img', 'src')
+            parser.which_host(embed_links, 'src')
 
-        # Generate the directory for the source file and the images downloaded
-        save_source(url, basedir, creditor=poster)
 
 
 class GThread(threading.Thread):
@@ -209,3 +215,4 @@ class GThread(threading.Thread):
 if __name__ == "__main__":
     pygui = Gui()
     gtk.main()
+
