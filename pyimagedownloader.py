@@ -125,13 +125,19 @@ class ImageHostParser():
         """check every url in the given list against all regular expressions
         and extract the value of the chosen html attribute"""
         n = 0
+        
+        # piping the urllist urls into a set to purge duplicates
+        finalset = set()
         for L in urllist:
             self.stringl = str(L.get(attr, None))
+            finalset.add(self.stringl)
+
+        for L in finalset:
             # iterate over the regexp dictionary items; when found a url matching,
             # spawn a new process for the download
             for k, v in regexp_dict.items():
-                if k.search(self.stringl):
-                    p = Process(target=v, args=(self.stringl, self.basedir))
+                if k.search(L):
+                    p = Process(target=v, args=(L, self.basedir))
                     p.start()
                     # without multiprocessing
 #                    v(self.stringl, self.basedir)
@@ -149,8 +155,8 @@ class ImageHostParser():
     def uniquify(self, seq):
         """Given a sequence of items, returns them only once, purging
         those presents more than one time, preserving the order"""
-        self.seen = set()
-        return [x for x in seq if x not in self.seen and not self.seen.add(x)]
+        seen = set()
+        return [x for x in seq if x not in seen and not seen.add(x)]
 
 
 # Generate the argument parser
