@@ -27,6 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import fileinput
+import time
 from multiprocessing import Process, Pool
 from optparse import OptionParser
 from os.path import abspath, dirname
@@ -142,8 +143,10 @@ class ImageHostParser():
                     # without multiprocessing
 #                    v(self.stringl, self.basedir)
                     n = n + 1
-#                    if n > 30:
-#                        p.join()
+                    if n > 100:
+                        # if we reach more than 100 downloading processes, 
+                        # slow down please!
+                        time.sleep(2)
                 else:
                     continue
 
