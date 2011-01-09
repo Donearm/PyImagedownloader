@@ -142,10 +142,16 @@ class ImageHostParser():
                     # without multiprocessing
 #                    v(self.stringl, self.basedir)
                     n = n + 1
+#                    if n > 30:
+#                        p.join()
                 else:
                     continue
 
         print("%d images were present" % n)
+
+    def chunks(self, l, n):
+        """split an iterable in enough chunks of itself as the n given"""
+        return (l[i:i+n] for i in range(0, len(l), n))
 
     def get_all_links(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
