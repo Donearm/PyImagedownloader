@@ -28,6 +28,7 @@ import sys
 import re
 import urllib2
 import socket
+import httplib
 from cookielib import CookieJar
 from urllib import urlencode
 # importing config file variables
@@ -135,6 +136,9 @@ class Connector():
             #print(response.geturl())
             #print(response.getcode())
             return response.read()
+        except httplib.IncompleteRead as e:
+            time.sleep(3)
+            self.reqhandler(url)
         except urllib2.HTTPError as e:
             response = ''
             if e.code == 405:
@@ -166,6 +170,9 @@ class Connector():
         try:
             response = urllib2.urlopen(request, None)
             return response.read()
+        except httplib.IncompleteRead as e:
+            time.sleep(3)
+            self.get_request(url, user_agent)
         except urllib2.HTTPError as e:
             response = ''
             if e.code == 404:
