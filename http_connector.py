@@ -29,7 +29,6 @@ import re
 import urllib2
 import socket
 import httplib
-import time
 from cookielib import CookieJar
 from urllib import urlencode
 # importing config file variables
@@ -42,7 +41,7 @@ class Connector():
     def __init__(self):
         # Some variables for the connection
         self.values = {}
-        self.headers = { 'User-Agent' : user_agent }
+        self.headers = { 'User-Agent' : user_agent, 'Connection' : 'Keep-Alive' }
         self.timeout = timeout
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
@@ -138,8 +137,7 @@ class Connector():
             #print(response.getcode())
             return response.read()
         except httplib.IncompleteRead as e:
-            time.sleep(3)
-            self.reqhandler(url)
+            self.post_request(url, data, headers)
         except urllib2.HTTPError as e:
             response = ''
             if e.code == 405:
@@ -172,8 +170,7 @@ class Connector():
             response = urllib2.urlopen(request, None)
             return response.read()
         except httplib.IncompleteRead as e:
-            time.sleep(3)
-            self.get_request(url, user_agent)
+            self.get_request(url, ua)
         except urllib2.HTTPError as e:
             response = ''
             if e.code == 404:
