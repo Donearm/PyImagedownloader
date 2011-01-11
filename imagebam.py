@@ -51,8 +51,11 @@ def imagebam_parse(link, basedir):
     try: 
         savefile = join(basedir, imagename)
     except UnicodeEncodeError:
-        # catch files with strange characters in name
+        # encode with utf8 files with non-ascii characters in their name
         savefile = join(basedir, imagename.encode("utf-8"))
+    except UnicodeDecodeError:
+        # catch bad characters and try to replace them with correct utf8 chars
+        savefile = join(basedir, imagename.decode('utf8', 'replace'))
     except AttributeError:
         # perhaps we have used the split in getting an imagename and thus
         # we now have a list and not a string
