@@ -10,6 +10,9 @@ timeout = 120
 # Debug or not?
 debug = 0
 
+# Number of simultaneous downloads
+numprocs = 20
+
 # Celebrityforum username and password
 cf_name = ''
 cf_pwd = ''

@@ -27,8 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import fileinput
-import time
-from multiprocessing import Process, Pool
+from multiprocessing import Process, Queue
 from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
@@ -42,7 +41,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
 import http_connector
 import pygui
 # importing config file variables
-from pyimg import basedir
+from pyimg import basedir, numprocs
 
 
 
@@ -112,6 +111,7 @@ class ImageHostParser():
         self.tag = tag
         self.attr = attr
         self.basedir = basedir
+        self.numprocs = numprocs
 # iterlinks() gets all links on the page but it's slower than using xpath
 # (because it catches a whole lot more links)
 #        self.linklist = []
@@ -124,8 +124,16 @@ class ImageHostParser():
 
     def which_host(self, urllist, attr):
         """check every url in the given list against all regular expressions
-        and extract the value of the chosen html attribute"""
+        and extract the value of the chosen html attribute.
+        Then use a queue and enough processes to download all matched urls"""
+        # make a numeric index, a queue and enough processes as numprocs
         n = 0
+        self.q = Queue()
+        self.ps = [ Process(target=self.use_queue, args=()) for i in range(self.numprocs) ]
+
+        for p in self.ps:
+            # start all processes
+            p.start()
         
         # piping the urllist urls into a set to purge duplicates
         finalset = set()
@@ -133,24 +141,32 @@ class ImageHostParser():
             self.stringl = str(L.get(attr, None))
             finalset.add(self.stringl)
 
+
         for L in finalset:
             # iterate over the regexp dictionary items; when found a url matching,
-            # spawn a new process for the download
+            # put the method, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
-                    p = Process(target=v, args=(L, self.basedir))
-                    p.start()
-                    # without multiprocessing
-#                    v(self.stringl, self.basedir)
+                    self.q.put((v, (L, self.basedir)))
+#                    p = Process(target=v, args=(L, self.basedir))
+#                    p.start()
                     n = n + 1
-                    if n > 100:
-                        # if we reach more than 100 downloading processes, 
-                        # slow down please!
-                        time.sleep(2)
                 else:
                     continue
 
+        for i in range(self.numprocs):
+            # put a STOP to end the iter builtin inside use_queue
+            self.q.put("STOP")
+
         print("%d images were present" % n)
+
+    def use_queue(self):
+        """use up the queue by running all its elements"""
+        for method, (link, b) in iter(self.q.get, "STOP"):
+            # method is one of <imagehost>.<imagehost>_parse function
+            # link is the matched url from finalset
+            # b is always self.basedir
+            method(link, b)
 
     def chunks(self, l, n):
         """split an iterable in enough chunks of itself as the n given"""
@@ -160,12 +176,6 @@ class ImageHostParser():
         xpath_search = '//' + tag + '[@' + attr + ']'
         all_tags = self.page.xpath(xpath_search)
         return all_tags
-
-    def uniquify(self, seq):
-        """Given a sequence of items, returns them only once, purging
-        those presents more than one time, preserving the order"""
-        seen = set()
-        return [x for x in seq if x not in seen and not seen.add(x)]
 
 
 # Generate the argument parser
