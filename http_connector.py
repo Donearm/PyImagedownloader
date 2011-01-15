@@ -129,68 +129,76 @@ class Connector():
 
     def post_request(self, url, data, headers):
         request = urllib2.Request(url, data, headers)
-        try:
-            response = urllib2.urlopen(request, data)
-            # various infos on the response
-            #print(response.info())
-            #print(response.geturl())
-            #print(response.getcode())
-            return response.read()
-        except httplib.IncompleteRead as e:
-            self.post_request(url, data, headers)
-        except urllib2.HTTPError as e:
-            response = ''
-            if e.code == 405:
-                # we were wrong, the url doesn't accept a POST, make a GET then
-                response = self.get_request(url, user_agent)
-            elif e.code == 404:
-                # url non-existing, just go on
-                print("%s couldn't be found, skipping it..." % url)
-                return response
-            else:
-                print("An image couldn't be downloaded.")
-                print(e.code)
-                return response
-        except urllib2.URLError as e:
-            response = ''
-            print("An image couldn't be downloaded.")
-            print(e.reason)
-            return response
-        except socket.error as e:
-            response = ''
-            print("An image couldn't be downloaded.")
-            print(e)
-            return response
+        attempts = 0
+        while attempts < 10:
+            try:
+                response = urllib2.urlopen(request, data)
+                # various infos on the response
+                #print(response.info())
+                #print(response.geturl())
+                #print(response.getcode())
+                return response.read()
+                break
+            except httplib.IncompleteRead as e:
+                attempts += 1
+            except urllib2.HTTPError as e:
+                attempts += 1
+                response = ''
+                if e.code == 405:
+                    # we were wrong, the url doesn't accept a POST, make a GET then
+                    response = self.get_request(url, user_agent)
+                elif e.code == 404:
+                    # url non-existing, just go on
+                    print("%s couldn't be found, skipping it..." % url)
+                    return response
+                    break
+                else:
+                    print(e.code)
+            except urllib2.URLError as e:
+                attempts += 1
+                print(e.reason)
+            except socket.error as e:
+                attempts += 1
+                print(e)
+
+        print("An image couldn't be downloaded.")
+        response = ''
+        return response
 
 
     def get_request(self, url, ua=user_agent):
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
-        try:
-            response = urllib2.urlopen(request, None)
-            return response.read()
-        except httplib.IncompleteRead as e:
-            self.get_request(url, ua)
-        except urllib2.HTTPError as e:
-            response = ''
-            if e.code == 404:
-                # url non-existing, just go on
-                print("%s couldn't be found, skipping it..." % url)
-                return response
-            else:
-                print("An image couldn't be downloaded.")
-                print(e.code)
-                return response
-        except urllib2.URLError as e:
-            response = ''
-            print("An image couldn't be downloaded.")
-            print(e.reason)
-            return response
-        except socket.error as e:
-            response = ''
-            print("An image couldn't be downloaded.")
-            print(e)
-            return response
+        attempts = 0
+        while attempts < 10:
+            try:
+                response = urllib2.urlopen(request, None)
+                return response.read()
+                break
+            except httplib.IncompleteRead as e:
+                attempts += 1
+                self.get_request(url, ua)
+            except urllib2.HTTPError as e:
+                attempts += 1
+                response = ''
+                if e.code == 404:
+                    # url non-existing, just go on
+                    print("%s couldn't be found, skipping it..." % url)
+                    return response
+                    break
+                else:
+                    print(e.code)
+            except urllib2.URLError as e:
+                attempts += 1
+                print(e.reason)
+            except socket.error as e:
+                attempts += 1
+                print(e)
+
+        print("An image couldn't be downloaded.")
+        response = ''
+        return response
+
 
     def get_filename(self, url, split=''):
         self.request = urllib2.Request(url)
