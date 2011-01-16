@@ -213,6 +213,9 @@ def download_url(url, savedirectory, embed="", poster=""):
     
     connector = http_connector.Connector()
     Rpage = connector.reqhandler(url, 1)
+    if Rpage == '':
+        raise IOError("Url not valid or nonexistent")
+
 
 
     # Generate the directory for the source file and the images downloaded
@@ -255,16 +258,16 @@ def filelist_download(file):
                 else:
                     try:
                         download_url(u.strip("\n"), basedir, embed, poster)
+                        bckp_l.append(u)
+                        url = '#' + u
+                        o.write(url)
                     except:
-                        # if anything goes wrong, add the not downloaded urls to the filelist,
-                        # uncommented, and exit
-                        downloaded_l = [i for i in whole_f if i not in bckp_l]
-                        for i in downloaded_l:
-                            o.write(i)
-                        sys.exit(0)
-                    bckp_l.append(u)
-                    url = '#' + u
-                    o.write(url)
+                        # if anything goes wrong, append an error tag to the url and go on
+                        # to the next one
+                        bckp_l.append(u)
+                        url = 'ERROR: ' + u
+                        o.write(url)
+
     # at the end, move the backup file to the filelist's place
     rename(abspath(o.name), abspath(f.name))
 
