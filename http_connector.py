@@ -138,7 +138,10 @@ class Connector():
                 #print(response.geturl())
                 #print(response.getcode())
                 return response.read()
-                break
+            except httplib.InvalidURL as e:
+                # url is not valid!
+                response = ''
+                return response
             except httplib.IncompleteRead as e:
                 attempts += 1
             except urllib2.HTTPError as e:
@@ -151,7 +154,6 @@ class Connector():
                     # url non-existing, just go on
                     print("%s couldn't be found, skipping it..." % url)
                     return response
-                    break
                 else:
                     print(e.code)
             except urllib2.URLError as e:
@@ -174,7 +176,10 @@ class Connector():
             try:
                 response = urllib2.urlopen(request, None)
                 return response.read()
-                break
+            except httplib.InvalidURL as e:
+                # url is not valid!
+                response = ''
+                return response
             except httplib.IncompleteRead as e:
                 attempts += 1
                 self.get_request(url, ua)
@@ -185,7 +190,6 @@ class Connector():
                     # url non-existing, just go on
                     print("%s couldn't be found, skipping it..." % url)
                     return response
-                    break
                 else:
                     print(e.code)
             except urllib2.URLError as e:
