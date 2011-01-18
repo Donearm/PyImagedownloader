@@ -20,14 +20,12 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.3"
-__date__ = "11082010"
+__version__ = "1.4"
+__date__ = "18012011"
 __email__ = "forod.g@gmail.com"
 
 import sys
-from os.path import abspath
 import threading
-from multiprocessing import Process
 # importing local modules
 import http_connector
 # importing config file variables
@@ -44,6 +42,7 @@ try:
         import gobject
         # Enable threading
         gobject.threads_init()
+        gtk.gdk.threads_init()
     except:
         print("Gtk was not available, install it or use command line mode...")
         sys.exit(1)
@@ -129,8 +128,7 @@ class Gui():
         self.cut_button.connect("clicked", self.copy, "cut")
         self.copy_button.connect("clicked", self.copy, "copy")
         self.paste_button.connect("clicked", self.paste)
-        #self.start_button.connect("clicked", self.download_url, self.url, self.basedir, self.embed, self.poster)
-        self.start_button.connect("clicked", self.sequential_download_url, self.liststore, self.basedir, self.embed, self.poster)
+        self.start_button.connect("clicked", self.sequential_downloader, self.liststore, self.basedir, self.embed, self.poster)
         self.close_button.connect("clicked", self.close)
 
         # Tooltips
@@ -139,8 +137,8 @@ class Gui():
         self.paste_button.set_tooltip_text("Paste url(s) from the clipboard")
 
         self.window.show_all()
-
         gtk.main()
+
 
     def close(self, widget):
         gtk.main_quit()
@@ -162,20 +160,33 @@ class Gui():
         if text != None:
             self.liststore.append([text])
 
-    def sequential_download_url(self, widget, liststore, basedir="", embed="", poster=""):
-        """given a ListStore object feeds all its contents to download_url"""
+    def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
+        """instantiate a SequentialDownloader object and execute run()"""
+        self.sqdownloader = SequentialDownloader(widget, liststore, basedir, embed, poster)
+        self.sqdownloader.start()
+
+
+
+
+class SequentialDownloader(threading.Thread):
+    """We use a class, inheriting from threading.Thread, to handle all the downloads
+    and liststore updating indipendently from the Gui"""
+    def __init__(self, widget, liststore, basedir="", embed="", poster=""):
+        threading.Thread.__init__(self)
+        self.widget = widget
+        self.liststore = liststore
+        self.basedir = basedir
+        self.embed = embed
+        self.poster = poster
+
+    def run(self):
         r = 0
         col = 0
-        for row in liststore:
-            self.download_url(liststore[r][col], basedir, embed, poster)
-            #iter = liststore.get_iter(row[r])
-            #row.remove(iter)
-            liststore[r][col] = ""
+        for row in self.liststore:
+            self.download_url(self.liststore[r][col], self.basedir, self.embed, self.poster)
+            self.liststore[r][col] = ""
             r += 1
-        liststore.clear()
-        #i = liststore.get_iter_first()
-        #print(liststore.get_value(i, 0))
-
+        self.liststore.clear()
 
     def download_url(self, url, savedirectory, embed="", poster=""):
         
@@ -200,19 +211,5 @@ class Gui():
 
 
 
-class GThread(threading.Thread):
-    def __init__(self):
-        super(GThread, self).__init__()
-        self.quit = False
-
-    def run(self, func, *args, **kwargs):
-        gobject.idle_add(func, *args, **kwargs)
-
-
-
-
-
 if __name__ == "__main__":
     pygui = Gui()
-    gtk.main()
-
