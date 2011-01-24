@@ -200,7 +200,8 @@ def argument_parser():
             help="a file containing the urls to be downloaded, one per row",
             dest="filelist")
     (options, args) = cli_parser.parse_args()
-    return options.poster, options.embed, options.gui, options.savedirectory, options.filelist , args
+    return options, args
+#    return options.poster, options.embed, options.gui, options.savedirectory, options.filelist , args
 
 # print an advice for hosts not supported
 def not_supported(host):
@@ -288,24 +289,23 @@ def filelist_fileinput(file):
         print(l.strip("\n"))
 
 if __name__ == "__main__":
-    (poster, embed, gui, savedirectory, filelist, url) = argument_parser()
+    options, url = argument_parser()
 
-    if savedirectory:
+    if options.savedirectory:
         # directory given on the command line?
-        basedir = abspath(savedirectory)
+        basedir = abspath(options.savedirectory)
 
-    if filelist:
-        filelist_download(filelist)
+    if options.filelist:
+        filelist_download(options.filelist)
 
         # exit now, we don't need to start the gui in this case
         sys.exit(0)
 
     # do we want a gui?
-    if gui:
-#        pygui = Process(target=pygui.Gui, args=(basedir, embed, poster))
-        pygui = pygui.Gui(basedir, embed, poster)
+    if options.gui:
+        pygui = pygui.Gui(basedir, options.embed, options.poster)
     else:
         # no gui then
-        download_url(url, basedir, embed, poster)
+        download_url(url, basedir, options.embed, options.poster)
 
     sys.exit(0)
