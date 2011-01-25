@@ -258,7 +258,7 @@ def filelist_download(file):
                     o.write(u)
                 else:
                     try:
-                        download_url(u.strip("\n"), basedir, embed, poster)
+                        download_url(u.strip("\n"), basedir, options.embed, options.poster)
                         bckp_l.append(u)
                         url = '#' + u
                         o.write(url)
@@ -279,7 +279,7 @@ def filelist_fileinput(file):
     f = fileinput.input(abspath(file), inplace=1)
     for line in f:
         try:
-            download_url(line, basedir, embed, poster)
+            download_url(line, basedir, options.embed, options.poster)
         except:
             # print the line where it stopped
             print(line)
