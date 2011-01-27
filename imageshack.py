@@ -34,7 +34,7 @@ rImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
 # the '/i/' type url
 rImageshackI = re.compile('/i/', re.IGNORECASE)
 # a partial url (without http://)
-rImageshackPartial = re.compile('/img[0-9]{,3}/', re.IGNORECASE)
+rImageshackPartial = re.compile('^[a-z0-9]\.imageshack\.(us|com)/img[0-9]{,3}/', re.IGNORECASE)
 
 
 values = {}
@@ -83,16 +83,13 @@ def imageshack_parse(link, basedir):
     imageshack_src = [li.get('src', None) for li in src_links]
 
     try:
-        imageshack_download('my\.php\?', link, basedir, imageshack_src[0], 1)            
+        imageshack_download(rImageshackSplit, link, basedir, imageshack_src[0])
     except IndexError:
         return
 
-def imageshack_download(regexp, url, basedir, src="", htmlpage=0):
+def imageshack_download(regexp, url, basedir, src=""):
     """downloader function for imageshack links. It needs a regexp for re.split
-    and of course the url of an imageshack hosted image
-    htmlpage is optional and it's to be enabled only for imageshack's pages
-    containing an image (and not the direct source url)
-    same for src, it's optional and only for those kind of pages"""
+    and of course the url of an imageshack hosted image"""
 
     # generate a random number; if not, the images will have the same save_extension[1]
     # and will overwrite each other   
@@ -112,13 +109,9 @@ def imageshack_download(regexp, url, basedir, src="", htmlpage=0):
         savefile = join(basedir, str(num) + str(save_extension[-1]))
     else:
         # generate just the filename of the image to be locally saved
-        save_extension = re.split(regexp, url)
-        if htmlpage == 1:
-            download_url = save_extension[0] + src
-            savefile = join(basedir, str(num) + str(save_extension[1]).replace('/', ''))
-        else:
-            download_url = url
-            savefile = join(basedir, str(save_extension[1]))
+        save_extension = re.split(regexp, src)
+        download_url = src
+        savefile = join(basedir, str(save_extension[1]))
 
     # finally save the image on the desidered directory
     urlretrieve(download_url, savefile) 
