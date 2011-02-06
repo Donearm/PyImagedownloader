@@ -45,6 +45,11 @@ from pyimg import basedir, numprocs
 
 
 
+# print an advice for hosts not supported
+def not_supported(host):
+    msg = "Sorry but %s isn't supported or isn't working right now" % host
+    print(msg)
+
 
 # The regexp we'll need to find the link
 rHttp = re.compile("http://", re.IGNORECASE)
@@ -79,7 +84,7 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rImagehaven : imagehaven.imagehaven_parse,
         rImageshack : imageshack.imageshack_parse,
         rPostimage : postimage.postimage_parse,
-        rSharenxs : sharenxs.sharenxs_parse,
+        rSharenxs : not_supported('sharenxs'),
         rBlogspot : blogspot.blogspot_parse,
         rUpmyphoto : upmyphoto.upmyphoto_parse,
         rUppix : uppix.uppix_parse,
@@ -166,7 +171,12 @@ class ImageHostParser():
             # method is one of <imagehost>.<imagehost>_parse function
             # link is the matched url from finalset
             # b is always self.basedir
-            method(link, b)
+            try:
+                method(link, b)
+            except TypeError as e:
+                # in case we have disabled the module (with not_supported function)
+                # method will raise TypeError, which we can safely ignore
+                pass
 
     def chunks(self, l, n):
         """split an iterable in enough chunks of itself as the n given"""
@@ -202,11 +212,6 @@ def argument_parser():
     (options, args) = cli_parser.parse_args()
     return options, args
 #    return options.poster, options.embed, options.gui, options.savedirectory, options.filelist , args
-
-# print an advice for hosts not supported
-def not_supported(host):
-    msg = "Sorry but %s isn't supported or isn't working right now" % host
-    print(msg)
 
 
 def download_url(url, savedirectory, embed="", poster=""):
