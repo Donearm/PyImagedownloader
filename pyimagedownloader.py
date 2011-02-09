@@ -34,7 +34,7 @@ from os import rename
 import lxml.html
 # importing local modules
 import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
-        imagetitan, bellazon, skinsbe, shareapic, storeimgs, upmyphoto, \
+        imagetitan, bellazon, skinsbe, shareapic, upmyphoto, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
         imageboss
@@ -65,7 +65,6 @@ rUppix = re.compile("http://www\.uppix\.info", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
-rStoreimgs = re.compile("http://storeimgs\.com", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
 rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
@@ -91,7 +90,6 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rBellazon : bellazon.bellazon_parse,
         rSkinsBe : skinsbe.skinsbe_parse,
         rShareapic : shareapic.shareapic_parse,
-        rStoreimgs : storeimgs.storeimgs_parse,
         rImagetitan : imagetitan.imagetitan_parse,
         rImageUpper : imageupper.imageupper_parse,
         rImageSocket : imagesocket.imagesocket_parse,
