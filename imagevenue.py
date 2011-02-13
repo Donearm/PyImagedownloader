@@ -55,7 +55,7 @@ def imagevenue_parse(link, basedir):
 
     imagevenue_src = [li.get('src', None) for li in src_links]
 
-    imagevenue_split = re.split('img.php\?image=', link) # remove the unneeded parts
+    imagevenue_split = re.split('img.php\?(loc=loc[0-9]{,3}&)?image=', link) # remove the unneeded parts
     try:
         # make up the real image url
         download_url = str(imagevenue_split[0]) + str(imagevenue_src[0])
