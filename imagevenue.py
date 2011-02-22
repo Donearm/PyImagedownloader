@@ -68,6 +68,9 @@ def imagevenue_parse(link, basedir):
         # generate just the filename of the image to be locally saved
         save_extension = re.split('([0-9a-zA-Z]+-[0-9]+/)?loc[0-9]{,4}/', imagevenue_src[0]) 
         savefile = join(basedir, str(save_extension[-1]))
+        if savefile.endswith('.'):
+            # add the extension for images without it
+            savefile = savefile + 'jpg'
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
     except IndexError:
