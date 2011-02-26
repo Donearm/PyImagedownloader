@@ -36,13 +36,15 @@ def shareapic_parse(link, basedir):
             # most of the time we can simply ignore parsing errors
             return
 
-        # find the src attribute which contains the real link of shareapic's images
+        # find the src attribute which contains the real link of shareapic's
+        # images
         src_links = page.xpath("//img[@title='Click to zoom! ::']")
         shareapic_fullsize = []
         for li in src_links:
             fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
             #fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li['src'])
-            shareapic_fullsize.append(fullsize_li) # add all the src part to a list
+            # add all the src parts to a list
+            shareapic_fullsize.append(fullsize_li)
 
         download_url = shareapic_fullsize[0]
         # generate just the filename of the image to be locally saved

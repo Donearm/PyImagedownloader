@@ -169,8 +169,8 @@ class Gui():
 
 
 class SequentialDownloader(threading.Thread):
-    """We use a class, inheriting from threading.Thread, to handle all the downloads
-    and liststore updating indipendently from the Gui"""
+    """We use a class, inheriting from threading.Thread, to handle all the 
+    downloads and liststore updating indipendently from the Gui"""
     def __init__(self, widget, liststore, basedir="", embed="", poster=""):
         threading.Thread.__init__(self)
         self.widget = widget
@@ -191,7 +191,7 @@ class SequentialDownloader(threading.Thread):
     def download_url(self, url, savedirectory, embed="", poster=""):
         
         connector = http_connector.Connector()
-        Rpage = connector.reqhandler(url, 1)
+        r_page = connector.reqhandler(url, 1)
 
 
         # Generate the directory for the source file and the images downloaded
@@ -200,7 +200,7 @@ class SequentialDownloader(threading.Thread):
         savedirectory = save_source(url, savedirectory, creditor=poster)
 
         # Parse the page for images
-        parser = ImageHostParser(Rpage, 'a', 'href', savedirectory)
+        parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
         if embed:
             # do we need to search for embedded images then?
             # Note: at the moment it downloads thumbnails too

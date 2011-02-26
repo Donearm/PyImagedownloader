@@ -35,7 +35,8 @@ def imagehostorg_parse(link, basedir):
         return
 
 
-    # find the src attribute which contains the real link of imagehostorg's images
+    # find the src attribute which contains the real link of imagehostorg's 
+    # images
     src_links = page.xpath("//div[@id='content']/img")
 
     imagehostorg_src = [li.get('src', None) for li in src_links]
@@ -51,7 +52,8 @@ def imagehostorg_parse(link, basedir):
 
         urlretrieve(download_url, savefile)
     else:
-        imagehostorg_split = re.split('/', imagehostorg_src[0]) # remove the unneeded parts
+        # remove unneeded parts
+        imagehostorg_split = re.split('/', imagehostorg_src[0])
         download_url = imagehostorg_src[0]
         # generate just the filename of the image to be locally saved
         savefile = join(basedir, str(imagehostorg_split[-1]))

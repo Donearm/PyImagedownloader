@@ -27,7 +27,8 @@ import http_connector
 
 
 def extract_domain(url):
-    """Given an url extract only the domain name (without 'www' and 'com' for example)"""
+    """Given an url extract only the domain name (without 'www' and 'com' for
+    example)"""
     u = urlparse(url)[1].split('.')
     if len(u) > 3: # for tld like co.uk or com.br
         return u[1] + '.' + u[2] + '.' + u[3]

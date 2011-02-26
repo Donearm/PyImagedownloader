@@ -24,11 +24,11 @@ import http_connector
 
 
 # The regexp we'll need to find the link
-rSharenxsThumb = re.compile("http://((www|cache)\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
+RSharenxsThumb = re.compile("http://((www|cache)\.)?sharenxs\.com/thumbnails/sf/", re.IGNORECASE)
 # regexp matching a http:// url
-rSharenxsUrl = re.compile("http://((www|cache)\.)?sharenxs\.com", re.IGNORECASE)
+RSharenxsUrl = re.compile("http://((www|cache)\.)?sharenxs\.com", re.IGNORECASE)
 # Regexp matching a full-sized sharenxs src url
-rSharenxsWz = re.compile("http://((www|cache)\.)?sharenxs\.com/images/wz", re.IGNORECASE)
+RSharenxsWz = re.compile("http://((www|cache)\.)?sharenxs\.com/images/wz", re.IGNORECASE)
 
 def sharenxs_parse(link, basedir):
     connector = http_connector.Connector()
@@ -46,7 +46,7 @@ def sharenxs_parse(link, basedir):
     sharenxs_view = [li.get('href', None) for li in view_links]
     
     # list comprehension to check that just the url will be fed to request2
-    sharenxs_url = [u for u in sharenxs_view if rSharenxsUrl.search(u)]
+    sharenxs_url = [u for u in sharenxs_view if RSharenxsUrl.search(u)]
 
     if len(sharenxs_url) is 0:
         # perhaps we are already on the page with the full image
@@ -81,7 +81,7 @@ def sharenxs_parse(link, basedir):
     sharenxs_src = [s.get('src', None) for s in src_links]
 
     # grab and check if we already have the full-sized image uri
-    sharenxs_wz = [w for w in sharenxs_src if rSharenxsWz.search(w)]
+    sharenxs_wz = [w for w in sharenxs_src if RSharenxsWz.search(w)]
 
     if len(sharenxs_wz) is not 0:
         try:
@@ -94,7 +94,7 @@ def sharenxs_parse(link, basedir):
     else:
         # in the case we don't have the full-sized uri, we use the thumbnail
         # url to generate the image's url
-        sharenxs_src = [s.get('src', None) for s in src_links if rSharenxsThumb.search(s.get('src', None))]
+        sharenxs_src = [s.get('src', None) for s in src_links if RSharenxsThumb.search(s.get('src', None))]
         try:
             # get the extension for the filename
             save_extension = re.split('nxs-', sharenxs_src[0])

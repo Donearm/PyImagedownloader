@@ -16,7 +16,6 @@ __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
-import re
 import random
 import string
 from urllib import urlretrieve

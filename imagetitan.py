@@ -24,7 +24,7 @@ import http_connector
 
 
 # The regexp we'll need to find the link
-rSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
+RSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
 
 def imagetitan_parse(link, basedir):
     # get every page linked from the imagetitan links
@@ -43,7 +43,7 @@ def imagetitan_parse(link, basedir):
     imagetitan_src = [li.get('src', None) for li in src_links]
 
 
-    imgtitanmatch = re.match(rSrcImagetitan, imagetitan_src[0])
+    imgtitanmatch = re.match(RSrcImagetitan, imagetitan_src[0])
 
     imgmiddle = imgtitanmatch.group(2) # the middle part of the url
     imgname = imgtitanmatch.group(3) # the name of the image 

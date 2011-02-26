@@ -56,7 +56,8 @@ class Connector():
     
 
     def reqhandler(self, url, login=0):
-        """the attribute that actually starts the request and return the response string"""
+        """the attribute that actually starts the request and return the
+        response string"""
 
         # check if the url given is a string or a list
         self.uri = self.check_string_or_list(url)
@@ -83,14 +84,15 @@ class Connector():
 
 
     def site_login(self, url, opener):
-        """check if it's a site or forum we have login credentials for and log-in"""
+        """check if it's a site or forum we have login credentials for and
+        log-in"""
 
         # Regexps needed
-        self.rUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
-        self.rImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
-        self.rCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
+        self.RUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
+        self.RImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
+        self.RCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
 
-        if self.rUsemycomputer.search(url):
+        if self.RUsemycomputer.search(url):
             # We got a login user/pwd for usemycomputer, let's first login then
             login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
             values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
@@ -101,7 +103,7 @@ class Connector():
             # second request to the login2 page
             request2 = urllib2.Request(login2_page, data)
             response1 = opener.open(request2)
-        elif self.rImc.search(url):
+        elif self.RImc.search(url):
             # Loging to IMC website
             login_page = 'http://www.imcmagazine.com/login.php'
             values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
@@ -111,7 +113,7 @@ class Connector():
             # login page request
             request = urllib2.Request(login_page, data)
             response = opener.open(request)
-        elif self.rCelebrityForum.search(url):
+        elif self.RCelebrityForum.search(url):
             login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
             auth_page = 'http://auth.leonardo.it/sso/login'
 
@@ -148,7 +150,8 @@ class Connector():
                 attempts += 1
                 response = ''
                 if e.code == 405:
-                    # we were wrong, the url doesn't accept a POST, make a GET then
+                    # we were wrong, the url doesn't accept a POST, make a GET
+                    # then
                     response = self.get_request(url, user_agent)
                 elif e.code == 404:
                     # url non-existing, just go on
@@ -230,7 +233,8 @@ class Connector():
 
 
     def check_string_or_list(self, url):
-        """check if the url given is a string or a list and always returns a correct url"""
+        """check if the url given is a string or a list and always returns a
+        correct url"""
         if isinstance(url, str):
             uri = url
             return uri

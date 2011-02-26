@@ -28,13 +28,13 @@ import http_connector
 
 
 # The split regexp
-rImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
+RImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 # the 'a.imageshack.us' type url
-rImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
+RImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
 # the '/i/' type url
-rImageshackI = re.compile('/i/', re.IGNORECASE)
+RImageshackI = re.compile('/i/', re.IGNORECASE)
 # a partial url (without http://)
-rImageshackPartial = re.compile('^[a-z0-9]\.imageshack\.(us|com)/img[0-9]{,3}/', re.IGNORECASE)
+RImageshackPartial = re.compile('^[a-z0-9]\.imageshack\.(us|com)/img[0-9]{,3}/', re.IGNORECASE)
 
 
 values = {}
@@ -56,9 +56,9 @@ class ShackConnector(http_connector.Connector):
                 return self.response
             except urllib2.HTTPError as e:
                 if e.code == 405:
-                    # we could be dealing with an url which is already the image url
-                    # let's download it right away then
-                    imageshack_download(rImageshackSplit, url, basedir)
+                    # we could be dealing with an url which is already the
+                    # image url let's download it right away then
+                    imageshack_download(RImageshackSplit, url, basedir)
 
 
 
@@ -66,8 +66,8 @@ class ShackConnector(http_connector.Connector):
 def imageshack_parse(link, basedir):
     
     # check first if it's already the full url of the image
-    if re.search(rImageshackSplit, link):
-        imageshack_download(rImageshackSplit, link, basedir)
+    if re.search(RImageshackSplit, link):
+        imageshack_download(RImageshackSplit, link, basedir)
 
     connector = ShackConnector(link)
     response = connector.reqhandler(link)
@@ -83,7 +83,7 @@ def imageshack_parse(link, basedir):
     imageshack_src = [li.get('src', None) for li in src_links]
 
     try:
-        imageshack_download(rImageshackSplit, link, basedir, imageshack_src[0])
+        imageshack_download(RImageshackSplit, link, basedir, imageshack_src[0])
     except IndexError:
         return
 
@@ -91,19 +91,20 @@ def imageshack_download(regexp, url, basedir, src=""):
     """downloader function for imageshack links. It needs a regexp for re.split
     and of course the url of an imageshack hosted image"""
 
-    # generate a random number; if not, the images will have the same save_extension[1]
-    # and will overwrite each other   
-    num = random.randrange(1,1000)
+    # generate a random number; if not, the images will have the same
+    # save_extension[1] and will overwrite each other   
+    num = random.randrange(1, 1000)
 
     # Check if is a "type a" url
-    if rImageshackA.search(src):
+    if RImageshackA.search(src):
         save_extension = re.split('img[0-9]+/[0-9]+/', src)
         download_url = src
         savefile = join(basedir, str(num) + str(save_extension[-1]))
     # is it a partial url (without http://) ?
-    elif rImageshackPartial.search(src):
+    elif RImageshackPartial.search(src):
         save_extension = re.split('/img[0-9]+/[0-9]+/', src)
-        # extract the first "imgXXX" part, we'll need it to reconstruct the full url
+        # extract the first "imgXXX" part, we'll need it to reconstruct the
+        # full url
         imgxxx = re.split('/', src)
         download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src
         savefile = join(basedir, str(num) + str(save_extension[-1]))

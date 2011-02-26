@@ -19,7 +19,6 @@ __email__ = "forod.g@gmail.com"
 import re
 from urllib import urlretrieve
 from os.path import join
-import lxml.html
 
 
 def photobucket_parse(link, basedir):

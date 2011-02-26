@@ -18,7 +18,6 @@ __email__ = "forod.g@gmail.com"
 
 import re
 from urllib import urlretrieve
-import lxml.html
 from os.path import join
 
 

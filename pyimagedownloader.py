@@ -146,8 +146,8 @@ class ImageHostParser():
 
 
         for L in finalset:
-            # iterate over the regexp dictionary items; when found a url matching,
-            # put the method, url and self.basedir in the queue
+            # iterate over the regexp dictionary items; when finding a url
+            # matching, put the method, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
                     self.q.put((v, (L, self.basedir)))
@@ -172,8 +172,9 @@ class ImageHostParser():
             try:
                 method(link, b)
             except TypeError as e:
-                # in case we have disabled the module (with not_supported function)
-                # method will raise TypeError, which we can safely ignore
+                # in case we have disabled the module (with not_supported
+                # function) method will raise TypeError, which we can safely
+                # ignore
                 pass
 
     def chunks(self, l, n):
@@ -216,8 +217,8 @@ def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
     
     connector = http_connector.Connector()
-    Rpage = connector.reqhandler(url, 1)
-    if Rpage == '':
+    r_page = connector.reqhandler(url, 1)
+    if r_page == '':
         raise IOError("Url not valid or nonexistent")
 
 
@@ -228,7 +229,7 @@ def download_url(url, savedirectory, embed="", poster=""):
     savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
 
     # Parse the page for images
-    parser = ImageHostParser(Rpage, 'a', 'href', savedirectory)
+    parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
     if embed:
         # do we need to search for embedded images then?
         # Note: at the moment it downloads thumbnails too
@@ -239,16 +240,16 @@ def download_url(url, savedirectory, embed="", poster=""):
 
 
 
-def filelist_parse(file):
+def filelist_parse(parsefile):
     """parsing a file containing urls and giving back a list of them"""
-    file = open(abspath(file), 'r')
-    return file.readlines()
+    with open(abspath(parsefile), 'r') as f:
+        return f.readlines()
 
-def filelist_download(file):
-    """download a serie of urls from a file and comment out them, in another file, as
-    they are being downloaded."""
-    bckp = dirname(abspath(file)) + '/' + 'list.bak'
-    with open(abspath(file), 'rw') as f:
+def filelist_download(download_file):
+    """download a serie of urls from a file and comment out them, in another
+    file, as they are being downloaded."""
+    bckp = dirname(abspath(download_file)) + '/' + 'list.bak'
+    with open(abspath(download_file), 'rw') as f:
         # save every line in the filelist
         whole_f = f.readlines()
         # initiate a list for the downloaded and commented urls
@@ -266,8 +267,8 @@ def filelist_download(file):
                         url = '#' + u
                         o.write(url)
                     except:
-                        # if anything goes wrong, append an error tag to the url and go on
-                        # to the next one
+                        # if anything goes wrong, append an error tag to the
+                        # url and go on to the next one
                         bckp_l.append(u)
                         url = 'ERROR: ' + u
                         o.write(url)
@@ -276,10 +277,10 @@ def filelist_download(file):
     rename(abspath(o.name), abspath(f.name))
 
 
-def filelist_fileinput(file):
+def filelist_fileinput(download_file):
     """download a serie of urls from a file, commenting them as they are being
     downloaded (using fileinput)"""
-    f = fileinput.input(abspath(file), inplace=1)
+    f = fileinput.input(abspath(download_file), inplace=1)
     for line in f:
         try:
             download_url(line, basedir, options.embed, options.poster)

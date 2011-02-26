@@ -41,9 +41,9 @@ def postimage_parse(link, basedir):
         postimage_src = [li.get('src', None) for li in src_links]
         postimage_alt = [li.get('alt', None) for li in src_links]
     else:
-         alt_links = page.xpath("//center/a[@href]/img[@alt]")
-         postimage_alt = [li.get('alt', None) for li in alt_links]
-         postimage_src = [li.get('src', None) for li in alt_links]
+        alt_links = page.xpath("//center/a[@href]/img[@alt]")
+        postimage_alt = [li.get('alt', None) for li in alt_links]
+        postimage_src = [li.get('src', None) for li in alt_links]
 
 
     try:

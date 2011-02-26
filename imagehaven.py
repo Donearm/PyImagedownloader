@@ -39,7 +39,8 @@ def imagehaven_parse(link, basedir):
 
     imagehaven_src = [li.get('src', None) for li in src_links]
 
-    imagehaven_split = re.split('img\.php\?id=', link) # remove the unneeded parts
+    # remove unneeded parts
+    imagehaven_split = re.split('img\.php\?id=', link) 
     imagehaven_split2 = re.split('\.\/', imagehaven_src[0]) 
 
     try:

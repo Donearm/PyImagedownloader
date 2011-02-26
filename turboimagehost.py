@@ -34,7 +34,8 @@ def turboimagehost_parse(link, basedir):
         # most of the time we can simply ignore parsing errors
         return
 
-    # find the src attribute which contains the real link of turboimagehost's images
+    # find the src attribute which contains the real link of turboimagehost's 
+    # images
     src_links = page.xpath("//img[@id='imageid']")
 
     turboimagehost_src = [li.get('src', None) for li in src_links]
