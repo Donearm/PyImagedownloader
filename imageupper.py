@@ -38,7 +38,7 @@ def imageupper_parse(link, basedir):
 
     try:
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('[0-9]+/[0-9]+/', imageupper_src[0])
+        save_extension = re.split('[a-z][0-9]+/[0-9]+/[0-9]+/', imageupper_src[0])
 
         savefile = join(basedir, save_extension[-1])
         download_url = imageupper_src[0]
