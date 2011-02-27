@@ -37,7 +37,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, upmyphoto, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
-        imageboss
+        imageboss, servimg
 import http_connector
 import pygui
 # importing config file variables
@@ -77,6 +77,7 @@ rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", 
 #rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}(\?w=[0-9]+\&amp\;h=[0-9]+)?", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
 rImageboss = re.compile("http://www\.imageboss\.net", re.IGNORECASE)
+rServimg = re.compile("http://www\.servimg\.com", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rImagebam : imagebam.imagebam_parse,
@@ -100,7 +101,8 @@ regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
         rUsemycomputer : usemycomputer.usemycomputer_parse,
         rWordpress : wordpress.wordpress_parse,
         rWordpressuploads : wordpress.wordpress_parse,
-        rImageboss : imageboss.imageboss_parse
+        rImageboss : imageboss.imageboss_parse,
+        rServimg : servimg.servimg_parse
         }
 
 
