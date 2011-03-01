@@ -60,6 +60,14 @@ def imagebam_parse(link, basedir):
         # we now have a list and not a string
         savefile = join(basedir, imagename[-1])
 
+    # correctly rename filenames with missing or partial extension
+    if savefile.endswith('.'):
+            savefile = savefile + 'jpg'
+    elif savefile.endswith('.j'):
+            savefile = savefile + 'pg'
+    else:
+        pass
+
     # finally save the image in the desidered directory
     if not exists(savefile):
         try:
