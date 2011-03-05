@@ -1,4 +1,0 @@
-include AUTHORS
-include COPYING
-include README
-include pyimagedownloader/*.py
