@@ -28,10 +28,10 @@ import sys
 import threading
 # importing local modules
 import http_connector
+import savesource
 # importing config file variables
 #from pyimagedownloader import download_url, basedir, embed, poster
 from pyimagedownloader import ImageHostParser
-from savesource import save_source
 
 try:
     import pygtk
@@ -197,7 +197,10 @@ class SequentialDownloader(threading.Thread):
         # Generate the directory for the source file and the images downloaded
         # Plus, return savedirectory as basedir + page title, so to save images
         # on a per-site basis
-        savedirectory = save_source(url, savedirectory, creditor=poster)
+
+        source_saver = savesource.SaveSource(url, savedirectory, creditor=poster)
+        savedirectory = source_saver.link_save()
+#        savedirectory = save_source(url, savedirectory, creditor=poster)
 
         # Parse the page for images
         parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
