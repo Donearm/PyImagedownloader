@@ -228,7 +228,10 @@ def download_url(url, savedirectory, embed="", poster=""):
     # Generate the directory for the source file and the images downloaded
     # Plus, return savedirectory as basedir + page title, so to save images
     # on a per-site basis
-    savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
+    source_saver = savesource.SaveSource(url, savedirectory, creditor=poster)
+    savedirectory = source_saver.link_save()
+
+#    savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
 
     # Parse the page for images
     parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
