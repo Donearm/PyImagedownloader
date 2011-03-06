@@ -21,6 +21,49 @@ from urllib import urlretrieve
 import lxml.html
 import http_connector
 
+class BellazonParse():
+
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.page = ''
+        self.connector = http_connector.Connector()
+
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
+
+        try:
+            self.page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            return
+
+        return self.page
+
+    def bellazon_get_image_src(self, page):
+        src_links = page.xpath("//img[@id='thepic']")
+
+        bellazon_src = [li.get('src', None) for li in src_links]
+
+        return bellazon_src
+
+    def bellazon_save_image(self, src_list):
+        try:
+            save_extension = self.connector.get_filename(src_list[0], 'id=')
+            download_url = src_list[0]
+            savefile = join(self.basedir, str(save_extension))
+        except IndexError:
+            return
+
+        urlretrieve(download_url, savefile)
+
+    def bellazon_parse(self):
+        self.page = self.process_url(self.link)
+
+        self.bellazon_src = self.bellazon_get_image_src(self.page)
+
+        self.bellazon_save_image(self.bellazon_src)
+
+
 
 def bellazon_parse(link, basedir):
     connector = http_connector.Connector()
