@@ -67,7 +67,7 @@ class ImageshackParse():
     def __init__(self, link, basedir):
         self.link = link
         self.basedir = basedir
-        self.connector = ShackConnector()
+        self.connector = ShackConnector(self.link)
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -94,22 +94,22 @@ class ImageshackParse():
         num = random.randrange(1, 1000)
 
         # Check if is a "type a" url 
-        if RImageshackA.search(src):
-            save_extension = re.split('img[0-9]+/[0-9]+/', src)
-            download_url = src
+        if RImageshackA.search(src[0]):
+            save_extension = re.split('img[0-9]+/[0-9]+/', src[0])
+            download_url = src[0]
             savefile = join(basedir, str(num) + str(save_extension[-1]))
         # is it a partial url (without http://) ?
-        elif RImageshackPartial.search(src):
-            save_extension = re.split('/img[0-9]+/[0-9]+/', src)
+        elif RImageshackPartial.search(src[0]):
+            save_extension = re.split('/img[0-9]+/[0-9]+/', src[0])
             # extract the first "imgXXX" part, we'll need it to reconstruct the
             # full url
-            imgxxx = re.split('/', src)
-            download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src
+            imgxxx = re.split('/', src[0])
+            download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src[0]
             savefile = join(basedir, str(num) + str(save_extension[-1]))
         else:
             # generate just the filename of the image to be locally saved
-            save_extension = re.split(regexp, src)
-            download_url = src
+            save_extension = re.split(regexp, src[0])
+            download_url = src[0]
             savefile = join(basedir, str(save_extension[1]))
 
         # finally save the image on the desidered directory

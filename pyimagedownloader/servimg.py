@@ -61,4 +61,4 @@ class ServimgParse():
 
         self.servimg_src, self.imagename = self.servimg_get_image_src_and_name(self.page)
 
-        self.servimg.save_image(self.servimg_src, self.imagename)
+        self.servimg_save_image(self.servimg_src, self.imagename)
