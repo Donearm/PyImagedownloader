@@ -30,7 +30,7 @@ class ServimgParse():
         self.connector = http_connector.Connector()
 
     def process_url(self, url):
-        response = connector.reqhandler(url)
+        response = self.connector.reqhandler(url)
 
         page = lxml.html.fromstring(response)
 
