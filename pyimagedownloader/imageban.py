@@ -20,15 +20,21 @@ import re
 from urllib import urlretrieve
 from os.path import join
 
+class ImagebanParse():
 
-def imageban_parse(link, basedir):
-    imageban_split = re.split('/', link) # get the image file name
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
 
-    download_url = link
+    def parse(self):
+        # get the image file name
+        imageban_split = re.split('/', self.link)
 
-    # generate the save file name
-    savefile = join(basedir, str(imageban_split[-1]))
+        download_url = self.link
 
-    # finally save the image in the desidered directory
-    urlretrieve(download_url, savefile) 
+        # generate the save file name
+        savefile = join(self.basedir, str(imageban_split[-1]))
+
+        # finally save the image in the desidered directory
+        urlretrieve(download_url, savefile)
 

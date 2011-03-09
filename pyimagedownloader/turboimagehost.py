@@ -22,37 +22,52 @@ from os.path import join
 import lxml.html
 import http_connector
 
+class TurboimagehostParse():
 
-def turboimagehost_parse(link, basedir):
-    # get every page linked from the turboimagehost links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def process_url(self, url):
+        response = connector.reqhandler(url)
 
-    # find the src attribute which contains the real link of turboimagehost's 
-    # images
-    src_links = page.xpath("//img[@id='imageid']")
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    turboimagehost_src = [li.get('src', None) for li in src_links]
+        return page
 
+    def turboimagehost_get_image_src(self, page):
+        # find the src attribute which contains the real link of turboimagehost's 
+        # images
+        src_links = page.xpath("//img[@id='imageid']")
 
-    # get just the filename
-    turboimagehost_split = re.split('[0-9A-Za-z]+/', turboimagehost_src[0])
+        turboimagehost_src = [li.get('src', None) for li in src_links]
 
-    download_url = turboimagehost_src[0]
+        return turboimagehost_src
 
-    try: 
-        # generate just the filename of the image to be locally saved
-        savefile = join(basedir, str(turboimagehost_split[-1]))
-    except UnicodeEncodeError:
-        # catch files with strange characters in name
-        savefile = join(basedir, str(turboimagehost_split[-1].encode("utf-8")))
+    def turboimagehost_save_image(self, src_list):
+        # get just the filename
+        turboimagehost_split = re.split('[0-9A-Za-z]+/', src_list[0])
 
-    # finally save the image in the desidered directory
-    urlretrieve(download_url, savefile) 
+        download_url = src_list[0]
 
+        try: 
+            # generate just the filename of the image to be locally saved
+            savefile = join(self.basedir, str(turboimagehost_split[-1]))
+        except UnicodeEncodeError:
+            # catch files with strange characters in name
+            savefile = join(self.basedir, str(turboimagehost_split[-1].encode("utf-8")))
+
+        # finally save the image in the desidered directory
+        urlretrieve(download_url, savefile) 
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.turboimagehost_src = self.turboimagehost_get_image_src(self.page)
+
+        self.turboimagehost_save_image(self.turboimagehost_src)

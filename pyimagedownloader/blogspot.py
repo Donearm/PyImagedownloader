@@ -22,20 +22,16 @@ from os.path import join
 import http_connector
 
 
+class BlogspotParse():
 
-def blogspot_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
 
-    # No need for blogspot to call lxml again, the links in blogspot_list
-    # are already the direct urls to the full image
-
-    # generate just the filename of the image to be locally saved
-    #save_extension = re.split('(/[0-9A-Za-z_-]+/)*', blogspot_src[0])
-    save_extension = re.split('/s1600/', link)
-
-    savefile = join(basedir, str(save_extension[-1]))
-
-    download_url = link
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+    def parse(self):
+        # No need for blogspot to call lxml again, the link is
+        # already the direct urls to the full image
+        save_extension = re.split('/s1600/', link)
+        savefile = join(self.basedir, str(save_extension[-1]))
+        download_url = self.link
+        urlretrieve(download_url, savefile)

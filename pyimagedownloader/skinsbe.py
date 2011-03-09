@@ -22,30 +22,47 @@ from os.path import join
 import lxml.html
 import http_connector
 
+class SkinsbeParse():
 
-def skinsbe_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def process_url(self, url):
+        response = connector.reqhandler(url)
 
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    # find the src attribute which contains the real link of skinsbe's images
-    src_links = page.xpath("//img[@id='wallpaper_image']")
+        return page
 
-    skinsbe_src = [li.get('src', None) for li in src_links]
+    def skinsbe_get_image_src(self, page):
+        # find the src attribute which contains the real link of skinsbe's images
+        src_links = page.xpath("//img[@id='wallpaper_image']")
 
-    # generate just the filename of the image to be locally saved
-    save_extension = re.sub("^.*[0-9]\/", '', skinsbe_src[0])
-    savefile = join(basedir, save_extension)
+        skinsbe_src = [li.get('src', None) for li in src_links]
 
-    download_url = skinsbe_src[0]
-    # finally save the image in the desidered directory
-    try:
-        urlretrieve(download_url, savefile) 
-    except :
-        return
+        return skinsbe_src
+
+    def skinsbe_save_image(self, src_list):
+        # generate just the filename of the image to be locally saved
+        save_extension = re.sub("^.*[0-9]\/", '', src_list[0])
+        savefile = join(self.basedir, save_extension)
+
+        download_url = src_list[0]
+        # finally save the image in the desidered directory
+        try:
+            urlretrieve(download_url, savefile) 
+        except :
+            return
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.skinsbe_src = self.skinsbe_get_image_src(self.page)
+
+        self.skinsbe_save_image(self.skinsbe_src)

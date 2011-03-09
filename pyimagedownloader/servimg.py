@@ -22,23 +22,43 @@ import lxml.html
 import http_connector
 
 
-def servimg_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+class ServimgParse():
 
-    page = lxml.html.fromstring(response)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    src_links = page.xpath("//p[@id='picture']/img")
+    def process_url(self, url):
+        response = connector.reqhandler(url)
 
-    servimg_src = [li.get('src', None) for li in src_links]
+        page = lxml.html.fromstring(response)
 
-    try:
-        save_extension = connector.get_filename(servimg_src[0], '/')
-        download_url = servimg_src[0]
-        savefile = join(basedir, str(save_extension[-1]))
-    except IndexError:
-        return
+        return page
 
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+    def servimg_get_image_src_and_name(self, page):
+        src_links = page.xpath("//p[@id='picture']/img")
 
+        servimg_src = [li.get('src', None) for li in src_links]
+
+        try:
+            imagename = self.connector.get_filename(servimg_src[0], '/')
+        except IndexError:
+            return
+
+        return servimg_src, imagename
+
+    def servimg_save_image(self, src_list, imagename):
+        save_extension = imagename
+        download_url = src_list[0]
+        savefile = join(self.basedir, str(save_extension[-1]))
+
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.servimg_src, self.imagename = self.servimg_get_image_src_and_name(self.page)
+
+        self.servimg.save_image(self.servimg_src, self.imagename)

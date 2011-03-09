@@ -24,70 +24,86 @@ import lxml.html
 import http_connector
 
 
-def imagebam_parse(link, basedir):
-    # get every page linked from the imagebam links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+class ImagebamParse():
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    # find the src attribute which contains the real link of imagebam's images
-    src_links = page.xpath("//img[@onclick='scale(this);']")
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
 
-    imagebam_src = [li.get('src', None) for li in src_links]
-
-    # get the image name from the id tag
-#    imagename = [li.get('id', None) for i in src_links]
-    # or, better, from the Content-Disposition header
-    imagename = connector.get_filename(imagebam_src[0], 'filename=')
-
-    download_url = imagebam_src[0]
-
-    try: 
-        savefile = join(basedir, imagename)
-    except UnicodeEncodeError:
-        # encode with utf8 files with non-ascii characters in their name
-        savefile = join(basedir, imagename.encode("utf-8"))
-    except UnicodeDecodeError:
-        # catch bad characters and try to replace them with correct utf8 chars
-        savefile = join(basedir, imagename.decode('utf8', 'replace'))
-    except AttributeError:
-        # perhaps we have used the split in getting an imagename and thus
-        # we now have a list and not a string
-        savefile = join(basedir, imagename[-1])
-
-    # correctly rename filenames with missing or partial extension
-    if savefile.endswith('.'):
-            savefile = savefile + 'jpg'
-    elif savefile.endswith('.j'):
-            savefile = savefile + 'pg'
-    else:
-        pass
-
-    # finally save the image in the desidered directory
-    if not exists(savefile):
         try:
-            urlretrieve(download_url, savefile) 
-        except IOError as e:
-            # image not loading, skipping it
+            self.page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
             return
-    else:
-        randstring = ''.join(random.choice(string.lowercase) for i in range(5))
+
+        return self.page
+
+    def imagebam_get_image_src_and_name(self, page):
+        # find the src attribute which contains the real link of imagebam's 
+        # images
+        src_links = page.xpath("//img[@onclick='scale(this);']")
+
+        imagebam_src = [li.get('src', None) for li in src_links]
+
+        # get the image name from the Content-Disposition header
+        imagename = self.connector.get_filename(imagebam_src[0], 'filename=')
+
+        return imagebam_src, imagename
+
+    def imagebam_save_image(self, src_list, imagename):
+
+        download_url = src_list[0]
         try:
-            savefile = join(basedir, randstring + imagename)
+            savefile = join(self.basedir, imagename)
         except UnicodeEncodeError:
-            savefile = join(basedir, randstring + imagename.encode("uft-8"))
+            # encode with utf8 files with non-ascii characters in their name
+            savefile = join(self.basedir, imagename.encode("utf-8"))
+        except UnicodeDecodeError:
+            # catch bad characters and try to replace them with correct utf8 chars
+            savefile = join(self.basedir, imagename.decode('utf8', 'replace'))
         except AttributeError:
-            savefile = join(basedir, randstring + imagename[-1])
-        except TypeError:
-            savefile = join(basedir, randstring + imagename[-1])
-        try:
-            urlretrieve(download_url, savefile)
-        except IOError as e:
-            return
+            # perhaps we have used the split in getting an imagename and thus
+            # we now have a list and not a string
+            savefile = join(self.basedir, imagename[-1])
+
+        # correctly rename filenames with missing or partial extension
+        if savefile.endswith('.'):
+                savefile = savefile + 'jpg'
+        elif savefile.endswith('.j'):
+                savefile = savefile + 'pg'
+        else:
+            pass
+
+        # finally save the image in the desidered directory
+        if not exists(savefile):
+            try:
+                urlretrieve(download_url, savefile) 
+            except IOError as e:
+                # image not loading, skipping it
+                return
+        else:
+            randstring = ''.join(random.choice(string.lowercase) for i in range(5))
+            try:
+                savefile = join(self.basedir, randstring + imagename)
+            except UnicodeEncodeError:
+                savefile = join(self.basedir, randstring + imagename.encode("uft-8"))
+            except AttributeError:
+                savefile = join(self.basedir, randstring + imagename[-1])
+            except TypeError:
+                savefile = join(self.basedir, randstring + imagename[-1])
+            try:
+                urlretrieve(download_url, savefile)
+            except IOError as e:
+                return
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.imagebam_src, self.imagename = self.imagebam_get_image_src_and_name(self.page)
+        self.imagebam_save_image(self.imagebam_src, self.imagename)
 
 

@@ -62,57 +62,69 @@ class ShackConnector(http_connector.Connector):
 
 
 
+class ImageshackParse():
 
-def imageshack_parse(link, basedir):
-    
-    # check first if it's already the full url of the image
-    if re.search(RImageshackSplit, link):
-        imageshack_download(RImageshackSplit, link, basedir)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = ShackConnector()
 
-    connector = ShackConnector(link)
-    response = connector.reqhandler(link)
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            return
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        return
+        return page
 
-    # find the src attribute which contains the real link of imageshack's images
-    src_links = page.xpath("//img[@id='main_image']")
+    def imageshack_get_image_src(self, page):
+        src_links = page.xpath("//img[@id='main_image']")
+        
+        imageshack_src = [li.get('src', None) for li in src_links]
 
-    imageshack_src = [li.get('src', None) for li in src_links]
+        return imageshack_src
 
-    try:
-        imageshack_download(RImageshackSplit, link, basedir, imageshack_src[0])
-    except IndexError:
-        return
+    def imageshack_save_image(self, regexp, link, basedir, src=''):
+        """downloader function for imageshack links. It needs a regexp for 
+        re.split and of course the url of an imageshack hosted image"""
 
-def imageshack_download(regexp, url, basedir, src=""):
-    """downloader function for imageshack links. It needs a regexp for re.split
-    and of course the url of an imageshack hosted image"""
+        # generate a random number; if not, the images will have the same
+        # save_extension[1] and will overwrite each other   
+        num = random.randrange(1, 1000)
 
-    # generate a random number; if not, the images will have the same
-    # save_extension[1] and will overwrite each other   
-    num = random.randrange(1, 1000)
+        # Check if is a "type a" url 
+        if RImageshackA.search(src):
+            save_extension = re.split('img[0-9]+/[0-9]+/', src)
+            download_url = src
+            savefile = join(basedir, str(num) + str(save_extension[-1]))
+        # is it a partial url (without http://) ?
+        elif RImageshackPartial.search(src):
+            save_extension = re.split('/img[0-9]+/[0-9]+/', src)
+            # extract the first "imgXXX" part, we'll need it to reconstruct the
+            # full url
+            imgxxx = re.split('/', src)
+            download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src
+            savefile = join(basedir, str(num) + str(save_extension[-1]))
+        else:
+            # generate just the filename of the image to be locally saved
+            save_extension = re.split(regexp, src)
+            download_url = src
+            savefile = join(basedir, str(save_extension[1]))
 
-    # Check if is a "type a" url
-    if RImageshackA.search(src):
-        save_extension = re.split('img[0-9]+/[0-9]+/', src)
-        download_url = src
-        savefile = join(basedir, str(num) + str(save_extension[-1]))
-    # is it a partial url (without http://) ?
-    elif RImageshackPartial.search(src):
-        save_extension = re.split('/img[0-9]+/[0-9]+/', src)
-        # extract the first "imgXXX" part, we'll need it to reconstruct the
-        # full url
-        imgxxx = re.split('/', src)
-        download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src
-        savefile = join(basedir, str(num) + str(save_extension[-1]))
-    else:
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split(regexp, src)
-        download_url = src
-        savefile = join(basedir, str(save_extension[1]))
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
 
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+    def parse(self):
+        # check first if we already have the url of the image
+        if re.search(RImageshackSplit, self.link):
+            self.imageshack_save_image(RImageshackSplit, self.link, self.basedir)
+
+        self.page = self.process_url(self.link)
+        
+        self.imageshack_src = self.imageshack_get_image_src(self.page)
+
+        try:
+            self.imageshack_save_image(RImageshackSplit, self.link, self.basedir, self.imageshack_src)
+        except IndexError:
+            return

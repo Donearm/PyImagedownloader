@@ -20,20 +20,25 @@ import re
 from urllib import urlretrieve
 from os.path import join
 
+class WordpressParse():
 
-def wordpress_parse(link, basedir):
-    # urls of this kind are already the absolute ones of the image
-    # Therefore:
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
 
-    # grab the filename of the image
-    save_extension = re.split('/[0-9]{,2}/', link)
-    
-    # generate the savefile
-    # the split is needed to clean image names with added '?w=width&h=height' 
-    # strings
-    savefile = join(basedir, str(save_extension[-1]).split('?w=')[0])
+    def parse(self):
+        # urls of this kind are already the absolute ones of the image
 
-    download_url = link
+        # Therefore:
+        # grab the filename of the image
+        save_extension = re.split('/[0-9]{,2}/', self.link)
+        
+        # generate the savefile
+        # the split is needed to clean image names with added 
+        # '?w=width&h=height' strings
+        savefile = join(self.basedir, str(save_extension[-1]).split('?w=')[0])
 
-    # download the image
-    urlretrieve(download_url, savefile)
+        download_url = self.link
+
+        # download the image
+        urlretrieve(download_url, savefile)

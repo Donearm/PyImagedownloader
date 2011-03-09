@@ -79,30 +79,30 @@ rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.
 rImageboss = re.compile("http://www\.imageboss\.net", re.IGNORECASE)
 rServimg = re.compile("http://www\.servimg\.com", re.IGNORECASE)
 # putting them all in a dictionary
-regexp_dict = {rImagevenue : imagevenue.imagevenue_parse,
-        rImagebam : imagebam.imagebam_parse,
-        rImagehaven : imagehaven.imagehaven_parse,
-        rImageshack : imageshack.imageshack_parse,
-        rPostimage : postimage.postimage_parse,
-        rSharenxs : sharenxs.sharenxs_parse,
-        rBlogspot : blogspot.blogspot_parse,
-        rUpmyphoto : upmyphoto.upmyphoto_parse,
-        rUppix : uppix.uppix_parse,
-        rBellazon : bellazon.bellazon_parse,
-        rSkinsBe : skinsbe.skinsbe_parse,
-        rShareapic : shareapic.shareapic_parse,
-        rImagetitan : imagetitan.imagetitan_parse,
-        rImageUpper : imageupper.imageupper_parse,
-        rImageSocket : imagesocket.imagesocket_parse,
-        rPhotobucket : photobucket.photobucket_parse,
-        rImageban : imageban.imageban_parse,
-        rImagehostorg : imagehostorg.imagehostorg_parse,
-        rTurboimagehost : turboimagehost.turboimagehost_parse,
-        rUsemycomputer : usemycomputer.usemycomputer_parse,
-        rWordpress : wordpress.wordpress_parse,
-        rWordpressuploads : wordpress.wordpress_parse,
-        rImageboss : imageboss.imageboss_parse,
-        rServimg : servimg.servimg_parse
+regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
+        rImagebam : imagebam.ImagebamParse,
+        rImagehaven : imagehaven.ImagehavenParse,
+        rImageshack : imageshack.ImageshackParse,
+        rPostimage : postimage.PostimageParse,
+        rSharenxs : sharenxs.SharenxsParse,
+        rBlogspot : blogspot.BlogspotParse,
+        rUpmyphoto : upmyphoto.UpmyphotoParse,
+        rUppix : uppix.UppixParse,
+        rBellazon : bellazon.BellazonParse,
+        rSkinsBe : skinsbe.SkinsbeParse,
+        rShareapic : shareapic.ShareapicParse,
+        rImagetitan : imagetitan.ImagetitanParse,
+        rImageUpper : imageupper.ImageupperParse,
+        rImageSocket : imagesocket.ImagesocketParse,
+        rPhotobucket : photobucket.PhotobucketParse,
+        rImageban : imageban.ImagebanParse,
+        rImagehostorg : imagehostorg.ImagehostorgParse,
+        rTurboimagehost : turboimagehost.TurboimagehostParse,
+        rUsemycomputer : usemycomputer.UsemycomputerParse,
+        rWordpress : wordpress.WordpressParse,
+        rWordpressuploads : wordpress.WordpressParse,
+        rImageboss : imageboss.ImagebossParse,
+        rServimg : servimg.ServimgParse
         }
 
 
@@ -152,9 +152,9 @@ class ImageHostParser():
             # matching, put the method, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
-                    self.q.put((v, (L, self.basedir)))
-#                    p = Process(target=v, args=(L, self.basedir))
-#                    p.start()
+                    parser = v(L, self.basedir)
+                    self.q.put((parser.parse()))
+#                    self.q.put((v, (L, self.basedir)))
                     n = n + 1
                 else:
                     continue
@@ -167,12 +167,13 @@ class ImageHostParser():
 
     def use_queue(self):
         """use up the queue by running all its elements"""
-        for method, (link, b) in iter(self.q.get, "STOP"):
+        for method in iter(self.q.get, "STOP"):
+        #for method (link, b) in iter(self.q.get, "STOP"):
             # method is one of <imagehost>.<imagehost>_parse function
             # link is the matched url from finalset
             # b is always self.basedir
             try:
-                method(link, b)
+                method()
             except TypeError as e:
                 # in case we have disabled the module (with not_supported
                 # function) method will raise TypeError, which we can safely

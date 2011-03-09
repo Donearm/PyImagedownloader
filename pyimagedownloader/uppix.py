@@ -22,25 +22,43 @@ from os.path import join
 import lxml.html
 import http_connector
 
-def uppix_parse(link, basedir):
-    # get every page linked from the uppix links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+class UppixParse():
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    # find the src attribute which contains the real link of uppix's images
-    src_links = page.xpath("//img[@id='dpic']")
+    def process_url(self, url):
+        response = connector.reqhandler(url)
 
-    uppix_src = [li.get('src', None) for li in src_links]
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    # generate just the filename of the image to be locally saved
-    save_extension = re.sub('S[0-9]+/', '',  uppix_src[0]) 
-    uppix_sub = re.sub('Viewer[a-zA-Z]\.php\?file=', '', link)
-    savefile = join(basedir, save_extension)
-    # finally save the image on the desidered directory
-    urlretrieve(uppix_sub, savefile) 
+        return page
+
+    def uppix_get_image_src(self, page):
+        # find the src attribute which contains the real link of uppix's images
+        src_links = page.xpath("//img[@id='dpic']")
+
+        uppix_src = [li.get('src', None) for li in src_links]
+
+        return uppix_src
+
+    def uppix_save_image(self, src_list):
+        # generate just the filename of the image to be locally saved
+        save_extension = re.sub('S[0-9]+/', '',  src_list[0]) 
+        uppix_sub = re.sub('Viewer[a-zA-Z]\.php\?file=', '', self.link)
+        savefile = join(self.basedir, save_extension)
+        # finally save the image on the desidered directory
+        urlretrieve(uppix_sub, savefile) 
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.uppix_src = self.uppix_get_image_src(self.page)
+
+        self.uppix_save_image(self.uppix_src)

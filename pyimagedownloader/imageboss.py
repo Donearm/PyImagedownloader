@@ -22,27 +22,47 @@ import lxml.html
 import http_connector
 
 
-def imageboss_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+class ImagebossParse():
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    src_links = page.xpath("//img[@id='thepic']")
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
 
-    imageboss_src = [li.get('src', None) for li in src_links]
+        try:
+            self.page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    try:
-        save_extension = connector.get_filename(imageboss_src[0], '[a-z0-9]+/')
-        download_url = imageboss_src[0]
-        savefile = join(basedir, str(save_extension[-1]))
-    except IndexError:
-        return
+        return self.page
 
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+    def imageboss_get_image_src_and_name(self, page):
+        src_links = page.xpath("//img[@id='thepic']")
 
+        imageboss_src = [li.get('src', None) for li in src_links]
+        
+        imagename = self.connector.get_filename(imageboss_src[0], '[a-z0-9]+/')
+
+        return imageboss_src, imagename
+
+    def imageboss_save_image(self, src_list, imagename):
+
+        try:
+            save_extension = imagename
+            download_url = src_list[0]
+            savefile = join(self.basedir, str(save_extension[-1]))
+        except IndexError:
+            return
+
+        urlretrieve(download_url, savefile)
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.imageboss_src, self.imagename = self.imageboss_get_image_src_and_name(self.page)
+
+        self.imagebam_save_image(self.imageboss_src, self.imagename)

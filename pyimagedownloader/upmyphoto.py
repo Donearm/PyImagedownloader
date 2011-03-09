@@ -22,31 +22,47 @@ from os.path import join
 import lxml.html
 import http_connector
 
+class UpmyphotoParse():
 
-def upmyphoto_parse(link, basedir):
-    # get every page linked from the upmyphoto links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def process_url(self, url):
+        response = connector.reqhandler(url)
 
-    # find the src attribute which contains the real link of upmyphoto's images
-    src_links = page.xpath("//img[@id='image']")
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    upmyphoto_src = [li.get('src', None) for li in src_links]
+        return page
 
-    # generate just the filename of the image to be locally saved
-    # if this fails, it's possible that the image has been deleted
-    try:
-        save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', upmyphoto_src[0])
-    except IndexError as e:
-        return
-    savefile = join(basedir, str(save_extension[-1]))
+    def upmyphoto_get_image_src(self, page):
+        # find the src attribute which contains the real link of upmyphoto's images
+        src_links = page.xpath("//img[@id='image']")
 
-    download_url = upmyphoto_src[0]
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+        upmyphoto_src = [li.get('src', None) for li in src_links]
+
+        return upmyphoto_src
+        
+    def upmyphoto_save_image(self, src_list):
+        # generate just the filename of the image to be locally saved
+        # if this fails, it's possible that the image has been deleted
+        try:
+            save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', src_list[0])
+        except IndexError as e:
+            return
+        savefile = join(self.basedir, str(save_extension[-1]))
+        download_url = src_list[0]
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+        
+        self.upmyphoto_src = self.upmyphoto_get_image_src(self.page)
+
+        self.upmyphoto_save_image(self.upmyphoto_src)

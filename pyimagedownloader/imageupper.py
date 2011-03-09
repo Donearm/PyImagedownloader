@@ -22,27 +22,45 @@ from os.path import join
 import lxml.html
 import http_connector
 
+class ImageupperParse():
 
-def imageupper_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
 
-    src_links = page.xpath("//img[@id='img']")
-    imageupper_src = [li.get('src', None) for li in src_links]
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    try:
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split('[a-z][0-9]+/[0-9]+/[0-9]+/', imageupper_src[0])
+        return page
 
-        savefile = join(basedir, save_extension[-1])
-        download_url = imageupper_src[0]
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
-    except IndexError:
-        return
+    def imageupper_get_image_src(self, page):
+        src_links = page.xpath("//img[@id='img']")
+        imageupper_src = [li.get('src', None) for li in src_links]
+
+        return imageupper_src
+
+    def imageupper_save_image(self, src_list):
+        try:
+            # generate just the filename of the image to be locally saved
+            save_extension = re.split('[a-z][0-9]+/[0-9]+/[0-9]+/', src_list[0])
+
+            savefile = join(basedir, save_extension[-1])
+            download_url = src_list[0]
+            # finally save the image on the desidered directory
+            urlretrieve(download_url, savefile) 
+        except IndexError:
+            return
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.imageupper_src = self.imageupper_get_image_src(self.page)
+
+        self.imageupper_save_image(self.imageupper_src)

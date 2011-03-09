@@ -20,19 +20,20 @@ import re
 from urllib import urlretrieve
 from os.path import join
 
+class PhotobucketParse():
 
-def photobucket_parse(link, basedir):
-    try:
-        # generate just the filename of the image to be locally saved
-        save_extension = re.split('/', link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+    
+    def parse(self):
+        try:
+            # generate just the filename of the image to be locally saved
+            save_extension = re.split('/', self.link)
 
-        savefile = join(basedir, save_extension[-1])
-        download_url = link
-        # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
-    except IndexError:
-        return
-
-
-
-
+            savefile = join(self.basedir, save_extension[-1])
+            download_url = self.link
+            # finally save the image on the desidered directory
+            urlretrieve(download_url, savefile) 
+        except IndexError:
+            return

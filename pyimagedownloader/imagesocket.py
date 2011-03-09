@@ -29,37 +29,55 @@ values = { 'month': '01', 'day' : '1', 'year' : '1978', 'verifyAge' : 'Confirm'}
 headers = { 'User-Agent' : user_agent }
 data = urlencode(values, 1)
 
-def imagesocket_parse(link, basedir):
-    # supply the age verification informations before the first file
-    #
-    # splitting the url to get only the file name
-    filename = link.split('/')
-    connector = http_connector.Connector()
-    age_response = connector.post_request('http://www.imagesocket.com/warning/' + filename[-1], data, headers)
+class ImagesocketParse():
 
-    try:
-        response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
+    def give_age_verification_info(self):
+        # supply the age verification informations before the first file
+
+        # splitting the url to get only the file name
+        filename = self.link.split('/')
+        age_response = self.connector.post_request('http://www.imagesocket.com/warning/' + filename[-1], data, headers)
+
+
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
+        
         try:
             page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
             return
 
+        return page
+
+    def imagesocket_get_image_src(self, page):
         src_links = page.xpath("//img[@id='thumb']")
         imagesocket_src = [li.get('src', None) for li in src_links]
 
+        return imagesocket_src
 
+    def imagesocket_save_image(self, src_list):
         try:
             # generate just the filename of the image to be locally saved
-            save_extension = re.split('images/', imagesocket_src[0])
+            save_extension = re.split('images/', src_list[0])
 
             savefile = join(basedir, save_extension[-1])
-            download_url = imagesocket_src[0]
+            download_url = src_list[0]
             # finally save the image on the desidered directory
-            print(download_url)
             urlretrieve(download_url, savefile) 
         except IndexError:
             return
-    except:
-        return
+
+    def parse(self):
+        self.give_age_verification_info()
+
+        self.page = self.process_url(self.link)
+
+        self.imagesocket_src = self.imagesocket_get_image_src(self.page)
+
+        self.imagesocket_save_image(self.imagesocket_src)

@@ -22,42 +22,57 @@ from os.path import join
 import lxml.html
 import http_connector
 
+class ImagehostorgParse():
 
-def imagehostorg_parse(link, basedir):
-    # get every page linked from the imagehostorg links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
 
+        try:
+            self.page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
-    # find the src attribute which contains the real link of imagehostorg's 
-    # images
-    src_links = page.xpath("//div[@id='content']/img")
+    def imagehostorg_get_image_split_and_src(self, page):
+        # find the src attribute which contains the real link of imagehostorg's 
+        # images
+        src_links = page.xpath("//div[@id='content']/img")
 
-    imagehostorg_src = [li.get('src', None) for li in src_links]
+        imagehostorg_src = [li.get('src', None) for li in src_links]
 
-    if not imagehostorg_src:
-        # there is an ajax script to show the image and thus no src url
-        # we use the link in imagehostorg_list to generate the image name
-        # and get the content      
-        imagehostorg_split = re.split('/', link)
-        download_url = re.sub('view', 'secure', link)
+        if not imagehostorg_src:
+            # there is an ajax script to show the image and thus no src url
+            # we use the original link to generate the image name and get the 
+            # content
+            imagehostorg_split = re.split('/', self.link)
+            return imagehostorg_split
+        else:
+            # remove unneeded parts
+            imagehostorg_split = re.split('/', imagehostorg_src[0])
+            return imagehostorg_split, imagehostorg_src
 
-        savefile = join(basedir, str(imagehostorg_split[-1]))
+    def imagehosorg_save_image(self, split, src_list=''):
+        if not src_list:
+            # if no src_list we use the original link and the split only
+            download_url = re.sub('view', 'secure', self.link)
+            savefile = join(self.basedir, str(split[-1]))
+            urlretrieve(download_url, savefile)
+        else:
+            download_url = src_list[0]
+            savefile = join(self.basedir, str(split[-1]))
+            urlretrieve(download_url, savefile)
 
-        urlretrieve(download_url, savefile)
-    else:
-        # remove unneeded parts
-        imagehostorg_split = re.split('/', imagehostorg_src[0])
-        download_url = imagehostorg_src[0]
-        # generate just the filename of the image to be locally saved
-        savefile = join(basedir, str(imagehostorg_split[-1]))
+    def parse(self):
+        self.page = self.process_url(self.link)
 
-        # finally save the image in the desidered directory
-        urlretrieve(download_url, savefile) 
+        try:
+            self.imagehostorg_split, self.imagehostorg_src = self.imagehostorg_get_image_split_and_src(self.page)
+        except:
+            return
 
+        self.imagehostorg_save_image(self.imagehostorg_split, self.imagehostorg_src)

@@ -20,20 +20,32 @@ import re
 from os.path import join
 from urllib import urlretrieve
 
+class UsemycomputerParse():
 
-def usemycomputer_parse(link, basedir):
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
 
-    # no need to connect to the image's url, just rewrite the link to obtain
-    # the uri of the image
-    usemycomputer_split = re.split('show\.html\?i=\/', link)
+    def usemycomputer_get_image_split_and_name(self, url):
+        # no need to connect to the image's url, just rewrite the link to obtain
+        # the uri of the image
+        usemycomputer_split = re.split('show\.html\?i=\/', url)
 
-    # split by '/' so to extract the image name
-    imgname = re.split('/', usemycomputer_split[1])
+        # split by '/' so to extract the image name
+        imagename = re.split('/', usemycomputer_split[1])
 
-    # generate just the filename of the image to be locally saved
-    savefile = join(basedir, imgname[-1])
+        return usemycomputer_split, imagename
 
-    download_url = usemycomputer_split[0] + usemycomputer_split[1]
+    def usemycomputer_save_image(self, split, imagename):
+        # generate just the filename of the image to be locally saved
+        savefile = join(self.basedir, imagename[-1])
 
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+        download_url = split[0] + split[1]
+
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+
+    def parse(self):
+        self.usemycomputer_split, self.imagename = self.usemycomputer_get_image_split_and_name(self.link)
+
+        self.usemycomputer_save_image(self.usemycomputer_split, self.imagename)

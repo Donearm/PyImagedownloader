@@ -56,36 +56,9 @@ class BellazonParse():
 
         urlretrieve(download_url, savefile)
 
-    def bellazon_parse(self):
+    def parse(self):
         self.page = self.process_url(self.link)
 
         self.bellazon_src = self.bellazon_get_image_src(self.page)
 
         self.bellazon_save_image(self.bellazon_src)
-
-
-
-def bellazon_parse(link, basedir):
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
-
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
-
-    src_links = page.xpath("//img[@id='thepic']")
-
-    bellazon_src = [li.get('src', None) for li in src_links]
-
-    try:
-        save_extension = connector.get_filename(bellazon_src[0], 'id=')
-        download_url = bellazon_src[0]
-        savefile = join(basedir, str(save_extension))
-    except IndexError:
-        return
-
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
-

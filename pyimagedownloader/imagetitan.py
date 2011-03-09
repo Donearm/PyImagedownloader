@@ -26,33 +26,50 @@ import http_connector
 # The regexp we'll need to find the link
 RSrcImagetitan = re.compile("(img[0-9]{,2})(/[0-9A-Za-z]+/[0-9]+/)(.*[jpg|png|gif|jpeg])", re.IGNORECASE)
 
-def imagetitan_parse(link, basedir):
-    # get every page linked from the imagetitan links
-    connector = http_connector.Connector()
-    response = connector.reqhandler(link)
+class ImagetitanParse():
 
-    try:
-        page = lxml.html.fromstring(response)
-    except lxml.etree.XMLSyntaxError as e:
-        # most of the time we can simply ignore parsing errors
-        return
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
-    # find the src attribute which contains the real link of imagetitan's images
-    src_links = page.xpath("//img[@id='image']")
+    def process_url(self, url):
+        response = self.connector.reqhandler(url)
 
-    imagetitan_src = [li.get('src', None) for li in src_links]
+        try:
+            page = lxml.html.fromstring(response)
+        except lxml.etree.XMLSyntaxError as e:
+            # most of the time we can simply ignore parsing errors
+            return
 
+        return page
 
-    imgtitanmatch = re.match(RSrcImagetitan, imagetitan_src[0])
+    def imagetitan_get_image_match_group(self, page):
+        # find the src attribute which contains the real link of imagetitan's images
+        src_links = page.xpath("//img[@id='image']")
 
-    imgmiddle = imgtitanmatch.group(2) # the middle part of the url
-    imgname = imgtitanmatch.group(3) # the name of the image 
-    imggrp = imgtitanmatch.group(1) # the 'img[0-9]'
+        imagetitan_src = [li.get('src', None) for li in src_links]
 
-    # generate just the filename of the image to be locally saved
-    savefile = join(basedir, imgname)
-    # generate the url of the image
-    download_url = 'http://' + imggrp + '.imagetitan.com/' + imggrp + imgmiddle + imgname
-    # finally save the image on the desidered directory
-    urlretrieve(download_url, savefile) 
+        # get the match group
+        imgtitanmatch = re.match(RSrcImagetitan, imagetitan_src[0])
 
+        imggrp = imgtitanmatch.group(1) # the 'img[0-9]' part of the url
+        imgmiddle = imgtitanmatch.group(2) # the middle part
+        imgname = imgtitanmatch.group(3) # the name of the image 
+
+        return imggrp, imgmiddle, imgname
+
+    def imagetitan_save_image(self, imggrp, imgmiddle, imgname):
+        # generate just the filename of the image to be locally saved
+        savefile = join(self.basedir, imgname)
+        # generate the url of the image
+        download_url = 'http://' + imggrp + '.imagetitan.com/' + imggrp + imgmiddle + imgname
+        # finally save the image on the desidered directory
+        urlretrieve(download_url, savefile) 
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.imggrp, self.imgmiddle, self.imgname = self.imagetitan_get_image_match_group(self.page)
+
+        self.imagetitan_save_image(self.imggrp, self.imgmiddle, self.imgname)

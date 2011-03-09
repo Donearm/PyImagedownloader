@@ -23,35 +23,50 @@ import lxml.html
 import http_connector
 
 
+class ShareapicParse():
 
-def shareapic_parse(link, basedir):
-    # get every page linked from the shareapic links
-    connector = http_connector.Connector()
-    try:
-        response = connector.reqhandler(link)
+    def __init__(self, link, basedir):
+        self.link = link
+        self.basedir = basedir
+        self.connector = http_connector.Connector()
 
+    def process_url(self, url):
         try:
-            page = lxml.html.fromstring(response)
-        except lxml.etree.XMLSyntaxError as e:
-            # most of the time we can simply ignore parsing errors
+            response = self.connector.reqhandler(url)
+
+            try:
+                page = lxml.html.fromstring(response)
+            except lxml.etree.XMLSyntaxError as e:
+                # most of the time we can simply ignore parsing errors
+                return
+            return page
+        except:
+            print("An image couldn't be downloaded")
             return
 
+    def shareapic_get_image_src(self, page):
         # find the src attribute which contains the real link of shareapic's
         # images
         src_links = page.xpath("//img[@title='Click to zoom! ::']")
-        shareapic_fullsize = []
-        for li in src_links:
-            fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
-            #fullsize_li = re.sub(r"images([0-9])", r"fullsize\1", li['src'])
-            # add all the src parts to a list
-            shareapic_fullsize.append(fullsize_li)
 
-        download_url = shareapic_fullsize[0]
+        shareapic_src = []
+        for L in src_links:
+            fullsize = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
+            shareapic_src.append(fullsize)
+
+        return shareapic_src
+
+    def shareapic_save_image(self, src_list):
+        download_url = src_list[0]
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('fullsize[0-9]', shareapic_fullsize[0]) 
-        savefile = join(basedir, str(save_extension[1]))
+        save_extension = re.split('fullsize[0-9]', src_list[0])
+        savefile = join(self.basedir, str(save_extension[1]))
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile)
-    except:
-        print("An image couldn't be downloaded")
-        return
+
+    def parse(self):
+        self.page = self.process_url(self.link)
+
+        self.shareapic_src = self.shareapic_get_image_src(self.page)
+
+        self.shareapic_save_image(self.shareapic_src)
