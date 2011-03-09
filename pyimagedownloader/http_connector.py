@@ -43,20 +43,17 @@ class Connector():
         self.values = {}
         self.headers = { 'User-Agent' : user_agent, 'Connection' : 'Keep-Alive' }
         self.timeout = timeout
-        self.opener = ''
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
 
 
-    def install_opener(self):
-        """set a cookie handler and install the opener"""
+        #set a cookie handler and install the opener
         self.cj = CookieJar()
         if debug == 1:
            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPHandler(debuglevel=1))
         else:
             self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         urllib2.install_opener(self.opener)
-        return self.opener
     
 
     def reqhandler(self, url, login=0):
