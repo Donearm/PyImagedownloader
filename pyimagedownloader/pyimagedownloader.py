@@ -149,12 +149,17 @@ class ImageHostParser():
 
         for L in finalset:
             # iterate over the regexp dictionary items; when finding a url
-            # matching, put the method, url and self.basedir in the queue
+            # matching, put the the class name, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
-                    parser = v(L, self.basedir)
-                    self.q.put((parser.parse()))
-#                    self.q.put((v, (L, self.basedir)))
+                    # instantiate and then pass the parse method to the queue.
+                    # it downloads but doesn't make the queue do its job
+#                    parser = v(L, self.basedir)
+#                    self.q.put((parser.parse()))
+
+                    # add the class name and the parameters needed for its __init__
+                    # into the queue
+                    self.q.put((v, (L, self.basedir)))
                     n = n + 1
                 else:
                     continue
@@ -167,17 +172,20 @@ class ImageHostParser():
 
     def use_queue(self):
         """use up the queue by running all its elements"""
-        for method in iter(self.q.get, "STOP"):
-        #for method (link, b) in iter(self.q.get, "STOP"):
-            # method is one of <imagehost>.<imagehost>_parse function
+        for instance, (link, b) in iter(self.q.get, "STOP"):
+            # instance is simply the name of the class as in regexp_dict
             # link is the matched url from finalset
             # b is always self.basedir
+            
+            # instantiate the class
+            i = instance(link, b)
             try:
-                method()
+                # run the parse method
+                i.parse()
             except TypeError as e:
                 # in case we have disabled the module (with not_supported
-                # function) method will raise TypeError, which we can safely
-                # ignore
+                # function) trying to run it will raise TypeError, which we can 
+                # safely ignore
                 pass
 
     def chunks(self, l, n):
