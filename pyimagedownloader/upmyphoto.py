@@ -52,13 +52,16 @@ class UpmyphotoParse():
         # generate just the filename of the image to be locally saved
         # if this fails, it's possible that the image has been deleted
         try:
-            save_extension = re.split('/img/dir[0-9]+/(loc[0-9]+/)?', src_list[0])
+            save_extension = re.split('/images/[a-zA-Z0-9]+/', src_list[0])
         except IndexError as e:
             return
         savefile = join(self.basedir, str(save_extension[-1]))
         download_url = src_list[0]
         # finally save the image on the desidered directory
-        urlretrieve(download_url, savefile) 
+        filereq = self.connector.reqhandler(download_url)
+        with open(savefile, 'wb') as f:
+            f.write(filereq)
+#        urlretrieve(download_url, savefile)
 
     def parse(self):
         self.page = self.process_url(self.link)
