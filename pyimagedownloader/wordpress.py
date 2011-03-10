@@ -31,7 +31,7 @@ class WordpressParse():
 
         # Therefore:
         # grab the filename of the image
-        save_extension = re.split('/[0-9]{,2}/', self.link)
+        save_extension = re.split('/', self.link)
         
         # generate the savefile
         # the split is needed to clean image names with added 
