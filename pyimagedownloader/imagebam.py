@@ -19,7 +19,7 @@ __email__ = "forod.g@gmail.com"
 import random
 import string
 from urllib import urlretrieve
-from os.path import join, exists
+from os.path import join, exists, splitext
 import lxml.html
 import http_connector
 
@@ -71,10 +71,13 @@ class ImagebamParse():
             savefile = join(self.basedir, imagename[-1])
 
         # correctly rename filenames with missing or partial extension
-        if savefile.endswith('.'):
-                savefile = savefile + 'jpg'
-        elif savefile.endswith('.j'):
-                savefile = savefile + 'pg'
+        root, ext = splitext(savefile)
+        if ext == '.':
+            savefile = savefile + 'jpg'
+        elif ext == '.j':
+            savefile = savefile + 'pg'
+        elif ext == '':
+            savefile = savefile + '.jpg'
         else:
             pass
 
