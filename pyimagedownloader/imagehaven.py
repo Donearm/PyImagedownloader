@@ -55,7 +55,7 @@ class ImagehavenParse():
 
         return imagehaven_split, imagehaven_split2, imagename
 
-    def imaghaven_save_image(self, split1, split2, imagename):
+    def imagehaven_save_image(self, split1, split2, imagename):
         try:
             # make up the real image url
             download_url = str(split1[0]) + str(split2[1])
