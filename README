@@ -17,10 +17,12 @@ It also downloads images posted in one of the supported forum or sites
 + password) and put it in the config file (pyimg.py). Those supported
 are just what I regularly use, more could be added.
 
+
 Installation
 ----
 
-see INSTALL
+Most of the time a simple `python build/setup.py install` should 
+suffice. See http://docs.python.org/install/index.html
 
 
 License
