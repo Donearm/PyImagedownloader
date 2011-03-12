@@ -65,4 +65,4 @@ class ImagebossParse():
 
         self.imageboss_src, self.imagename = self.imageboss_get_image_src_and_name(self.page)
 
-        self.imagebam_save_image(self.imageboss_src, self.imagename)
+        self.imageboss_save_image(self.imageboss_src, self.imagename)
