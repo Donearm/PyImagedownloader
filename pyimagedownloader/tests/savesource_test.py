@@ -26,10 +26,6 @@ class TestSavesource(unittest.TestCase):
         string = self.ss.extract_domain(self.brazilian_domain)
         self.assertIsInstance(string, str)
 
-    def test_process_page(self):
-        response, url_string = self.ss.process_page(self.url)
-        self.assertIsInstance(response, str)
-
     def test_get_page_title(self):
         response, url_string = self.ss.process_page(self.url)
         title = self.ss.get_page_title(response)
