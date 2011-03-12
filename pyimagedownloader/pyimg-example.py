@@ -24,3 +24,7 @@ imc_pwd = ''
 # Usemycomputer forum username and password
 umc_name = ''
 umc_pwd = ''
+
+# Orfaos do Exclusivo forum username and password
+orfaos_name = ''
+orfaos_pwd = ''

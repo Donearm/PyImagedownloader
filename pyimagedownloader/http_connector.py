@@ -50,9 +50,9 @@ class Connector():
         #set a cookie handler and install the opener
         self.cj = CookieJar()
         if debug == 1:
-           self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPHandler(debuglevel=1))
+           self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPSHandler(debuglevel=1))
         else:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
+            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPSHandler())
         urllib2.install_opener(self.opener)
     
 
@@ -92,6 +92,7 @@ class Connector():
         self.RUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
         self.RImc = re.compile("http://www\.imcmagazine\.com/", re.IGNORECASE)
         self.RCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
+        self.ROrfaosdoexclusivo = re.compile("http[s]?://www\.orfaosdoexclusivo\.com", re.IGNORECASE)
 
         if self.RUsemycomputer.search(url):
             # We got a login user/pwd for usemycomputer, let's first login then
@@ -128,6 +129,14 @@ class Connector():
             data = urlencode(values)
 
             request = urllib2.Request(auth_page, data)
+            response = opener.open(request)
+        elif self.ROrfaosdoexclusivo.search(url):
+            login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
+            values = {'username': orfaos_name, 'password': orfaos_pwd}
+
+            data = urlencode(values)
+
+            request = urllib2.Request(login_page, data)
             response = opener.open(request)
 
     def post_request(self, url, data, headers):
