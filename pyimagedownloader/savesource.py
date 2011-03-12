@@ -23,7 +23,6 @@ import htmlentitydefs
 from os.path import join
 from urlparse import urlparse
 import lxml.html
-import http_connector
 
 ACCEPTEDCHARS = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
 
@@ -31,29 +30,17 @@ class SaveSource():
     """Class to save an url to a file in the given directory and, optionally,
     also the name given as creditor in another file in the same directory"""
 
-    def __init__(self, page, basedir, creditor=""):
+    def __init__(self, page, basedir, url, creditor=""):
         # the variables we'll need
         self.page = page
         self.basedir = basedir
+        self.url = url
         self.creditor = creditor
         self.output_dir = ''
         self.response = ''
         self.page_title = ''
         self.neat_title = ''
-        self.url = ''
 
-    def process_page(self, page):
-        """connect to and retrieve page"""
-        connector = http_connector.Connector()
-
-        response = connector.reqhandler(page, 1)
-
-        # check whether the url is a string or a list; if the latter, convert 
-        # it to string
-        url = connector.check_string_or_list(page)
-
-        # return both page source and stringfied url
-        return response, url
 
     def get_page_title(self, response):
         """extract title page"""
@@ -92,9 +79,7 @@ class SaveSource():
         
     def link_save(self):
         """main method linking all the others in SaveSource class"""
-        self.response, self.url = self.process_page(self.page)
-
-        self.page_title = self.get_page_title(self.response)
+        self.page_title = self.get_page_title(self.page)
         
         self.neat_title = self.clean_title(self.page_title)
 

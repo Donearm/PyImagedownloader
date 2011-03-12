@@ -231,11 +231,12 @@ def download_url(url, savedirectory, embed="", poster=""):
         raise IOError("Url not valid or nonexistent")
 
 
-
+    # be sure to have a url as a string and not as a list for savesource.py
+    url_string = connector.check_string_or_list(url)
     # Generate the directory for the source file and the images downloaded
     # Plus, return savedirectory as basedir + page title, so to save images
     # on a per-site basis
-    source_saver = savesource.SaveSource(url, savedirectory, creditor=poster)
+    source_saver = savesource.SaveSource(r_page, savedirectory, url_string, creditor=poster)
     savedirectory = source_saver.link_save()
 
 #    savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
