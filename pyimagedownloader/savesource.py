@@ -51,10 +51,14 @@ class SaveSource():
         return self.page_title
 
     def clean_title(self, title):
-        """clean title of the page of characters not in the ACCEPTEDCHARS set"""
+        """clean title of the page of difficult for the shell characters,
+        preserving unicode ones"""
         neat_title = self.decode_htmlentities(title)
 
-        neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title)
+#        neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title)
+        
+        # remove all characters in the regexp plus any whitespace
+        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'/]', '-', neat_title).split())
         print(neat_title)
 
         return neat_title
