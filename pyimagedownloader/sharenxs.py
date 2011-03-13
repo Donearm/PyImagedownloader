@@ -39,7 +39,7 @@ class SharenxsParse():
         self.connector = http_connector.Connector()
 
     def process_url(self, url):
-        response = connector.reqhandler(url)
+        response = self.connector.reqhandler(url)
 
         try:
             page = lxml.html.fromstring(response)
@@ -104,7 +104,7 @@ class SharenxsParse():
             # opening the page with the full-sized image
             self.page = self.process_url(self.sharenxs_url[0])
 
-            self.src_links, self.sharenxs_src, self.sharenxs_wz = self.sharenxs_get_image_src_and_wz(self.page)
+            self.src_links, self.sharenxs_src, self.sharenxs_wz = self.sharenxs_get_image_links_src_and_wz(self.page)
             if len(self.sharenxs_wz) is not 0:
                 try:
                     save_extension = re.split('/', str(self.sharenxs_wz[0]))
