@@ -110,7 +110,7 @@ class ImageshackParse():
             # generate just the filename of the image to be locally saved
             save_extension = re.split(regexp, src[0])
             download_url = src[0]
-            savefile = join(basedir, str(save_extension[1]))
+            savefile = join(basedir, str(num) +  str(save_extension[1]))
 
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
@@ -122,7 +122,10 @@ class ImageshackParse():
 
         self.page = self.process_url(self.link)
         
-        self.imageshack_src = self.imageshack_get_image_src(self.page)
+        try:
+            self.imageshack_src = self.imageshack_get_image_src(self.page)
+        except:
+            return
 
         try:
             self.imageshack_save_image(RImageshackSplit, self.link, self.basedir, self.imageshack_src)
