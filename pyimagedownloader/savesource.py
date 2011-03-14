@@ -58,7 +58,7 @@ class SaveSource():
 #        neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title)
         
         # remove all characters in the regexp plus any whitespace
-        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'/]', '-', neat_title).split())
+        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'/«»]', '-', neat_title).split())
         print(neat_title)
 
         return neat_title
