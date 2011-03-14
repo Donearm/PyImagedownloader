@@ -93,24 +93,31 @@ class ImageshackParse():
         # save_extension[1] and will overwrite each other   
         num = random.randrange(1, 1000)
 
-        # Check if is a "type a" url 
-        if RImageshackA.search(src[0]):
-            save_extension = re.split('img[0-9]+/[0-9]+/', src[0])
-            download_url = src[0]
-            savefile = join(basedir, str(num) + str(save_extension[-1]))
-        # is it a partial url (without http://) ?
-        elif RImageshackPartial.search(src[0]):
-            save_extension = re.split('/img[0-9]+/[0-9]+/', src[0])
-            # extract the first "imgXXX" part, we'll need it to reconstruct the
-            # full url
-            imgxxx = re.split('/', src[0])
-            download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src[0]
+        # there is not src at all? Then it's an embedded image
+        if len(src) == 0:
+            save_extension = re.split('img[0-9]+/[0-9]+/', link)
+            download_url = link
             savefile = join(basedir, str(num) + str(save_extension[-1]))
         else:
-            # generate just the filename of the image to be locally saved
-            save_extension = re.split(regexp, src[0])
-            download_url = src[0]
-            savefile = join(basedir, str(num) +  str(save_extension[1]))
+            # Check if is a "type a" url 
+            if RImageshackA.search(src[0]):
+                save_extension = re.split('img[0-9]+/[0-9]+/', src[0])
+                download_url = src[0]
+                savefile = join(basedir, str(num) + str(save_extension[-1]))
+            # is it a partial url (without http://) ?
+            elif RImageshackPartial.search(src[0]):
+                save_extension = re.split('/img[0-9]+/[0-9]+/', src[0])
+                # extract the first "imgXXX" part, we'll need it to reconstruct the
+                # full url
+                imgxxx = re.split('/', src[0])
+                download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src[0]
+                savefile = join(basedir, str(num) + str(save_extension[-1]))
+
+            else:
+                # generate just the filename of the image to be locally saved
+                save_extension = re.split(regexp, src[0])
+                download_url = src[0]
+                savefile = join(basedir, str(num) +  str(save_extension[1]))
 
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
