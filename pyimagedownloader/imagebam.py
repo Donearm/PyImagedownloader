@@ -50,7 +50,11 @@ class ImagebamParse():
         imagebam_src = [li.get('src', None) for li in src_links]
 
         # get the image name from the Content-Disposition header
-        imagename = self.connector.get_filename(imagebam_src[0], 'filename=')
+        try:
+            imagename = self.connector.get_filename(imagebam_src[0], 'filename=')
+        except IndexError:
+            # sometimes Imagebam server go offline, skip this image
+            return
 
         return imagebam_src, imagename
 
