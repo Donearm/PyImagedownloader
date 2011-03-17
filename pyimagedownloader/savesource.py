@@ -47,7 +47,12 @@ class SaveSource():
 
         page_title_parsed = lxml.html.fromstring(response)
 
-        self.page_title = page_title_parsed.find(".//title").text
+        try:
+            self.page_title = page_title_parsed.find(".//title").text
+        except AttributeError:
+            # in the case there is no title tag on the page, use the url
+            self.page_title = str(self.url)
+
         return self.page_title
 
     def clean_title(self, title):
