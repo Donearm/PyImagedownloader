@@ -28,7 +28,6 @@ import sys
 import re
 import fileinput
 from multiprocessing import Process, Queue
-from optparse import OptionParser
 from os.path import abspath, dirname
 from os import rename
 import lxml.html
@@ -198,28 +197,61 @@ class ImageHostParser():
 
 # Generate the argument parser
 def argument_parser():
-    usage_message = "usage: %prog [options] url"
-    cli_parser = OptionParser(usage=usage_message)
-    cli_parser.add_option("-c", "--credit",
-            help="optionally save the name of the poster of the images in a file",
-            dest="poster")
-    cli_parser.add_option("-e", "--embed",
-            action="store_true",
-            help="enable search for embedded images too",
-            dest="embed")
-    cli_parser.add_option("-d", "--directory",
-            help="the directory where to save images",
-            dest="savedirectory")
-    cli_parser.add_option("-g", "--gui",
-            action="store_true",
-            help="start in gui mode",
-            dest="gui")
-    cli_parser.add_option("-f", "--filelist",
-            help="a file containing the urls to be downloaded, one per row",
-            dest="filelist")
-    (options, args) = cli_parser.parse_args()
-    return options, args
-#    return options.poster, options.embed, options.gui, options.savedirectory, options.filelist , args
+    try:
+        import argparse
+
+        cli_parser = argparse.ArgumentParser()
+        cli_parser.add_argument("-c", "--credit",
+                action="store_true",
+                help="optionally save the name of the poster of the images in a file",
+                dest="poster")
+        cli_parser.add_argument("-e", "--embed",
+                action="store_true",
+                help="enable search for embedded images too",
+                dest="embed")
+        cli_parser.add_argument("-d", "--directory",
+                action="store",
+                help="the directory where to save images (overrides config file)",
+                dest="savedirectory")
+        cli_parser.add_argument("-g", "--gui",
+                action="store_true",
+                help="start in GUI mode",
+                dest="gui")
+        cli_parser.add_argument("-f", "--filelist",
+                action="store",
+                help="download urls from file, one per row",
+                dest="filelist")
+        cli_parser.add_argument(action="store",
+                help="URL",
+                dest="url")
+        options = cli_parser.parse_args()
+        return options
+
+    except ImportError:
+        # Python < 2.7 = no argparse
+        import optparse
+
+        usage_message = "usage: %prog [options] url"
+        cli_parser = optparse.OptionParser(usage=usage_message)
+        cli_parser.add_option("-c", "--credit",
+                help="optionally save the name of the poster of the images in a file",
+                dest="poster")
+        cli_parser.add_option("-e", "--embed",
+                action="store_true",
+                help="enable search for embedded images too",
+                dest="embed")
+        cli_parser.add_option("-d", "--directory",
+                help="the directory where to save images (overrides config file)",
+                dest="savedirectory")
+        cli_parser.add_option("-g", "--gui",
+                action="store_true",
+                help="start in GUI mode",
+                dest="gui")
+        cli_parser.add_option("-f", "--filelist",
+                help="download urls from file, one per row",
+                dest="filelist")
+        (options, args) = cli_parser.parse_args()
+        return options, args
 
 
 def download_url(url, savedirectory, embed="", poster=""):
@@ -306,13 +338,21 @@ def filelist_fileinput(download_file):
         print(l.strip("\n"))
 
 if __name__ == "__main__":
-    options, url = argument_parser()
+    # try argparse first
+    try:
+        options = argument_parser()
+        # rename options.url to retrocompatibility with optparse previous 
+        # settings
+        url = options.url
+    except IndexError:
+        options, url = argument_parser()
+
 
     if options.savedirectory:
         # directory given on the command line?
         basedir = abspath(options.savedirectory)
 
-    if options.filelist:
+    if options.filelist is not None:
         filelist_download(options.filelist)
 
         # exit now, we don't need to start the gui in this case
