@@ -202,7 +202,7 @@ def argument_parser():
 
         cli_parser = argparse.ArgumentParser()
         cli_parser.add_argument("-c", "--credit",
-                action="store_true",
+                action="store",
                 help="optionally save the name of the poster of the images in a file",
                 dest="poster")
         cli_parser.add_argument("-e", "--embed",
