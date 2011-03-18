@@ -82,9 +82,10 @@ class SaveSource():
             source_file.write("\n\n\nfonte:%s\n" % url)
 
         if creditor is not False:
-            domain_name = self.extract_domain(url)
-            with open('credits.txt', "w") as credits_file:
-                credits_file.write("credits: %s @%s \n" % (creditor, domain_name))
+            if creditor is not None:
+                domain_name = self.extract_domain(url)
+                with open('credits.txt', "w") as credits_file:
+                    credits_file.write("credits: %s @%s \n" % (creditor, domain_name))
         
     def link_save(self):
         """main method linking all the others in SaveSource class"""
