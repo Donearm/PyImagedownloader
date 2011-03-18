@@ -191,6 +191,7 @@ class Connector():
             try:
                 response = self.opener.open(request, None)
 #                print(request.header_items())
+#                print(request.unredirected_hdrs)
                 return response.read()
             except httplib.InvalidURL as e:
                 # url is not valid!
