@@ -223,6 +223,7 @@ def argument_parser():
                 dest="filelist")
         cli_parser.add_argument(action="store",
                 help="URL",
+                nargs="*",
                 dest="url")
         options = cli_parser.parse_args()
         return options
