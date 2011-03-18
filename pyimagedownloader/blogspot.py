@@ -31,7 +31,12 @@ class BlogspotParse():
     def parse(self):
         # No need for blogspot to call lxml again, the link is
         # already the direct urls to the full image
-        save_extension = re.split('/s1600/', self.link)
+        save_extension = re.split('/s1600(-h)?/', self.link)
         savefile = join(self.basedir, str(save_extension[-1]))
-        download_url = self.link
+        if len(save_extension) > 2:
+            # the (-h) of the split pattern matched then, remove it
+            # to obtain the download url
+            download_url = save_extension[0] + '/s1600/' + save_extension[-1]
+        else:
+            download_url = self.link
         urlretrieve(download_url, savefile)
