@@ -41,7 +41,9 @@ class Connector():
     def __init__(self):
         # Some variables for the connection
         self.values = {}
-        self.headers = { 'User-Agent' : user_agent, 'Connection' : 'Keep-Alive' }
+#        self.user_agent = { 'User-Agent' : user_agent }
+        self.user_agent = user_agent
+        self.headers = { 'User-Agent' : self.user_agent, 'Connection' : 'Keep-Alive' }
         self.timeout = timeout
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
@@ -71,10 +73,10 @@ class Connector():
             # Encode values (if any)
             self.data = urlencode(self.values)
             # if there are some values it's a POST request
-            self.response = self.post_request(self.uri, self.data, user_agent)
+            self.response = self.post_request(self.uri, self.data, self.user_agent)
         else:
             # no values, then it's a GET request
-            self.response = self.get_request(self.uri, user_agent)
+            self.response = self.get_request(self.uri, self.user_agent)
 
         return self.response
 
@@ -144,7 +146,7 @@ class Connector():
         attempts = 0
         while attempts < 10:
             try:
-                response = urllib2.urlopen(request, data)
+                response = self.opener.open(request, data)
                 # various infos on the response
                 #print(response.info())
                 #print(response.geturl())
@@ -162,7 +164,7 @@ class Connector():
                 if e.code == 405:
                     # we were wrong, the url doesn't accept a POST, make a GET
                     # then
-                    response = self.get_request(url, user_agent)
+                    response = self.get_request(url, self.user_agent)
                 elif e.code == 404:
                     # url non-existing, just go on
                     print("%s couldn't be found, skipping it..." % url)
@@ -181,13 +183,14 @@ class Connector():
         return response
 
 
-    def get_request(self, url, ua=user_agent):
+    def get_request(self, url, ua):
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
         attempts = 0
         while attempts < 10:
             try:
-                response = urllib2.urlopen(request, None)
+                response = self.opener.open(request, None)
+#                print(request.header_items())
                 return response.read()
             except httplib.InvalidURL as e:
                 # url is not valid!
@@ -220,7 +223,7 @@ class Connector():
     def get_filename(self, url, split=''):
         self.request = urllib2.Request(url)
         try:
-            self.response = urllib2.urlopen(self.request)
+            self.response = self.opener.open(self.request)
             try:
                 self.filename = self.response.headers['Content-Disposition'].split('=')[1]
                 # remove single or double quotes from the filename
