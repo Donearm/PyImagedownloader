@@ -108,7 +108,10 @@ class SaveSource():
         if len(u) > 3: # for tld like co.uk or com.br
             return u[1] + '.' + u[2] + '.' + u[3]
         else:
-            return u[1] + '.' + u[2]
+            if u[0] == 'www':
+                return u[1] + '.' + u[2]
+            else:
+                return u[0] + '.' + u[1]
 
     def decode_htmlentities(self, s):
         # Thanks to http://github.com/sku/python-twitter-ircbot/blob/321d94e0e40d0acc92f5bf57d126b57369da70de/html%5Fdecode.py
