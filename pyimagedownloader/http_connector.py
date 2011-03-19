@@ -145,8 +145,10 @@ class Connector():
             request = urllib2.Request(login_page, data)
             response = opener.open(request)
 
-    def post_request(self, url, data, headers):
+    def post_request(self, url, data, headers, referer=''):
         request = urllib2.Request(url, data, headers)
+        if referer:
+            request.add_header('Referer', referer)
         attempts = 0
         while attempts < 10:
             try:
@@ -187,9 +189,11 @@ class Connector():
         return response
 
 
-    def get_request(self, url, ua):
+    def get_request(self, url, ua, referer=''):
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
+        if referer:
+            request.add_header('Referer', referer)
         attempts = 0
         while attempts < 10:
             try:
@@ -226,11 +230,12 @@ class Connector():
 
 
     def get_filename(self, url, split=''):
-        self.request = urllib2.Request(url)
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', self.user_agent)
         try:
-            self.response = self.opener.open(self.request)
+            response = self.opener.open(request)
             try:
-                self.filename = self.response.headers['Content-Disposition'].split('=')[1]
+                self.filename = response.headers['Content-Disposition'].split('=')[1]
                 # remove single or double quotes from the filename
                 if self.filename[0] == '"' or self.filename[0] == "'":
                     self.filename = self.filename[1:-1]
