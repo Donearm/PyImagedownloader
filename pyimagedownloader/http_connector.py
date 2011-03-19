@@ -52,9 +52,13 @@ class Connector():
         #set a cookie handler and install the opener
         self.cj = CookieJar()
         if debug == 1:
-           self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPSHandler(debuglevel=1))
+           self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
+                   urllib2.HTTPHandler(debuglevel=1),
+                   urllib2.HTTPSHandler(debuglevel=1))
         else:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), urllib2.HTTPSHandler())
+            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
+                    urllib2.HTTPHandler(),
+                    urllib2.HTTPSHandler())
         urllib2.install_opener(self.opener)
     
 
