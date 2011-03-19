@@ -18,6 +18,7 @@ __email__ = "forod.g@gmail.com"
 
 from os.path import join
 from urllib import urlretrieve
+from pyimg import user_agent
 import lxml.html
 import http_connector
 
@@ -55,8 +56,8 @@ class PixrouteParse():
 
         # finally save the image on the desidered directory
         with open(savefile, "wb") as f:
-            f.write(self.connector.reqhandler(download_url))
-#        urlretrieve(download_url, savefile) 
+            # pixroute needs a Referer header to allow downloading
+            f.write(self.connector.get_request(download_url, user_agent, self.link))
 
     def parse(self):
         self.page = self.process_url(self.link)
