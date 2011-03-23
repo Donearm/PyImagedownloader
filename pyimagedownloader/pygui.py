@@ -100,33 +100,39 @@ class Gui():
 
         # Buttons
         self.basedir_button = gtk.Button("Set save directory")
+        self.filelist_button = gtk.Button("Load file")
         self.cut_button = gtk.Button("Cut")
         self.copy_button = gtk.Button("Copy")
         self.paste_button = gtk.Button("Paste")
         self.start_button = gtk.Button("Start")
         self.close_button = gtk.Button("Close")
         self.basedir_button.set_size_request(30, 30)
+        self.filelist_button.set_size_request(30, 30)
         self.cut_button.set_size_request(50, 50)
         self.copy_button.set_size_request(50, 50)
         self.paste_button.set_size_request(50, 50)
         self.start_button.set_size_request(50, 50)
         self.close_button.set_size_request(50, 50)
 
-        self.hbox = gtk.HBox(False, 5)
+        self.hbox1 = gtk.HBox(False, 5)
+        self.hbox2 = gtk.HBox(False, 5)
         self.vbox = gtk.VBox(False, 5)
 
-        self.vbox.pack_start(self.basedir_button, True)
+        self.hbox1.pack_start(self.basedir_button)
+        self.hbox1.pack_start(self.filelist_button)
+        self.vbox.pack_start(self.hbox1)
         self.vbox.pack_start(self.scrolledwindow)
-        self.hbox.pack_start(self.start_button)
-        self.hbox.pack_start(self.cut_button)
-        self.hbox.pack_start(self.copy_button)
-        self.hbox.pack_start(self.paste_button)
-        self.hbox.pack_start(self.close_button)
-        self.vbox.pack_start(self.hbox)
+        self.hbox2.pack_start(self.start_button)
+        self.hbox2.pack_start(self.cut_button)
+        self.hbox2.pack_start(self.copy_button)
+        self.hbox2.pack_start(self.paste_button)
+        self.hbox2.pack_start(self.close_button)
+        self.vbox.pack_start(self.hbox2)
         self.scrolledwindow.add(self.treeview)
         self.window.add(self.vbox)
 
         self.basedir_button.connect("clicked", self.basedir_dialog)
+        self.filelist_button.connect("clicked", self.filelist_dialog)
         self.cut_button.connect("clicked", self.copy, "cut")
         self.copy_button.connect("clicked", self.copy, "copy")
         self.paste_button.connect("clicked", self.paste)
@@ -180,6 +186,21 @@ class Gui():
             self.chooser_dialog.destroy()
 
         self.chooser_dialog.destroy()
+
+    def filelist_dialog(self, widget):
+        self.filelist_dialog = gtk.FileChooserDialog(title="Load file with URLs...",
+                action=gtk.FILE_CHOOSER_ACTION_OPEN,
+                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        
+        response = self.filelist_dialog.run()
+        if response == gtk.RESPONSE_OK:
+            filelist = self.filelist_dialog.get_filename()
+            self.filelist_dialog.destroy()
+            return filelist
+        elif response == gtk.RESPONSE_CANCEL:
+            self.filelist_dialog.destroy()
+        else:
+            self.filelist_dialog.destroy()
 
         
     def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
