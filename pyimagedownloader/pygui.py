@@ -95,17 +95,17 @@ class Gui():
         # make the column header not clickable
         self.tvcolumn.set_clickable(False)
         
-
-
         # Clipboard
         self.clipboard = gtk.Clipboard(gtk.gdk.display_get_default(), "PRIMARY")
 
         # Buttons
+        self.basedir_button = gtk.Button("Set save directory")
         self.cut_button = gtk.Button("Cut")
         self.copy_button = gtk.Button("Copy")
         self.paste_button = gtk.Button("Paste")
         self.start_button = gtk.Button("Start")
         self.close_button = gtk.Button("Close")
+        self.basedir_button.set_size_request(30, 30)
         self.cut_button.set_size_request(50, 50)
         self.copy_button.set_size_request(50, 50)
         self.paste_button.set_size_request(50, 50)
@@ -115,7 +115,8 @@ class Gui():
         self.hbox = gtk.HBox(False, 5)
         self.vbox = gtk.VBox(False, 5)
 
-        self.vbox.pack_start(self.scrolledwindow, True)
+        self.vbox.pack_start(self.basedir_button, True)
+        self.vbox.pack_start(self.scrolledwindow)
         self.hbox.pack_start(self.start_button)
         self.hbox.pack_start(self.cut_button)
         self.hbox.pack_start(self.copy_button)
@@ -125,6 +126,7 @@ class Gui():
         self.scrolledwindow.add(self.treeview)
         self.window.add(self.vbox)
 
+        self.basedir_button.connect("clicked", self.basedir_dialog)
         self.cut_button.connect("clicked", self.copy, "cut")
         self.copy_button.connect("clicked", self.copy, "copy")
         self.paste_button.connect("clicked", self.paste)
@@ -160,6 +162,26 @@ class Gui():
         if text != None:
             self.liststore.append([text])
 
+    def basedir_dialog(self, widget):
+        # make a FileChooserDialog
+        self.chooser_dialog = gtk.FileChooserDialog(title="Select download directory...",
+                action=gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER,
+                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        self.chooser_dialog.set_current_folder(str(self.basedir))
+
+        # run it
+        response = self.chooser_dialog.run()
+        if response == gtk.RESPONSE_OK:
+            self.basedir = self.chooser_dialog.get_current_folder()
+        elif response == gtk.RESPONSE_CANCEL:
+            print(self.chooser_dialog.get_current_folder())
+            self.chooser_dialog.destroy()
+        else:
+            self.chooser_dialog.destroy()
+
+        self.chooser_dialog.destroy()
+
+        
     def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
         """instantiate a SequentialDownloader object and execute run()"""
         self.sqdownloader = SequentialDownloader(widget, liststore, basedir, embed, poster)
