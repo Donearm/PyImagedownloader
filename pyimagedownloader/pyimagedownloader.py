@@ -274,8 +274,6 @@ def download_url(url, savedirectory, embed="", poster=""):
     source_saver = savesource.SaveSource(r_page, savedirectory, url_string, creditor=poster)
     savedirectory = source_saver.link_save()
 
-#    savedirectory = savesource.save_source(url, savedirectory, creditor=poster)
-
     # Parse the page for images
     parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
     if embed:

@@ -195,6 +195,8 @@ class Gui():
         response = self.filelist_dialog.run()
         if response == gtk.RESPONSE_OK:
             filelist = self.filelist_dialog.get_filename()
+            # call the method to add every url from filelist to the liststore
+            self.populate_liststore(self.filelist_dialog, self.liststore, filelist)
             self.filelist_dialog.destroy()
             return filelist
         elif response == gtk.RESPONSE_CANCEL:
@@ -202,12 +204,21 @@ class Gui():
         else:
             self.filelist_dialog.destroy()
 
+    def populate_liststore(self, widget, liststore, filelist):
+        """populate the given liststore with elements from filelist"""
+        with open(filelist, "r") as f:
+            line = f.readlines()
+            for u in line:
+                if u.startswith('#'):
+                    # ignore commented lines
+                    pass
+                else:
+                    liststore.append([u.strip('\n')])
         
     def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
         """instantiate a SequentialDownloader object and execute run()"""
         self.sqdownloader = SequentialDownloader(widget, liststore, basedir, embed, poster)
         self.sqdownloader.start()
-
 
 
 
@@ -240,10 +251,8 @@ class SequentialDownloader(threading.Thread):
         # Generate the directory for the source file and the images downloaded
         # Plus, return savedirectory as basedir + page title, so to save images
         # on a per-site basis
-
-        source_saver = savesource.SaveSource(url, savedirectory, creditor=poster)
+        source_saver = savesource.SaveSource(r_page, savedirectory, url, creditor=poster)
         savedirectory = source_saver.link_save()
-#        savedirectory = save_source(url, savedirectory, creditor=poster)
 
         # Parse the page for images
         parser = ImageHostParser(r_page, 'a', 'href', savedirectory)
