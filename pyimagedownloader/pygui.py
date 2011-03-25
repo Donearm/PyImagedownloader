@@ -20,8 +20,8 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.4"
-__date__ = "18012011"
+__version__ = "1.5"
+__date__ = "25032011"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -177,15 +177,13 @@ class Gui():
                 buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         self.chooser_dialog.set_current_folder(str(self.basedir))
 
+        self.chooser_dialog.set_default_response(gtk.RESPONSE_OK)
         # run it
-        response = self.chooser_dialog.run()
-        if response == gtk.RESPONSE_OK:
-            self.basedir = self.chooser_dialog.get_current_folder()
-        elif response == gtk.RESPONSE_CANCEL:
+        if self.chooser_dialog.run() == gtk.RESPONSE_OK:
             print(self.chooser_dialog.get_current_folder())
-            self.chooser_dialog.destroy()
+            self.basedir = self.chooser_dialog.get_current_folder()
         else:
-            self.chooser_dialog.destroy()
+            print(self.chooser_dialog.get_current_folder())
 
         self.chooser_dialog.destroy()
 
