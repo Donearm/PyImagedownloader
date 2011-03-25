@@ -29,6 +29,8 @@ import threading
 # importing local modules
 import http_connector
 import savesource
+from os import rename
+from os.path import abspath, dirname
 # importing config file variables
 #from pyimagedownloader import download_url, basedir, embed, poster
 from pyimagedownloader import ImageHostParser
@@ -206,15 +208,22 @@ class Gui():
 
     def populate_liststore(self, widget, liststore, filelist):
         """populate the given liststore with elements from filelist"""
+        bckp_f = dirname(abspath(filelist)) + '/' + 'list.bckp'
         with open(filelist, "r") as f:
             line = f.readlines()
-            for u in line:
-                if u.startswith('#'):
-                    # ignore commented lines
-                    pass
-                else:
-                    liststore.append([u.strip('\n')])
-        
+            with open(bckp_f, "w") as b:
+                for u in line:
+                    if u.startswith('#'):
+                        # write back commented lines
+                        b.write(u)
+                    else:
+                        # write as commented lines added to the liststore
+                        liststore.append([u.strip('\n')])
+                        b.write('#' + u)
+    
+        rename(abspath(b.name), abspath(f.name))
+
+
     def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
         """instantiate a SequentialDownloader object and execute run()"""
         self.sqdownloader = SequentialDownloader(widget, liststore, basedir, embed, poster)
