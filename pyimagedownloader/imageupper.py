@@ -49,9 +49,9 @@ class ImageupperParse():
     def imageupper_save_image(self, src_list):
         try:
             # generate just the filename of the image to be locally saved
-            save_extension = re.split('[a-z][0-9]+/[0-9]+/[0-9]+/', src_list[0])
+            save_extension = re.split('([a-z][0-9]+/)?[0-9]+/[0-9]+/', src_list[0])
 
-            savefile = join(basedir, save_extension[-1])
+            savefile = join(self.basedir, save_extension[-1])
             download_url = src_list[0]
             # finally save the image on the desidered directory
             urlretrieve(download_url, savefile) 
