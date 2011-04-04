@@ -38,6 +38,8 @@ class ImagehostorgParse():
             # most of the time we can simply ignore parsing errors
             return
 
+        return self.page
+
     def imagehostorg_get_image_split_and_src(self, page):
         # find the src attribute which contains the real link of imagehostorg's 
         # images
@@ -56,7 +58,7 @@ class ImagehostorgParse():
             imagehostorg_split = re.split('/', imagehostorg_src[0])
             return imagehostorg_split, imagehostorg_src
 
-    def imagehosorg_save_image(self, split, src_list=''):
+    def imagehostorg_save_image(self, split, src_list=''):
         if not src_list:
             # if no src_list we use the original link and the split only
             download_url = re.sub('view', 'secure', self.link)
