@@ -143,6 +143,9 @@ class ImageHostParser():
         finalset = set()
         for L in urllist:
             self.stringl = str(L.get(attr, None))
+            # remove the anonym.to string before urls
+            if self.stringl.startswith("http://anonym.to/?"):
+                self.stringl = re.sub('http://anonym.to/\?', '', self.stringl)
             finalset.add(self.stringl)
 
 
