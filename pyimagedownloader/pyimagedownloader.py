@@ -36,7 +36,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
-        imageboss, servimg, pixroute
+        imageboss, servimg, pixroute, tumblr
 import http_connector
 import pygui
 # importing config file variables
@@ -77,6 +77,7 @@ rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.
 rImageboss = re.compile("http://www\.imageboss\.net", re.IGNORECASE)
 rServimg = re.compile("http://www\.servimg\.com", re.IGNORECASE)
 rPixroute = re.compile("http://www\.pixroute\.com", re.IGNORECASE)
+rTumblr = re.compile("http://[0-9]+\.media\.tumblr\.com", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rImagebam : imagebam.ImagebamParse,
@@ -101,7 +102,8 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rWordpressuploads : wordpress.WordpressParse,
         rImageboss : imageboss.ImagebossParse,
         rServimg : servimg.ServimgParse,
-        rPixroute : pixroute.PixrouteParse
+        rPixroute : pixroute.PixrouteParse,
+        rTumblr : tumblr.TumblrParse
         }
 
 
