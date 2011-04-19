@@ -17,8 +17,7 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from os.path import join, exists
-import string
+from os.path import join
 import random
 import lxml.html
 import http_connector
@@ -63,14 +62,10 @@ class PostimageParse():
             # generate just the filename of the image to be locally saved
             save_extension = re.split('/[a-z0-9]+/', src_list[0])
 
-            savefile = join(self.basedir, save_extension[-1])
+            randnumber = random.randint(1, 999)
+            savefile = join(self.basedir, str(randnumber) + '-' + save_extension[-1])
             download_url = src_list[0]
 
-            if exists(savefile):
-                # check that images won't have all the same filename and will
-                # be thus overwritten by the following one
-                randstring = ''.join(random.choice(string.lowercase) for i in range(5))
-                savefile = join(self.basedir, randstring + save_extension[-1])
 
             # finally save the image on the desidered directory
             # I'm using http_connector function to make use of its opener,
