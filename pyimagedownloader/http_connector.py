@@ -147,6 +147,7 @@ class Connector():
 
     def post_request(self, url, data, headers, referer=''):
         request = urllib2.Request(url, data, headers)
+        request.add_header('Accept', '*/*')
         if referer:
             request.add_header('Referer', referer)
         attempts = 0
@@ -192,6 +193,7 @@ class Connector():
     def get_request(self, url, ua, referer=''):
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
+        request.add_header('Accept', '*/*')
         if referer:
             request.add_header('Referer', referer)
         attempts = 0
