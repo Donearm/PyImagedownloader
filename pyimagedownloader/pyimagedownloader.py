@@ -36,7 +36,7 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
-        imageboss, servimg, pixroute, tumblr, imgur
+        imageboss, servimg, pixroute, tumblr, imgur, radikal
 import http_connector
 import pygui
 # importing config file variables
@@ -79,6 +79,7 @@ rServimg = re.compile("http://www\.servimg\.com", re.IGNORECASE)
 rPixroute = re.compile("http://www\.pixroute\.com", re.IGNORECASE)
 rTumblr = re.compile("http://[0-9]+\.media\.tumblr\.com", re.IGNORECASE)
 rImgur = re.compile("http://([a-z]+\.)?imgur\.com", re.IGNORECASE)
+rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rImagebam : imagebam.ImagebamParse,
@@ -105,7 +106,8 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rServimg : servimg.ServimgParse,
         rPixroute : pixroute.PixrouteParse,
         rTumblr : tumblr.TumblrParse,
-        rImgur : imgur.ImgurParse
+        rImgur : imgur.ImgurParse,
+        rRadikal : radikal.RadikalParse
         }
 
 
