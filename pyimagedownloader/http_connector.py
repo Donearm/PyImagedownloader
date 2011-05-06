@@ -30,7 +30,7 @@ import urllib2
 import socket
 import httplib
 from cookielib import CookieJar
-from urllib import urlencode
+from urllib import urlencode, quote
 # importing config file variables
 from pyimg import *
 
@@ -68,6 +68,9 @@ class Connector():
 
         # check if the url given is a string or a list
         self.uri = self.check_string_or_list(url)
+
+        # correctly quote not safe characters in an url
+        self.uri = quote(self.uri, safe="%/:=&?~#+!$,;'@()*[]")
 
         # for some sites we need to login first....
         if login == 1:
