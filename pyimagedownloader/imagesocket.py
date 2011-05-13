@@ -77,6 +77,9 @@ class ImagesocketParse():
         self.give_age_verification_info()
 
         self.page = self.process_url(self.link)
+        if not self.page:
+            # image was not found, exit
+            return
 
         self.imagesocket_src = self.imagesocket_get_image_src(self.page)
 
