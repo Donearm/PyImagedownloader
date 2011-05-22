@@ -53,6 +53,11 @@ class SaveSource():
             # in the case there is no title tag on the page, use the url
             self.page_title = str(self.url)
 
+        # some pages don't return AttributeError but page_title is still None.
+        # use the url then
+        if not self.page_title:
+            self.page_title = str(self.url)
+        
         return self.page_title
 
     def clean_title(self, title):
