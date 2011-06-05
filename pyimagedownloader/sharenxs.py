@@ -17,9 +17,12 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
-from urllib import urlretrieve
+import urllib2
+import cookielib
+from urllib import urlretrieve, urlencode
 from os.path import join
 import lxml.html
+from pyimg import user_agent, debug
 import http_connector
 
 
@@ -30,19 +33,96 @@ RSharenxsUrl = re.compile("http://((www|cache)\.)?sharenxs\.com", re.IGNORECASE)
 # Regexp matching a full-sized sharenxs src url
 RSharenxsWz = re.compile("http://((www|cache)\.)?sharenxs\.com/images/wz", re.IGNORECASE)
 
+class SharenxsConnector(http_connector.Connector):
+    # reimplementing base Connector class to return a infourl object from get_request
+    # method so it can be given to extract_cookies() to take the 'PHPSESSID' and
+    # 'ad_redirect_st_nxs' cookies to pass the initial ad page on sharenxs.com
+    # Then they will be added to a second get_request() as the 'Cookie' header so
+    # to enable downloading of the image
+    def __init__(self, url):
+        http_connector.Connector.__init__(self)
+        self.uri = url
+        self.values = {}
+        self.headers = { 'User-Agent' : user_agent }
+        self.data = urlencode(self.values)
+        self.cj = cookielib.CookieJar()
+
+    def get_request(self, url, ua, cookie='', referer=''):
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', ua)
+        request.add_header('Accept', '*/*')
+        if cookie:
+            request.add_header('Cookie', cookie)
+        if referer:
+            request.add_header('Referer', referer)
+        attempts = 0
+        while attempts < 10:
+            try:
+                response = self.opener.open(request, None)
+#                print(request.header_items())
+#                print(request.unredirected_hdrs)
+                return response
+            except httplib.InvalidURL as e:
+                # url is not valid!
+                response = ''
+                return response
+            except httplib.IncompleteRead as e:
+                attempts += 1
+                self.get_request(url, ua)
+            except urllib2.HTTPError as e:
+                attempts += 1
+                response = ''
+                if e.code == 404:
+                    # url non-existing, just go on
+                    print("%s couldn't be found, skipping it..." % url)
+                    return response
+                else:
+                    print(e.code)
+            except urllib2.URLError as e:
+                attempts += 1
+                print(e.reason)
+            except socket.error as e:
+                attempts += 1
+                print(e)
+
+        print("An image couldn't be downloaded.")
+        response = ''
+        return response
+
+
 
 class SharenxsParse():
 
     def __init__(self, link, basedir):
         self.link = link
         self.basedir = basedir
-        self.connector = http_connector.Connector()
+        self.connector = SharenxsConnector(self.link)
+
 
     def process_url(self, url):
-        response = self.connector.reqhandler(url)
+        # generate a first request that is needed for extract_cookies()
+        req = urllib2.Request(url, user_agent)
+        response = self.connector.get_request(url, user_agent)
+
+        # extract cookies from first response
+        self.connector.cj.extract_cookies(response, req)
+
+        # make received cookies in a dict
+        cookies = self.connector.cj.make_cookies(response, req)
+        cookie_header = {}
+        for c in cookies:
+            # generate just the Cookie header we need with the only 2 necessary values
+            headerp = {'Cookie': 'PHPSESSID=' + c.value}
+            headerv = {'Cookie': 'ad_redirect_st_nxs=' + c.value}
+            cookie_header = {'Cookie': headerp['Cookie'] + '; ' + headerv['Cookie']}
+
+        # retry the same url with added the cookie_header
+        response2 = self.connector.get_request(url, user_agent, cookie_header)
 
         try:
-            page = lxml.html.fromstring(response)
+            # we need to use .read() because SharenxsConnector.get_request return an
+            # addinfourl object and not the html string anymore
+            page = lxml.html.fromstring(response2.read())
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
             return
