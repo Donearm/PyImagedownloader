@@ -64,7 +64,7 @@ rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&a
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
-rImageUpper = re.compile("http://imageupper\.com/i/", re.IGNORECASE)
+rImageUpper = re.compile("http://imageupper\.com/g?i/", re.IGNORECASE)
 rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
 rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
