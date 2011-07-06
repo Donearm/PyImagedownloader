@@ -41,7 +41,6 @@ class Connector():
     def __init__(self):
         # Some variables for the connection
         self.values = {}
-#        self.user_agent = { 'User-Agent' : user_agent }
         self.user_agent = user_agent
         self.headers = { 'User-Agent' : self.user_agent, 'Connection' : 'Keep-Alive' }
         self.timeout = timeout
@@ -51,15 +50,18 @@ class Connector():
 
         #set a cookie handler and install the opener
         self.cj = CookieJar()
+
+    def threadsafe_opener(self):
         if debug == 1:
-           self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
+           opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                    urllib2.HTTPHandler(debuglevel=1),
                    urllib2.HTTPSHandler(debuglevel=1))
         else:
-            self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                     urllib2.HTTPHandler(),
                     urllib2.HTTPSHandler())
-        urllib2.install_opener(self.opener)
+        return opener
+#        urllib2.install_opener(opener)
     
 
     def reqhandler(self, url, login=0):
@@ -74,7 +76,8 @@ class Connector():
 
         # for some sites we need to login first....
         if login == 1:
-            self.site_login(self.uri, self.opener)
+            urllib2.install_opener(self.threadsafe_opener())
+            self.site_login(self.uri)
 
         if self.values:
             # Encode values (if any)
@@ -93,7 +96,7 @@ class Connector():
 #         return self.Rpage
 
 
-    def site_login(self, url, opener):
+    def site_login(self, url):
         """check if it's a site or forum we have login credentials for and
         log-in"""
 
@@ -112,6 +115,8 @@ class Connector():
             data = urlencode(values)
 
             # second request to the login2 page
+            opener = self.threadsafe_opener()
+            urllib2.install_opener(opener)
             request2 = urllib2.Request(login2_page, data)
             response1 = opener.open(request2)
         elif self.RImc.search(url):
@@ -122,6 +127,8 @@ class Connector():
             data = urlencode(values)
 
             # login page request
+            opener = self.threadsafe_opener()
+            urllib2.install_opener(opener)
             request = urllib2.Request(login_page, data)
             response = opener.open(request)
         elif self.RCelebrityForum.search(url):
@@ -137,6 +144,8 @@ class Connector():
             
             data = urlencode(values)
 
+            opener = self.threadsafe_opener()
+            urllib2.install_opener(opener)
             request = urllib2.Request(auth_page, data)
             response = opener.open(request)
         elif self.ROrfaosdoexclusivo.search(url):
@@ -145,18 +154,22 @@ class Connector():
 
             data = urlencode(values)
 
+            opener = self.threadsafe_opener()
+            urllib2.install_opener(opener)
             request = urllib2.Request(login_page, data)
             response = opener.open(request)
 
     def post_request(self, url, data, headers, referer=''):
         request = urllib2.Request(url, data, headers)
+        opener = self.threadsafe_opener()
+        urllib2.install_opener(opener)
         request.add_header('Accept', '*/*')
         if referer:
             request.add_header('Referer', referer)
         attempts = 0
         while attempts < 10:
             try:
-                response = self.opener.open(request, data)
+                response = opener.open(request, data)
                 # various infos on the response
                 #print(response.info())
                 #print(response.geturl())
@@ -195,6 +208,8 @@ class Connector():
 
     def get_request(self, url, ua, referer=''):
         request = urllib2.Request(url)
+        opener = self.threadsafe_opener()
+        urllib2.install_opener(opener)
         request.add_header('User-Agent', ua)
         request.add_header('Accept', '*/*')
         if referer:
@@ -202,7 +217,7 @@ class Connector():
         attempts = 0
         while attempts < 10:
             try:
-                response = self.opener.open(request, None)
+                response = opener.open(request, None)
 #                print(request.header_items())
 #                print(request.unredirected_hdrs)
                 return response.read()
@@ -236,9 +251,11 @@ class Connector():
 
     def get_filename(self, url, split=''):
         request = urllib2.Request(url)
+        opener = self.threadsafe_opener()
+        urllib2.install_opener(opener)
         request.add_header('User-Agent', self.user_agent)
         try:
-            response = self.opener.open(request)
+            response = opener.open(request)
             try:
                 self.filename = response.headers['Content-Disposition'].split('=')[1]
                 # remove single or double quotes from the filename
