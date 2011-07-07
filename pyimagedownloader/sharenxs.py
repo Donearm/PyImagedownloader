@@ -20,6 +20,8 @@ import re
 import urllib2
 import cookielib
 from urllib import urlretrieve, urlencode
+import httplib
+import socket
 from os.path import join
 import lxml.html
 from pyimg import user_agent, debug
@@ -46,6 +48,7 @@ class SharenxsConnector(http_connector.Connector):
         self.headers = { 'User-Agent' : user_agent }
         self.data = urlencode(self.values)
         self.cj = cookielib.CookieJar()
+        self.opener = self.threadsafe_opener()
 
     def get_request(self, url, ua, cookie='', referer=''):
         request = urllib2.Request(url)
