@@ -87,6 +87,7 @@ class Gui(QtGui.QWidget):
         self.listview = QtGui.QListWidget()
         self.listview.Flow(QtGui.QListWidget.TopToBottom)
         self.listview.Movement(QtGui.QListWidget.Free) # items can be freely moved
+        self.listview.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 
         # Buttons
         self.start_button = QtGui.QPushButton("Start")
@@ -133,9 +134,9 @@ class Gui(QtGui.QWidget):
     def paste(self):
         """Paste clipboard's contents into the application"""
         contents = self.clip.mimeData(mode=QtGui.QClipboard.Selection)
-        if str(contents.text()).isspace() or not contents.text():
-            self.statusbar.showMessage("Nothing to paste", 500)
+        if unicode(QtCore.QString.fromUtf8(contents.text())).isspace() or not contents.text():
             # contents are either empty or containing only spaces/newlines/tabs
+            self.statusbar.showMessage("Nothing to paste", 500)
             return
         else:
             if contents.hasText:
