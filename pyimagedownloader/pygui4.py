@@ -127,8 +127,9 @@ class Gui(QtGui.QWidget):
 
     def cut(self):
         """Cut selection and put into system's clipboard"""
-        txt = self.listview.takeItem(self.listview.currentRow())
-        self.clip.setText(txt.text(), mode=QtGui.QClipboard.Selection)
+        for i in self.listview.selectedItems():
+            txt = self.listview.takeItem(self.listview.row(i))
+            self.clip.setText(txt.text(), mode=QtGui.QClipboard.Selection)
         self.statusbar.showMessage("Cut!", 500)
     
     def paste(self):
