@@ -44,7 +44,7 @@ try:
         import gobject
         # Enable threading
         gobject.threads_init()
-        gtk.gdk.threads_init()
+#        gtk.gdk.threads_init()
     except:
         print("Gtk was not available, install it or use command line mode...")
         sys.exit(1)
@@ -147,6 +147,7 @@ class Gui():
         self.paste_button.set_tooltip_text("Paste url(s) from the clipboard")
 
         self.window.show_all()
+        gtk.threads_init()
         gtk.main()
 
 
@@ -177,15 +178,29 @@ class Gui():
                 buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         self.chooser_dialog.set_current_folder(str(self.basedir))
 
-        self.chooser_dialog.set_default_response(gtk.RESPONSE_OK)
+        self.chooser_dialog.set_default_response(gtk.RESPONSE_CANCEL)
         # run it
-        if self.chooser_dialog.run() == gtk.RESPONSE_OK:
+        response = self.chooser_dialog.run()
+        if response == gtk.RESPONSE_OK:
             print(self.chooser_dialog.get_current_folder())
             self.basedir = self.chooser_dialog.get_current_folder()
-        else:
+#            self.chooser_dialog.destroy()
+        elif response == gtk.RESPONSE_CANCEL:
             print(self.chooser_dialog.get_current_folder())
+            self.chooser_dialog.destroy()
+        else:
+            self.chooser_dialog.destroy()
 
-        self.chooser_dialog.destroy()
+#        self.chooser_dialog.destroy()
+
+
+#        if self.chooser_dialog.run() == gtk.RESPONSE_OK:
+#            print(self.chooser_dialog.get_current_folder())
+#            self.basedir = self.chooser_dialog.get_current_folder()
+#        else:
+#            print(self.chooser_dialog.get_current_folder())
+#
+#        self.chooser_dialog.destroy()
 
     def filelist_dialog(self, widget):
         self.filelist_dialog = gtk.FileChooserDialog(title="Load file with URLs...",
