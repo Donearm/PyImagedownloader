@@ -52,6 +52,7 @@ class Connector():
         self.cj = CookieJar()
 
     def threadsafe_opener(self):
+        """Generate a new opener with each call, so to be thread-safe"""
         if debug == 1:
            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                    urllib2.HTTPHandler(debuglevel=1),
