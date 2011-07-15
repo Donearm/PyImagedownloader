@@ -63,7 +63,7 @@ class Connector():
                     urllib2.HTTPSHandler())
         return opener
 #        urllib2.install_opener(opener)
-    
+
 
     def reqhandler(self, url, login=0):
         """the attribute that actually starts the request and return the

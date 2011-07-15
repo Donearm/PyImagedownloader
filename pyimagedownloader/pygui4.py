@@ -20,8 +20,8 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.5"
-__date__ = "25032011"
+__version__ = "1.0"
+__date__ = "15072011"
 __email__ = "forod.g@gmail.com"
 
 import sys
@@ -30,9 +30,7 @@ from PyQt4 import QtGui, QtCore
 # importing local modules
 import http_connector
 import savesource
-
-# importing config file variables
-#from pyimagedownloader import ImageHostParser
+from pyimagedownloader import ImageHostParser
 
 app = QtGui.QApplication(sys.argv)
 
@@ -175,7 +173,7 @@ class Gui(QtGui.QWidget):
         """remove the row from a listview"""
         self.listview.takeItem(row)
 
-    def download_url(self, url, row, savedirectory="", embed="", poster=""):
+    def download_url(self, url, savedirectory="", embed="", poster=""):
         
         connector = http_connector.Connector()
         r_page = connector.reqhandler(url, 1)
@@ -202,11 +200,10 @@ class Gui(QtGui.QWidget):
             parser.which_host(embed_links, 'src')
         
 #        self.emit(QtCore.SIGNAL('downloadDone(QString)'), row)
-        print("Cazzo vuoi? " + row)
     
 #    def test(self, url, row, savedirectory="", embed="", poster=""):
 #        print(url)
-#        print("Che ti serve? " + str(row))
+#        print("We are at " + str(row))
 #        connector = http_connector.Connector()
 #        page = connector.reqhandler(url, 1)
 #        print(page)
@@ -219,13 +216,19 @@ class Gui(QtGui.QWidget):
         for r in range(0, self.listview.count()):
             url = self.listview.item(r).text()
 #            t = GenericThread(self.download_url, url, r, self.basedir, self.embed, self.poster)
-            self.thread_pool.append(GenericThread(self.download_url, url, r, self.basedir, self.embed, self.poster))
+#            self.thread_pool.append(GenericThread(self.download_url, url, r, self.basedir, self.embed, self.poster))
+            self.thread_pool.append(SequentialDownloader(self.listview, self.basedir, self.embed, self.poster))
 #            self.thread_pool.append(GenericThread(self.test, url, r, self.basedir, self.embed, self.poster))
 #            self.disconnect(self, QtCore.SIGNAL('downloadDone(QString)'), self.clean_listview_item)
 #            self.connect(self, QtCore.SIGNAL('downloadDone(QString)'), self.clean_listview_item)
 
 #            self.thread_pool[len(self.thread_pool)-1].start()
-            self.thread_pool[r].start()
+            try:
+                self.thread_pool[r].start()
+            except KeyboardInterrupt:
+                waiting = self.thread_pool[r].wait()
+                while not waiting:
+                    self.statusbar.showMessage("Waiting to stop current executing download...")
 #            t.start()
 
         print(self.thread_pool)
@@ -233,8 +236,10 @@ class Gui(QtGui.QWidget):
 
 
 class GenericThread(QtCore.QThread):
+#class GenericThread(threading.Thread):
     def __init__(self, function, *args, **kwargs):
         QtCore.QThread.__init__(self)
+#        threading.Thread.__init__(self)
         self.function = function
         self.args = args
         self.kwargs = kwargs
@@ -256,6 +261,9 @@ class SequentialDownloader(QtCore.QThread):
         self.embed = embed
         self.poster = poster
 
+    def __del__(self):
+        self.wait()
+
     def run(self):
         for i in range(0, self.listview.count()):
             url = self.listview.item(i).text()
@@ -272,12 +280,13 @@ class SequentialDownloader(QtCore.QThread):
         if r_page == '':
             raise IOError("Url not valid or nonexistent")
 
-        # be sure to have a url as a string and not as a list for savesource.py
-        url_string = connector.check_string_or_list(url)
+#        # be sure to have a url as a string and not as a list for savesource.py
+#        url_string = connector.check_string_or_list(url)
         # Generate the directory for the source file and the images downloaded
         # Plus, return savedirectory as basedir + page title, so to save images
         # on a per-site basis
-        source_saver = savesource.SaveSource(r_page, savedirectory, url_string, creditor=poster)
+#        source_saver = savesource.SaveSource(r_page, savedirectory, url_string, creditor=poster)
+        source_saver = savesource.SaveSource(r_page, savedirectory, url, creditor=poster)
         savedirectory = source_saver.link_save()
 
         # Parse the page for images

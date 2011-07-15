@@ -38,7 +38,8 @@ import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
         imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad, imageep
 import http_connector
-import pygui
+#import pygui
+import pygui4
 # importing config file variables
 from pyimg import basedir, numprocs
 
@@ -374,7 +375,8 @@ if __name__ == "__main__":
 
     # do we want a gui?
     if options.gui:
-        pygui = pygui.Gui(basedir, options.embed, options.poster)
+#        pygui = pygui.Gui(basedir, options.embed, options.poster)
+        pygui = pygui4.Gui(basedir, options.embed, options.poster)
     else:
         # no gui then
         download_url(url, basedir, options.embed, options.poster)
