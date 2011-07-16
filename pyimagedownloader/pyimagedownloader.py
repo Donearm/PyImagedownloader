@@ -32,7 +32,7 @@ from os.path import abspath, dirname
 from os import rename
 import lxml.html
 # importing local modules
-import savesource, imageshack, imagevenue, uppix, imagehaven, imagebam, \
+import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, \
         sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
@@ -60,7 +60,6 @@ rImageshack = re.compile("http://img[0-9]{,3}\.imageshack\.us", re.IGNORECASE)
 rPostimage = re.compile("http://(www\.|[a-z0-9]+)?postimage\.org/(image|[a-z0-9]+)/", re.IGNORECASE)
 rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
-rUppix = re.compile("http://www\.uppix\.info", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
@@ -90,7 +89,6 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rPostimage : postimage.PostimageParse,
         rSharenxs : sharenxs.SharenxsParse,
         rBlogspot : blogspot.BlogspotParse,
-        rUppix : uppix.UppixParse,
         rBellazon : bellazon.BellazonParse,
         rSkinsBe : skinsbe.SkinsbeParse,
         rShareapic : shareapic.ShareapicParse,
