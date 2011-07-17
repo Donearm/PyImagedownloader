@@ -26,7 +26,7 @@ class TumblrParse():
         self.link = link
         self.basedir = basedir
 
-    def tumblr_get_image_split(self):
+    def tumblr_get_image_split(self, link):
         tumblr_split = re.split('/', self.link)
 
         return tumblr_split
