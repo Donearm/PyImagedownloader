@@ -439,7 +439,8 @@ Copyright &copy; 2010 Pix Route, All Rights Reserved.
         self.pixroute_src, self.imagename  = self.pr.pixroute_get_image_src_and_name(lxml.html.fromstring(self.example_pr_page))
         self.assertIsInstance(self.pixroute_src, list)
         self.assertTrue(self.pixroute_src[0])
-        self.assertIsInstance(self.imagename, str)
+        self.assertIsInstance(self.imagename, list)
+        self.assertTrue(self.imagename[-1])
 
     def test_pixroute_save_image(self):
         #TODO: how to test this?

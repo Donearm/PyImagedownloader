@@ -38,7 +38,7 @@ class PixrouteParse():
         return page
 
     def pixroute_get_image_src_and_name(self, page):
-        src_links = page.xpath('//div/img[@onload="czilox(this)"]')
+        src_links = page.xpath('//center/div/a/img')
 
         pixroute_src = [li.get('src', None) for li in src_links]
 
@@ -50,9 +50,9 @@ class PixrouteParse():
         return pixroute_src, imagename
 
     def pixroute_save_image(self, src_list, imagename):
-        save_extension = imagename
+        save_extension = imagename[-1]
         download_url = src_list[0]
-        savefile = join(self.basedir, str(save_extension[-1]))
+        savefile = join(self.basedir, save_extension)
 
         # finally save the image on the desidered directory
         with open(savefile, "wb") as f:
