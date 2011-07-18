@@ -24,7 +24,6 @@ class TestImgur(unittest.TestCase):
     def test_imgur_get_image_src(self):
         self.imgur_src = self.iur.imgur_get_image_src(lxml.html.fromstring(self.example_iur_page))
         self.assertIsInstance(self.imgur_src, list)
-        self.assertTrue(self.imgur_src[0])
 
     def test_imgur_save_image(self):
         #TODO: how to test this?
