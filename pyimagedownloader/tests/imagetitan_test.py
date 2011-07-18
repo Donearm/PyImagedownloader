@@ -71,9 +71,10 @@ class TestImagetitan(unittest.TestCase):
 
     def test_imagetitan_get_image_match_group(self):
         self.imggrp, self.imgmiddle, self.imgname = self.ititan.imagetitan_get_image_match_group(lxml.html.fromstring(self.example_ititan_page))
-        self.assertIsInstance(self.imggrp, re.MatchObject)
-        self.assertIsInstance(self.imgmiddle, re.MatchObject)
-        self.assertIsInstance(self.imgname, re.MatchObject)
+        # re.MatchObject simply return True if they matched
+        self.assertTrue(self.imggrp)
+        self.assertTrue(self.imgmiddle)
+        self.assertTrue(self.imgname)
 
     def test_imagetitan_save_image(self):
         #TODO: how to test this?
