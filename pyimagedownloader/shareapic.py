@@ -47,11 +47,11 @@ class ShareapicParse():
     def shareapic_get_image_src(self, page):
         # find the src attribute which contains the real link of shareapic's
         # images
-        src_links = page.xpath("//img[@title='Click to zoom! ::']")
+        src_links = page.xpath("//div[@id='bannerad']/a/img")
 
         shareapic_src = []
         for L in src_links:
-            fullsize = re.sub(r"images([0-9])", r"fullsize\1", li.get('src', None))
+            fullsize = re.sub(r"images([0-9])", r"fullsize\1", L.get('src', None))
             shareapic_src.append(fullsize)
 
         return shareapic_src
@@ -59,7 +59,7 @@ class ShareapicParse():
     def shareapic_save_image(self, src_list):
         download_url = src_list[0]
         # generate just the filename of the image to be locally saved
-        save_extension = re.split('fullsize[0-9]', src_list[0])
+        save_extension = re.split('fullsize[0-9]/', src_list[0])
         savefile = join(self.basedir, str(save_extension[1]))
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile)

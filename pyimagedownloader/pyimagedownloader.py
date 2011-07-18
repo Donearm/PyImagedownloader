@@ -62,7 +62,7 @@ rSharenxs = re.compile("http://(www\.)?sharenxs\.com/view/\?", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
 rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
-rShareapic = re.compile("http://www\.shareapic\.net/content\.php\?id", re.IGNORECASE)
+rShareapic = re.compile("http://www\.shareapic\.net/(content\.php\?id|View-[0-9]+-\.html)", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/g?i/", re.IGNORECASE)
 rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
@@ -161,6 +161,7 @@ class ImageHostParser():
             # matching, put the the class name, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
+                    print(L)
                     # instantiate and then pass the parse method to the queue.
                     # it downloads but doesn't make the queue do its job
 #                    parser = v(L, self.basedir)
