@@ -908,7 +908,6 @@ Image URL: Use this text link to post anywhere on the internet.<BR>
         self.assertIsInstance(self.sharenxs_src, list)
         self.assertTrue(self.sharenxs_src[0])
         self.assertIsInstance(self.sharenxs_wz, list)
-        self.assertIsInstance(self.sharenxs_wz[0])
 
     def test_sharenxs_save_image(self):
         #TODO: how to test this?
