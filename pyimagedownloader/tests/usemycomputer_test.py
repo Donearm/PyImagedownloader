@@ -75,7 +75,7 @@ class TestUsemycomputer(unittest.TestCase):
         self.assertIsInstance(self.usemycomputer_split, list)
         self.assertTrue(self.usemycomputer_split[0])
         self.assertIsInstance(self.imagename, list)
-        self.assertTrue(self.imagename[0])
+        self.assertTrue(self.imagename[-1])
 
     def test_usemycomputer_save_image(self):
         #TODO: how to test this?

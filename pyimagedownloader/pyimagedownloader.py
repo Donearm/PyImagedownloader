@@ -70,7 +70,7 @@ rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
 rTurboimagehost = re.compile("http://www\.turboimagehost\.com/p/", re.IGNORECASE)
-rUsemycomputer = re.compile("http://usemycomputer\.com/show\.html\?i=\/indeximages", re.IGNORECASE)
+rUsemycomputer = re.compile("/show\.html\?([a-z0-9=\&\;])+i=\/indeximages", re.IGNORECASE)
 rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}", re.IGNORECASE)
 #rWordpress = re.compile("http://.*.wordpress\.com/[0-9]+/[0-9]+/.*\.[a-z]{,4}(\?w=[0-9]+\&amp\;h=[0-9]+)?", re.IGNORECASE)
 rWordpressuploads = re.compile("http://.*/wp-content/uploads/.*\.[a-z]{,4}", re.IGNORECASE)
@@ -161,7 +161,6 @@ class ImageHostParser():
             # matching, put the the class name, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
-                    print(L)
                     # instantiate and then pass the parse method to the queue.
                     # it downloads but doesn't make the queue do its job
 #                    parser = v(L, self.basedir)

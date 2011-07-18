@@ -29,7 +29,7 @@ class UsemycomputerParse():
     def usemycomputer_get_image_split_and_name(self, url):
         # no need to connect to the image's url, just rewrite the link to obtain
         # the uri of the image
-        usemycomputer_split = re.split('show\.html\?i=\/', url)
+        usemycomputer_split = re.split('i=', url)
 
         # split by '/' so to extract the image name
         imagename = re.split('/', usemycomputer_split[1])
@@ -40,7 +40,7 @@ class UsemycomputerParse():
         # generate just the filename of the image to be locally saved
         savefile = join(self.basedir, imagename[-1])
 
-        download_url = split[0] + split[1]
+        download_url = 'http://usemycomputer.com/' + split[1]
 
         # finally save the image on the desidered directory
         urlretrieve(download_url, savefile) 
