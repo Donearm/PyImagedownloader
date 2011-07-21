@@ -17,7 +17,6 @@ if __name__ == '__main__':
     import tests.imagehaven_test
     import tests.imagehostorg_test
     import tests.imageshack_test
-    import tests.imagesocket_test
     import tests.imagetitan_test
     import tests.imageupper_test
     import tests.imagevenue_test

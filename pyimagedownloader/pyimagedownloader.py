@@ -34,7 +34,7 @@ import lxml.html
 # importing local modules
 import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, \
-        sharenxs, blogspot, postimage, imageupper, imagesocket, photobucket, \
+        sharenxs, blogspot, postimage, imageupper, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
         imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad 
 import http_connector
@@ -65,7 +65,6 @@ rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/(content\.php\?id|View-[0-9]+-\.html)", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
 rImageUpper = re.compile("http://imageupper\.com/g?i/", re.IGNORECASE)
-rImageSocket = re.compile("http://(www\.)?imagesocket\.com", re.IGNORECASE)
 rPhotobucket = re.compile("http://[a-z0-9]+\.photobucket\.com", re.IGNORECASE)
 rImageban = re.compile("http://[a-z0-9]+\.imageban\.ru", re.IGNORECASE)
 rImagehostorg = re.compile("http://[a-z0-9]+\.imagehost\.org", re.IGNORECASE)
@@ -94,7 +93,6 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rShareapic : shareapic.ShareapicParse,
         rImagetitan : imagetitan.ImagetitanParse,
         rImageUpper : imageupper.ImageupperParse,
-        rImageSocket : imagesocket.ImagesocketParse,
         rPhotobucket : photobucket.PhotobucketParse,
         rImageban : imageban.ImagebanParse,
         rImagehostorg : imagehostorg.ImagehostorgParse,
