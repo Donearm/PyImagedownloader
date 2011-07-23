@@ -320,7 +320,7 @@ def filelist_download(download_file):
                         bckp_l.append(u)
                         url = '#' + u
                         o.write(url)
-                    except:
+                    except urllib2.URLError as e:
                         # if anything goes wrong, append an error tag to the
                         # url and go on to the next one
                         bckp_l.append(u)
