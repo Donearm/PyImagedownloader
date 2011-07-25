@@ -27,6 +27,7 @@ __email__ = "forod.g@gmail.com"
 import sys
 import re
 import fileinput
+import urllib2
 from multiprocessing import Process, Queue
 from os.path import abspath, dirname
 from os import rename
