@@ -182,6 +182,9 @@ class Connector():
                 return response
             except httplib.IncompleteRead as e:
                 attempts += 1
+            except httplib.BadStatusLine as e:
+                # server replies with an unknown HTTP status code
+                attempts +=1
             except urllib2.HTTPError as e:
                 attempts += 1
                 response = ''
@@ -229,6 +232,9 @@ class Connector():
             except httplib.IncompleteRead as e:
                 attempts += 1
                 self.get_request(url, ua)
+            except httplib.BadStatusLine as e:
+                # server replies with an unknown HTTP status code
+                attempts +=1
             except urllib2.HTTPError as e:
                 attempts += 1
                 response = ''
