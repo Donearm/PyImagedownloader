@@ -3,12 +3,14 @@
 import unittest
 import imagebam
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestImagebam(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.imagebam.com/image/38af8c140780852'
+        self.image_url = 'http://45.imagebam.com/download/pWQfnGAtSfxbP4m7f4Y3bg/14079/140780852/119274167.jpg'
         self.example_ibam_page = """<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -560,8 +562,12 @@ pageTracker._trackPageview();
         self.assertTrue(self.imagename)
 
     def test_imagebam_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = []
+        urllist.append(self.image_url)
+        self.ibam.imagebam_save_image(urllist, 'kate.jpg')
+        savefile = join(self.basedir, 'kate.jpg')
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

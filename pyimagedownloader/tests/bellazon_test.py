@@ -3,12 +3,15 @@
 import unittest
 import bellazon
 import lxml.html
+import http_connector
+from os.path import isfile, join, getsize
 
 class TestBellazon(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.bellazon.com/http://www.bellazon.com/main/index.php?act=attach&type=post&id=1382086'
+        self.image_url = 'http://www.bellazon.com/main/index.php?act=attach&type=post&id=1392552&'
         self.example_bz_src = ['http://www.bellazon.com/main/index.php?act=attach&type=post&id=1382086&']
         self.example_bz_page = """<html>
         <head>
@@ -104,8 +107,18 @@ class TestBellazon(unittest.TestCase):
         self.assertTrue(self.bellazon_src[0])
 
     def test_bellazon_save_image(self):
-        #TODO: how to test this?
-        pass
+        # use a list to contain the image url
+        urllist = []
+        urllist.append(self.image_url)
+        connector = http_connector.Connector()
+        self.bz.bellazon_save_image(urllist)
+        # get the filename to save on disk
+        savefile = join(self.basedir, str(connector.get_filename(urllist[0], 'id=')))
+        # has the file been downloaded?
+        self.assertTrue(isfile(savefile))
+        # check that file is bigger than 1K
+        self.assertTrue(getsize(savefile) >= 1000)
+
 
 
 def main():
