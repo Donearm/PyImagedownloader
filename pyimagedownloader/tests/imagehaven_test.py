@@ -1,14 +1,17 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 import unittest
 import imagehaven
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestImagehaven(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://img22.imagehaven.net/img.php?id=3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg'
+        self.image_url = 'http://img22.imagehaven.net/images/58c249f166baa072125176f846a5d484/4e3572ca/3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg'
         self.example_ihvn_page = """<LINK REL="SHORTCUT ICON" HREF="favicon.ico">
 <title>Imagehaven.net - Free image hosting</title><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -176,7 +179,7 @@ aweInitPu();
   Click on the photo to view the original size  <span id="imagesizetext"></span>.
 </div>    
 
-<img src='./images/7fc258c4397d7a335821a497515b4e03/4e22cedd/3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg' id="image"  onClick="showOnclick()" onLoad="scaleImg()"><br><div style="margin: 5px;"><a href="http://www.imagehaven.net/reportimage.php?id=3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg" title="Report image"><img border="0" src="http://www.imagehaven.net/report.jpg"></a></div><center>
+<img src='./images/58c249f166baa072125176f846a5d484/4e3572ca/3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg' id="image"  onClick="showOnclick()" onLoad="scaleImg()"><br><div style="margin: 5px;"><a href="http://www.imagehaven.net/reportimage.php?id=3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg" title="Report image"><img border="0" src="http://www.imagehaven.net/report.jpg"></a></div><center>
 <!-- BEGIN STANDARD TAG - 300 x 250 - ROS: Run-of-site - DO NOT MODIFY -->
 <SCRIPT TYPE="text/javascript" SRC="http://ad.globe7.com/st?ad_type=ad&ad_size=300x250&section=402039"></SCRIPT>
 
@@ -226,19 +229,22 @@ pageTracker._trackPageview();
         self.page = self.ihvn.process_url(self.url)
         self.assertIsInstance(self.page, lxml.html.HtmlElement)
 
-    def test_imagehaven_get_image_splits_and_name(self):
-        self.imagehaven_split, self.imagehaven_split2, imagename = \
-        self.ihvn.imagehaven_get_image_splits_and_name(lxml.html.fromstring(self.example_ihvn_page))
+    def test_imagehaven_get_image_splits_and_src(self):
+        self.imagehaven_split, self.imagehaven_src = \
+        self.ihvn.imagehaven_get_image_split_and_src(lxml.html.fromstring(self.example_ihvn_page))
         self.assertIsInstance(self.imagehaven_split, list)
-        self.assertIsInstance(self.imagehaven_split2, list)
         self.assertTrue(self.imagehaven_split[0])
-        self.assertTrue(self.imagehaven_split2[0])
-        self.assertIsInstance(self.imagename, str)
-        self.assertTrue(self.imagename)
+        self.assertIsInstance(self.imagehaven_src[-1], str)
+        self.assertTrue(self.imagehaven_src)
 
     def test_imagehaven_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        split = [ 'http://img22.imagehaven.net/', '3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg' ]
+        self.ihvn.imagehaven_save_image(split, urllist)
+        savefile = join(self.basedir, str(split[-1]))
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
+
 
 
 def main():

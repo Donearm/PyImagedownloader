@@ -40,7 +40,7 @@ class ImagehavenParse():
 
         return self.page
 
-    def imagehaven_get_image_splits_and_name(self, page):
+    def imagehaven_get_image_split_and_src(self, page):
         # find the src attribute which contains the real url
         src_links = page.xpath("//img[@id='image']")
 
@@ -48,28 +48,24 @@ class ImagehavenParse():
 
         # remove unneeded parts
         imagehaven_split = re.split('img\.php\?id=', self.link)
-        imagehaven_split2 = re.split('\.\/', imagehaven_src[0])
 
-        # generate just the filename of the image to be locally saved
-        imagename = re.split('\./images/[0-9A-Za-z]+/[0-9A-Za-z]+/', imagehaven_src[0])
+        return imagehaven_split, imagehaven_src
 
-        return imagehaven_split, imagehaven_split2, imagename
-
-    def imagehaven_save_image(self, split1, split2, imagename):
+    def imagehaven_save_image(self, split, srclist):
         try:
             # make up the real image url
-            download_url = str(split1[0]) + str(split2[1])
-            savefile = join(self.basedir, str(imagename[1]))
+            download_url = str(split[0]) + re.sub('\./images', 'images', srclist[0])
+            savefile = join(self.basedir, split[-1])
+            urlretrieve(download_url, savefile)
         except IndexError:
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
             pass
 
-        urlretrieve(download_url, savefile)
 
     def parse(self):
         self.page = self.process_url(self.link)
 
-        self.imagehaven_split1, self.imagehaven_split2, self.imagename = self.imagehaven_get_image_splits_and_name(self.page)
+        self.imagehaven_split, self.imagehaven_src = self.imagehaven_get_image_split_and_src(self.page)
 
-        self.imagehaven_save_image(self.imagehaven_split1, self.imagehaven_split2, self.imagename)
+        self.imagehaven_save_image(self.imagehaven_split, self.imagehaven_src)
