@@ -201,12 +201,6 @@ class Gui(QtGui.QWidget):
         
 #        self.emit(QtCore.SIGNAL('downloadDone(QString)'), row)
     
-#    def test(self, url, row, savedirectory="", embed="", poster=""):
-#        print(url)
-#        print("We are at " + str(row))
-#        connector = http_connector.Connector()
-#        page = connector.reqhandler(url, 1)
-#        print(page)
 
     def sequential_downloader(self):
 #        self.sqdownloader = SequentialDownloader(self.listview, self.basedir, 

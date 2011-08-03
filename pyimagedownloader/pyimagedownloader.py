@@ -39,8 +39,6 @@ import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
         imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad 
 import http_connector
-#import pygui
-import pygui4
 # importing config file variables
 from pyimg import basedir, numprocs
 
@@ -224,9 +222,15 @@ def argument_parser():
                 action="store",
                 help="the directory where to save images (overrides config file)",
                 dest="savedirectory")
-        cli_parser.add_argument("-g", "--gui",
-                action="store_true",
-                help="start in GUI mode",
+        cli_parser.add_argument("-g", "--gtk",
+                action="store_const",
+                help="start in GUI mode (GTK)",
+                const='gtk',
+                dest="gui")
+        cli_parser.add_argument("-q", "--qt",
+                action="store_const",
+                help="start in GUI mode (QT)",
+                const='qt',
                 dest="gui")
         cli_parser.add_argument("-f", "--filelist",
                 action="store",
@@ -255,9 +259,15 @@ def argument_parser():
         cli_parser.add_option("-d", "--directory",
                 help="the directory where to save images (overrides config file)",
                 dest="savedirectory")
-        cli_parser.add_option("-g", "--gui",
-                action="store_true",
-                help="start in GUI mode",
+        cli_parser.add_option("-g", "--gtk",
+                action="store_const",
+                help="start in GUI mode (GTK)",
+                const='gtk',
+                dest="gui")
+        cli_parser.add_option("-q", "--qt",
+                action="store_const",
+                help="start in GUI mode (QT)",
+                const='qt',
                 dest="gui")
         cli_parser.add_option("-f", "--filelist",
                 help="download urls from file, one per row",
@@ -370,10 +380,15 @@ if __name__ == "__main__":
 
     # do we want a gui?
     if options.gui:
-#        pygui = pygui.Gui(basedir, options.embed, options.poster)
-        pygui = pygui4.Gui(basedir, options.embed, options.poster)
+        if options.gui == 'gtk':
+            import pygui
+            pygui = pygui.Gui(basedir, options.embed, options.poster)
+        else:
+            import pygui4
+            pygui = pygui4.Gui(basedir, options.embed, options.poster)
     else:
         # no gui then
         download_url(url, basedir, options.embed, options.poster)
+
 
     sys.exit(0)
