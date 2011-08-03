@@ -21,7 +21,7 @@
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
 __version__ = "1.3"
-__date__ = "16122009"
+__date__ = "03082011"
 __email__ = "forod.g@gmail.com"
 
 import sys

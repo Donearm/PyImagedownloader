@@ -20,7 +20,7 @@
 
 __author__ = "Gianluca Fiore"
 __license__ = "GPL"
-__version__ = "1.5"
+__version__ = "1.6"
 __date__ = "25032011"
 __email__ = "forod.g@gmail.com"
 
@@ -32,7 +32,6 @@ import savesource
 from os import rename
 from os.path import abspath, dirname
 # importing config file variables
-#from pyimagedownloader import download_url, basedir, embed, poster
 from pyimagedownloader import ImageHostParser
 
 try:
