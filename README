@@ -17,6 +17,19 @@ It also downloads images posted in one of the supported forum or sites
 + password) and put it in the config file (pyimg.py). Those supported
 are just what I regularly use, more could be added.
 
+NOTE
+----
+
+Given to time, or lack thereof to be correct, being not aplenty on my 
+part, this software won't receive new features or correct its, many, 
+defects (like GUIs being very buggy or totally not working). I'll be 
+updating it in accord to changes from image hostings as soon as I can 
+but probably no new hostings will be added. I just not have the time and 
+will to refactor all this to make it "modern" (and it would dearly need 
+it, I know) nor to make it more stable.
+Therefore, if anybody wants to help or fork it I'm very willing to 
+collaborate. Patches are very welcome too.
+
 
 Installation
 ----
