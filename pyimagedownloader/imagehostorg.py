@@ -61,7 +61,7 @@ class ImagehostorgParse():
     def imagehostorg_save_image(self, split, src_list=''):
         if not src_list:
             # if no src_list we use the original link and the split only
-            download_url = re.sub('view', 'secure', self.link)
+            download_url = re.sub('/view/', '', self.link)
             savefile = join(self.basedir, str(split[-1]))
             urlretrieve(download_url, savefile)
         else:
