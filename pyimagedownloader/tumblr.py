@@ -32,13 +32,13 @@ class TumblrParse():
         return tumblr_split
 
 
-    def tumblr_save_image(self, split):
+    def tumblr_save_image(self, link, split):
 
-        download_url = self.link
+        download_url = link
         savefile = join(self.basedir, split[-1])
         urlretrieve(download_url, savefile)
 
     def parse(self):
-        self.tumblr_split = self.tumblr_get_image_split()
+        self.tumblr_split = self.tumblr_get_image_split(self.link)
 
-        self.tumblr_save_image(self.tumblr_split)
+        self.tumblr_save_image(self.link, self.tumblr_split)
