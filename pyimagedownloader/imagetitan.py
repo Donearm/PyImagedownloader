@@ -47,6 +47,9 @@ class ImagetitanParse():
     def imagetitan_get_image_match_group(self, page):
         # find the src attribute which contains the real link of imagetitan's images
         src_links = page.xpath("//td[@align='center']/img")
+        if len(src_links) == 0:
+            # newer images have a different html layout
+            src_links = page.xpath("//img[@id='image']")
 
         imagetitan_src = [li.get('src', None) for li in src_links]
 
