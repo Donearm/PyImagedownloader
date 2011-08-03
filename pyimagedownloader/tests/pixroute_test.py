@@ -4,12 +4,14 @@
 import unittest
 import pixroute
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestPixroute(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.pixroute.com/s4tx57g1po5v/Ana_Ivanovic_En_Bikini_Le_15-01-11_1.jpg.html'
+        self.image_url = 'http://img127.pixroute.com/i/00036/s4tx57g1po5v.jpg'
         self.example_pr_page = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
@@ -443,8 +445,13 @@ Copyright &copy; 2010 Pix Route, All Rights Reserved.
         self.assertTrue(self.imagename[-1])
 
     def test_pixroute_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        imagename = [ 's4tx57g1po5v.jpg' ]
+        save_extension = imagename[-1]
+        savefile = join(self.basedir, save_extension)
+        self.pr.pixroute_save_image(urllist, imagename)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

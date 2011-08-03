@@ -4,12 +4,14 @@
 import unittest
 import radikal
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestRadikal(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://radikal.ru/F/s58.radikal.ru/i159/0904/4d/2f35f54b7251.jpg.html'
+        self.image_url = 'http://s58.radikal.ru/i159/0904/4d/2f35f54b7251.jpg'
         self.example_rdkl_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>
@@ -388,8 +390,11 @@ alt="" border=0 width=88 height=31></a><!--/LiveInternet-->
         self.assertTrue(self.imagename[0])
 
     def test_radikal_save_image(self):
-        #TODO: how to test this?
-        pass
+        imagename = [ 'http://s58.radikal.ru/', '2f35f54b7251.jpg' ]
+        savefile = join(self.basedir, imagename[1])
+        self.rdkl.radikal_save_image(self.image_url, imagename)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

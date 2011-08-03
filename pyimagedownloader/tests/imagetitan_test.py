@@ -4,62 +4,66 @@
 import unittest
 import imagetitan
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestImagetitan(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
-        self.url = 'http://img1.imagetitan.com/img.php?d=1/10&n=anna10.jpg'
+        self.url = 'http://img2.imagetitan.com/img.php?image=38_1966.jpg'
+        self.image_url = 'http://img2.imagetitan.com/img2/IVljS3wDcTG4k66/38/38_1966.jpg'
         self.example_ititan_page = """<html>
 <head>
-   <title>ImageTitan | anna10.jpg</title>
+   <title>ImageTitan | 1966.jpg</title>
    <meta name="keywords" content="hosting, image hosting, picture hosting, photo hosting, image webhosting, photo webhosting, picture webhosting">
    <meta name="description" content="Totally free image hosting service for forums, websites, auctions, and more">
 </head>
+<script language="javascript">
+var saveWidth = 0;
+
+function scaleImg(what)
+{
+   what = document.getElementById(what);
+   if( navigator.appName=="Netscape" )
+   {
+      winW = window.innerWidth;
+   }
+   if( navigator.appName.indexOf("Microsoft") != -1 )
+   {
+      winW = document.body.offsetWidth;
+   }
+   if( what.width > (720) || saveWidth > (720) )
+   {
+      if( what.width == (720) )
+      {
+         what.width=saveWidth;
+      }
+      else
+      {
+         saveWidth = what.width;
+         what.style.cursor = "pointer";
+         what.width=(720);
+         note.style.display="";
+      }
+   }
+}
+</script>
 <body text=#000000 link=#3333FF vlink=3333FF alink=#FF0000 bgcolor=#DDDDDD topmargin=5>
 
-<center><img src="http://www.imagetitan.com/images/bodytop.gif"></center>
-<table align=center border=0 cellpadding=0 cellspacing=0 width=750 bgcolor=#FFFFFF>
-<tr>
-<td background="http://www.imagetitan.com/images/bodybg.gif"><font face="verdana, arial" size=2>
+<center>
+<div id="note" style="display:none;"><font size=1 face="verdana">This image has been scaled down to fit your screen. Click image for original size</font><p></div>
 
-<table align=center border=0 cellpadding=0 cellspacing=0 width=730>
-<tr>
-<td>
-<font face="verdana, arial" size=2>
-<center><a href="http://www.imagetitan.com/"><img src="http://www.imagetitan.com/images/title.gif" border=0></a><br>
-<a href="http://www.imagetitan.com/">Home</a> | <a href="http://www.imagetitan.com/faq.htm">FAQ</a> | <a href="http://www.imagetitan.com/terms.htm">Terms of Use</a> | <a href="http://www.imagetitan.com/contact.htm">Contact Us</a></center>
-</td>
-
-</tr>
-</table>
-</td>
-</tr>
-</table>
-<center><img src="http://www.imagetitan.com/images/bodybot.gif"></center>
+<img id="image" onLoad="scaleImg('image')" onClick="scaleImg('image')" src="img2/IVljS3wDcTG4k66/38/38_1966.jpg"></center>
 
 <p>
 
-<table align=center border=0 cellpadding=5 cellspacing=0 width=750>
-<tr>
-<td align=center>
-<img src="img1/1/10/anna10.jpg"></td>
-</tr>
-</table>
+<center>
+<br><font size=2 face="verdana, arial">
+<a href="http://www.imagetitan.com/linkcode.php?host=img2&t=1&image=38_1966.jpg">Get Linking Code</a> | <a href="http://www.imagetitan.com/">Upload Images</a> | <a href="http://www.imagetitan.com/report.php?host=img2&image=38_1966.jpg">Report Problem</a>
+<br><font size=1>Free image hosting by <a href="http://www.imagetitan.com/">ImageTitan</a></font>
 
-<p>
-
-<center><img src="http://www.imagetitan.com/images/bodytop.gif"></center>
-<table align=center border=0 cellpadding=0 cellspacing=0 width=750 bgcolor=#FFFFFF>
-<tr>
-<td align=center background="http://www.imagetitan.com/images/bodybg.gif">
-<iframe src="http://www.mentalfunk.com/ads/720x90.htm" width="720" height="90" frameborder="no" scrolling="no"></iframe></center>
-</td>
-</tr>
-</table>
-<center><img src="http://www.imagetitan.com/images/bodybot.gif"></center>
-
-<center><font size=2>Copyright &copy; 2006 ImageTitan. All Rights Reserved</center>
+</font>
+</center>
 
 </body>
 </html>"""
@@ -77,8 +81,14 @@ class TestImagetitan(unittest.TestCase):
         self.assertTrue(self.imgname)
 
     def test_imagetitan_save_image(self):
-        #TODO: how to test this?
-        pass
+        imggrp = 'img2'
+        imgmiddle = '/IVljS3wDcTG4k66/38/'
+        imgname = '38_1966.jpg'
+        savefile = join(self.basedir, imgname)
+        self.ititan.imagetitan_save_image(imggrp, imgmiddle, imgname)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
+
 
 
 def main():

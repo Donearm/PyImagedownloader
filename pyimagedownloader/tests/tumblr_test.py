@@ -4,12 +4,14 @@
 import unittest
 import tumblr
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestTumblr(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://fuckyeahsimodels.tumblr.com/post/6544001799'
+        self.image_url = 'http://29.media.tumblr.com/tumblr_lmtbgqlyIR1qjbzrlo1_500.jpg'
         self.example_tum_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
 
@@ -444,8 +446,12 @@ tagged as: <a href="http://fuckyeahsimodels.tumblr.com/tagged/cintia_dicker">cin
         self.assertTrue(self.tumblr_split[0])
 
     def test_tumblr_save_image(self):
-        #TODO: how to test this?
-        pass
+        split = [ 'http://29.media.tumblr.com', 'tumblr_lmtbgqlyIR1qjbzrlo1_500.jpg']
+        link = self.image_url
+        savefile = join(self.basedir, split[-1])
+        self.tum.tumblr_save_image(link, split)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

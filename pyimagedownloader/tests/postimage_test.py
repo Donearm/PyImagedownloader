@@ -4,12 +4,14 @@
 import unittest
 import postimage
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestPostimage(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://postimage.org/image/2a2npxl6s/'
+        self.image_url = 'http://s3.postimage.org/5tolfqo49/Clip_20io.jpg'
         self.example_pimage_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -123,7 +125,7 @@ class TestPostimage(unittest.TestCase):
         self.assertTrue(self.postimage_src[0])
 
     def test_postimage_save_image(self):
-        #TODO: how to test this?
+        # TODO: how to test this?
         pass
 
 

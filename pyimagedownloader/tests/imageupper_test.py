@@ -4,12 +4,14 @@
 import unittest
 import imageupper
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestImageupper(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://imageupper.com/i/?S0700010020221Z2735188161074'
+        self.image_url = 'http://s07.imageupper.com/1/2/Z2735188161074_22.jpg'
         self.example_iupper_page = """<HTML><HEAD><TITLE>Image Upper.com - Free Image Hosting - View Image</TITLE>
 <script type="text/javascript">
 var resized=0;
@@ -82,8 +84,11 @@ function scaleImg(what){
         self.assertTrue(self.imageupper_src[0])
 
     def test_imageupper_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        savefile = join(self.basedir, 'Z2735188161074_22.jpg')
+        self.iupper.imageupper_save_image(urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

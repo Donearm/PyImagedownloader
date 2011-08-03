@@ -4,12 +4,14 @@
 import unittest
 import turboimagehost
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestTurboimagehost(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.turboimagehost.com/p/5787190/La_Senza.jpg.html'
+        self.image_url = 'http://s2d3.turboimagehost.com/sp/b66b32b24b95b7055395adb2ad7a08e8/La_Senza.jpg'
         self.example_turbo_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -296,8 +298,12 @@ urchinTracker();
         self.assertTrue(self.turboimagehost_src[0])
 
     def test_turboimagehost_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        split = [ 'http://s2d3.turboimagehost.com/sp/', 'La_Senza.jpg']
+        savefile = join(self.basedir, split[-1])
+        self.turbo.turboimagehost_save_image(urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

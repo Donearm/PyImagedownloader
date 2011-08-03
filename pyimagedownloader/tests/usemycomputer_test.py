@@ -3,6 +3,7 @@
 
 import unittest
 import usemycomputer
+from os.path import join, isfile, getsize
 
 class TestUsemycomputer(unittest.TestCase):
 
@@ -78,8 +79,12 @@ class TestUsemycomputer(unittest.TestCase):
         self.assertTrue(self.imagename[-1])
 
     def test_usemycomputer_save_image(self):
-        #TODO: how to test this?
-        pass
+        split = ['http://usemycomputer.com/show.html?', '/indeximages/2011/July/Danielle_Kn-Zeugari_2011_Ad_Campaign-UHQ_Pictures_012.jpg']
+        imagename = ['indeximages', '2011', 'July', 'Danielle_Kn-Zeugari_2011_Ad_Campaign-UHQ_Pictures_012.jpg']
+        savefile = join(self.basedir, imagename[-1])
+        self.umc.usemycomputer_save_image(split, imagename)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

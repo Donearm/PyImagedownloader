@@ -4,12 +4,15 @@
 import unittest
 import skinsbe
 import lxml.html
+from os.path import join, getsize, isfile
+import re
 
 class TestSkinsbe(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://image.skins.be/2831923/24797-septimiu29-danicathrall-nutsuk-31dec2010-123/'
+        self.image_url = 'http://13img.skins.be/2/8/3/1/9/2/3/24797-septimiu29-danicathrall-nutsuk-31dec2010-123.jpg'
         self.example_skin_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -353,8 +356,12 @@ class TestSkinsbe(unittest.TestCase):
         self.assertTrue(self.skinsbe_src[0])
 
     def test_skinsbe_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        save_extension = re.sub("^.*[0-9]\/", '', urllist[0])
+        savefile = join(self.basedir, save_extension)
+        self.skin.skinsbe_save_image(urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

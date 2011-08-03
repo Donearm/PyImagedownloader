@@ -4,6 +4,7 @@
 import unittest
 import typepad
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestTypepad(unittest.TestCase):
 
@@ -83,8 +84,12 @@ COMSCORE.beacon({
         self.assertTrue(self.imagename[0])
 
     def test_typepad_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.url ]
+        imagename = ['http://fashioncopious.typepad.com/', '6a00e54ef964538834015432347a94970c-popup']
+        savefile = join(self.basedir, str(imagename[1]) + '.jpg')
+        self.tpad.typepad_save_image(urllist, imagename)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

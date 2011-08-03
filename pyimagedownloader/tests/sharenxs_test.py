@@ -4,12 +4,14 @@
 import unittest
 import sharenxs
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestSharenxs(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.sharenxs.com/view/?id=tb5w2bf-05161681-7d2acgb'
+        self.image_url = 'http://cache.sharenxs.com/images/wz/cabb/ci/ah/bg/aa/AmberHeard1.jpg'
         self.example_snxs_page = """
 
 
@@ -910,8 +912,13 @@ Image URL: Use this text link to post anywhere on the internet.<BR>
         self.assertIsInstance(self.sharenxs_wz, list)
 
     def test_sharenxs_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        save_extension = [ 'http:', 'cache.sharenxs.com', 'images', 'wz', 
+                'cabb', 'ci', 'ah', 'bg', 'aa', 'AmberHeard1.jpg' ]
+        savefile = join(self.basedir, save_extension[-1])
+        self.snxs.sharenxs_save_image(urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
 
 
 def main():

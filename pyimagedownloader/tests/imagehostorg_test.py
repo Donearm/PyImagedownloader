@@ -3,12 +3,16 @@
 import unittest
 import imagehostorg
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestImagehostorg(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://h.imagehost.org/view/0790/cover'
+        self.url2 = 'http://h.imagehost.org/view/0198/z_cover.jpg'
+        self.image_url = 'http://h.imagehost.org/0790/cover.jpg'
+        self.image_url2 = 'http://h.imagehost.org/0198/z_cover.jpg'
         self.example_ihostorg_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -146,8 +150,20 @@ pageTracker._trackPageview();
             self.assertTrue(self.imagehostorg_src[0])
 
     def test_imagehostorg_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [self.image_url]
+        split = ['http://', 'h.imagehost.org', '/view/', '/0790/', 'cover.jpg']
+        savefile = join(self.basedir, str(split[-1]))
+        self.ihost.imagehostorg_save_image(split, src_list=urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
+
+    def test_imagehostorg_save_image_without_src_list(self):
+        urllist = [self.image_url2]
+        split2 = ['http://', 'h.imagehost.org', '/view/', '/0198/', 'z_cover.jpg']
+        savefile2 = join(self.basedir, str(split2[-1]))
+        self.ihost.imagehostorg_save_image(split2)
+        self.assertTrue(isfile(savefile2))
+        self.assertTrue(getsize(savefile2) >= 1000)
 
 
 def main():

@@ -4,12 +4,14 @@
 import unittest
 import shareapic
 import lxml.html
+from os.path import join, getsize, isfile
 
 class TestShareapic(unittest.TestCase):
 
     def setUp(self):
         self.basedir = '/mnt/documents/Maidens/Uploads/'
         self.url = 'http://www.shareapic.net/View-24384249-Satomi-Shigemori---Sexy-Asian-Bikini-Model.html'
+        self.image_url = 'http://images.shareapic.net/fullsize7/024384249.jpg'
         self.example_shpic_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html dir="ltr" lang="en">
 <head>
@@ -371,8 +373,14 @@ urchinTracker();
         self.assertTrue(self.shareapic_src[0])
 
     def test_shareapic_save_image(self):
-        #TODO: how to test this?
-        pass
+        urllist = [ self.image_url ]
+        save_extension = [ 'http://images.shareapic.net/', '024384249.jpg' ]
+        savefile = join(self.basedir, save_extension[1])
+        self.shpic.shareapic_save_image(urllist)
+        self.assertTrue(isfile(savefile))
+        self.assertTrue(getsize(savefile) >= 1000)
+
+
 
 
 def main():
