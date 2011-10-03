@@ -37,7 +37,7 @@ import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imagetitan, bellazon, skinsbe, shareapic, \
         sharenxs, blogspot, postimage, imageupper, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
-        imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad, livejournal
+        imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad 
 import http_connector
 # importing config file variables
 from pyimg import basedir, numprocs
@@ -79,7 +79,6 @@ rTumblr = re.compile("http://[0-9]+\.media\.tumblr\.com", re.IGNORECASE)
 rImgur = re.compile("http://([a-z]+\.)?imgur\.com", re.IGNORECASE)
 rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 rTypepad = re.compile("http://([a-z0-9]+\.)?typepad\.com/\.a/", re.IGNORECASE)
-rLivejournal = re.compile("http://pics\.livejournal\.com", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rImagebam : imagebam.ImagebamParse,
@@ -106,8 +105,7 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rTumblr : tumblr.TumblrParse,
         rImgur : imgur.ImgurParse,
         rRadikal : radikal.RadikalParse,
-        rTypepad : typepad.TypepadParse,
-        rLivejournal : livejournal.LivejournalParse
+        rTypepad : typepad.TypepadParse
         }
 
 
@@ -394,7 +392,11 @@ if __name__ == "__main__":
             pygui = pygui4.Gui(basedir, options.embed, options.poster)
     else:
         # no gui then
-        download_url(url, basedir, options.embed, options.poster)
+        try:
+            download_url(url, basedir, options.embed, options.poster)
+        except KeyboardInterrupt:
+            sys.exit(1)
+
 
 
     sys.exit(0)
