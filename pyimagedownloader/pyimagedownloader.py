@@ -115,15 +115,17 @@ class ImageHostParser():
     """ The main parser class """
 
     def __init__(self, page, tag, attr, basedir):
-        self.page = lxml.html.fromstring(page)
+        self.page = page
+        self.lxmlpage = lxml.html.fromstring(page)
         self.tag = tag
         self.attr = attr
         self.basedir = basedir
         self.numprocs = numprocs
+        self.img_counter = 0
 # iterlinks() gets all links on the page but it's slower than using xpath
 # (because it catches a whole lot more links)
 #        self.linklist = []
-#        for L in self.page.iterlinks():
+#        for L in self.lxmlpage.iterlinks():
 #            if rHttp.search(L[2]):
 #                self.linklist.append(L[2])
 #        print(self.linklist)
@@ -134,8 +136,7 @@ class ImageHostParser():
         """check every url in the given list against all regular expressions
         and extract the value of the chosen html attribute.
         Then use a queue and enough processes to download all matched urls"""
-        # make a numeric index, a queue and enough processes as numprocs
-        n = 0
+        # make a queue and enough processes as numprocs
         self.q = Queue()
         self.ps = [ Process(target=self.use_queue, args=()) for i in range(self.numprocs) ]
 
@@ -166,7 +167,7 @@ class ImageHostParser():
                     # add the class name and the parameters needed for its __init__
                     # into the queue
                     self.q.put((v, (L, self.basedir)))
-                    n = n + 1
+                    self.img_counter = self.img_counter + 1
                 else:
                     continue
 
@@ -174,12 +175,7 @@ class ImageHostParser():
             # put a STOP to end the iter builtin inside use_queue
             self.q.put("STOP")
 
-        if n == 0:
-            # no images found, automatically search for embedded ones then
-            embed_links = self.get_all_links('img', 'src')
-            self.which_host(embed_links, 'src')
-        else:
-            print("%d images were present" % n)
+        print("%d images were present" % self.img_counter)
 
     def use_queue(self):
         """use up the queue by running all its elements"""
@@ -205,7 +201,7 @@ class ImageHostParser():
 
     def get_all_links(self, tag, attr):
         xpath_search = '//' + tag + '[@' + attr + ']'
-        all_tags = self.page.xpath(xpath_search)
+        all_tags = self.lxmlpage.xpath(xpath_search)
         return all_tags
 
 
@@ -303,11 +299,14 @@ def download_url(url, savedirectory, embed="", poster=""):
     if embed:
         # do we need to search for embedded images then?
         # Note: at the moment it downloads thumbnails too
-        print("Searching for embedded images")
-        print("")
-        embed_links = parser.get_all_links('img', 'src')
-        parser.which_host(embed_links, 'src')
+        embed_download(parser)
 
+def embed_download(parser):
+    """Search for embedded images in a page. Requires an instance of ImageHostParser to be passed"""
+    print("Searching for embedded images")
+    print("")
+    embed_links = parser.get_all_links('img', 'src')
+    parser.which_host(embed_links, 'src')
 
 
 def filelist_parse(parsefile):
