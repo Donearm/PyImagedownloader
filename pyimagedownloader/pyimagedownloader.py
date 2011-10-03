@@ -176,7 +176,12 @@ class ImageHostParser():
             # put a STOP to end the iter builtin inside use_queue
             self.q.put("STOP")
 
-        print("%d images were present" % n)
+        if n == 0:
+            # no images found, automatically search for embedded ones then
+            embed_links = self.get_all_links('img', 'src')
+            self.which_host(embed_links, 'src')
+        else:
+            print("%d images were present" % n)
 
     def use_queue(self):
         """use up the queue by running all its elements"""
