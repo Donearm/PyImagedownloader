@@ -42,18 +42,13 @@ class PostimageParse():
         return page
 
     def postimage_get_image_src(self, page):
-        # Little trick: check if we have an img with an height; that would mean
-        # the image is already fullsized. If there is no height, the image is
-        # resized and we act accordingly
-        height_present = page.xpath("//img[@height]")
-        if height_present:
-            src_links = page.xpath("//center/img")
-            postimage_src = [li.get('src', None) for li in src_links]
-            postimage_alt = [li.get('alt', None) for li in src_links]
-        else:
-            alt_links = page.xpath("//center/a[@href]/img[@alt]")
-            postimage_alt = [li.get('alt', None) for li in alt_links]
-            postimage_src = [li.get('src', None) for li in alt_links]
+        # some images on postimage are embedded, check for <a><img> first
+        src_links = page.xpath("//center/a[@href]/img[@alt]")
+        if len(src_links) == 0:
+            src_links = page.xpath("//center/img[@alt]")
+
+        postimage_src = [li.get('src', None) for li in src_links]
+        postimage_alt = [li.get('alt', None) for li in src_links]
 
         return postimage_src
 
@@ -74,7 +69,7 @@ class PostimageParse():
             downreq = self.connector.reqhandler(download_url)
             with open(savefile, 'wb') as f:
                 f.write(downreq)
-        except IndexError:
+        except IndexError as e:
             return
 
     def parse(self):
