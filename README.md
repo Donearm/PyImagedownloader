@@ -1,9 +1,7 @@
-Pyimagedownloader
-
 Purpose of this program
-----
+=======================
 
-Pyimagedownloader is an image downloader written in Python. It downloads
+*PyImagedownloader* is an image downloader written in Python. It downloads
 all the images hosted on the supported imagehosting sites (see Supported
 Host List) present on the given url and puts them all in a directory with the
 page title name. It's geared towards those people that download images
@@ -17,8 +15,8 @@ It also downloads images posted in one of the supported forum or sites
 + password) and put it in the config file (pyimg.py). Those supported
 are just what I regularly use, more could be added.
 
-NOTE
-----
+Note
+====
 
 Given to time, or lack thereof to be correct, being not aplenty on my 
 part, this software won't receive new features or correct its, many, 
@@ -32,49 +30,51 @@ collaborate. Patches are very welcome too.
 
 
 Installation
-----
+============
 
 Most of the time a simple `python build/setup.py install` should 
 suffice. See http://docs.python.org/install/index.html
 
 
 License
-----
+=======
 
 see COPYING
 
 
 Supported Host List
-----
-Blogspot.com
-Imagebam.com
-Imageban.ru
-Imageboss.com
-Imagehaven.com
-Imagehost.org
-Imageshack.us
-Imagetitan.com
-Imageupper.com
-Imagevenue.com
-Imgur.com
-Photobucket.com
-Pixroute.com
-Postimage.org
-Radikal.ru
-Servimg.com
-Shareapic.net
-Sharenxs.com
-Skins.be
-Storeimgs.com
-Turboimagehost.com
-Tumblr.com
-Typepad.com
-Usemycomputer.com
-Wordpress.com
+==================
+
+* Blogspot.com
+* Imagebam.com
+* Imageban.ru
+* Imageboss.com
+* Imagehaven.com
+* Imagehost.org
+* Imageshack.us
+* Imagetitan.com
+* Imageupper.com
+* Imagevenue.com
+* Imgur.com
+* Photobucket.com
+* Pixroute.com
+* Postimage.org
+* Radikal.ru
+* Servimg.com
+* Shareapic.net
+* Sharenxs.com
+* Skins.be
+* Storeimgs.com
+* Turboimagehost.com
+* Tumblr.com
+* Typepad.com
+* Usemycomputer.com
+* Wordpress.com
 
 Supported Forum/Sites List
-----
-celebrityforum.freeforumzone.leonardo.it
-forum.usemycomputer.com
-www.imcmagazine.com
-www.orfaosdoexclusivo.com
+=========================
+
+* http://celebrityforum.freeforumzone.leonardo.it
+* http://forum.usemycomputer.com
+* http://www.imcmagazine.com
+* http://www.orfaosdoexclusivo.com
