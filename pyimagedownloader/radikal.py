@@ -56,7 +56,7 @@ class RadikalParse():
 
     def radikal_get_image_name(self, link):
         # generate just the filename of the image to be locally saved
-        imagename = re.split('/[a-zA-Z0-9]+/[a-zA-Z0-9]+/[a-zA-Z0-9]+/', link)
+        imagename = re.split('(/[a-zA-Z0-9]+)?/[a-zA-Z0-9]+/[a-zA-Z0-9]+/', link)
 
         return imagename
 
@@ -68,9 +68,9 @@ class RadikalParse():
             download_url = src[0]
 
         try:
-            savefile = join(self.basedir, str(imagename[1]))
+            savefile = join(self.basedir, str(imagename[-1]))
             urlretrieve(download_url, savefile)
-        except IndexError:
+        except IndexError as e:
             pass
 
 
