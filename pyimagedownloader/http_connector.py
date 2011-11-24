@@ -56,11 +56,13 @@ class Connector():
         if debug == 1:
            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                    urllib2.HTTPHandler(debuglevel=1),
-                   urllib2.HTTPSHandler(debuglevel=1))
+                   urllib2.HTTPSHandler(debuglevel=1),
+                   urllib2.HTTPRedirectHandler)
         else:
             opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                     urllib2.HTTPHandler(),
-                    urllib2.HTTPSHandler())
+                    urllib2.HTTPSHandler(),
+                    urllib2.HTTPRedirectHandler)
         return opener
 #        urllib2.install_opener(opener)
 
