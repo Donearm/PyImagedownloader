@@ -55,6 +55,7 @@ Supported Host List
 * Imagetitan.com
 * Imageupper.com
 * Imagevenue.com
+* Imgbox.com
 * Imgur.com
 * Photobucket.com
 * Pixroute.com
