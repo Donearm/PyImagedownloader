@@ -19,6 +19,7 @@ if __name__ == '__main__':
     import tests.imageshack_test
     import tests.imagetitan_test
     import tests.imageupper_test
+    import tests.imgbox_test
     import tests.imgur_test
     import tests.pixroute_test
     import tests.postimage_test

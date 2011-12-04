@@ -49,14 +49,14 @@ class ImgboxParse():
 
     def imgbox_get_image_name(self, src):
         # generate just the filename of the image to be locally saved
-        imagename = src.split('/')
+        imagename = src[0].split('/')
 
         return imagename
 
     def imgbox_save_image(self, src, imagename):
-        download_url = src
+        download_url = src[0]
         try:
-            savefile = join(self.basedir, str(imagename))
+            savefile = join(self.basedir, str(imagename[-1]))
             urlretrieve(download_url, savefile)
         except IndexError as e:
             pass
@@ -67,6 +67,6 @@ class ImgboxParse():
 
         self.imgbox_src = self.imgbox_get_image_src(self.page)
 
-        self.imagename = self.imgbox_get_image_name(self.imgbox_src[0])
+        self.imagename = self.imgbox_get_image_name(self.imgbox_src)
 
-        self.imgbox_save_image(self.imgbox_src[0], self.imagename[-1])
+        self.imgbox_save_image(self.imgbox_src, self.imagename)
