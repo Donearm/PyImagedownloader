@@ -1,8 +1,8 @@
 # The directory where to download the images. Full path
 basedir = ''
 
-# The User Agent string for the connection. Default is for Firefox 5.0 on Linux x86_64, change it if you like
-user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0'
+# The User Agent string for the connection. Default is for Firefox 8.0.1 on Linux x86_64, change it if you like
+user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:8.0.1) Gecko/20100101 Firefox/8.0.1'
 
 # Timeout after when the connection is dropped (in secs). Default 120
 timeout = 120
