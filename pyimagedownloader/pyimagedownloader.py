@@ -28,7 +28,8 @@ import sys
 import re
 import fileinput
 import urllib2
-from multiprocessing import Process, Queue
+import logging
+from multiprocessing import Process, Queue, log_to_stderr
 from os.path import abspath, dirname
 from os import rename
 import lxml.html
@@ -40,7 +41,7 @@ import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad, imgbox
 import http_connector
 # importing config file variables
-from pyimg import basedir, numprocs
+from pyimg import basedir, numprocs, debug
 
 
 
@@ -141,6 +142,11 @@ class ImageHostParser():
         # make a queue and enough processes as numprocs
         self.q = Queue()
         self.ps = [ Process(target=self.use_queue, args=()) for i in range(self.numprocs) ]
+
+        # enable multiprocessing logging feature
+        if debug:
+            log_to_stderr(logging.DEBUG)
+
 
         for p in self.ps:
             # start all processes
