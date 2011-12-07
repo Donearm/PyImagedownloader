@@ -114,7 +114,7 @@ class SaveSource():
         if len(u) > 3: # for tld like co.uk or com.br
             return u[1] + '.' + u[2] + '.' + u[3]
         else:
-            if u[0] == 'www':
+            if u[0] == 'www' or 'forum':
                 return u[1] + '.' + u[2]
             else:
                 return u[0] + '.' + u[1]
