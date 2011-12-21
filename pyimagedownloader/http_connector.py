@@ -29,6 +29,7 @@ import re
 import urllib2
 import socket
 import httplib
+from time import sleep
 from cookielib import CookieJar
 from urllib import urlencode, quote
 # importing config file variables
@@ -120,8 +121,7 @@ class Connector():
             # second request to the login2 page
             opener = self.threadsafe_opener()
             urllib2.install_opener(opener)
-            request2 = urllib2.Request(login2_page, data)
-            response1 = opener.open(request2)
+            request = urllib2.Request(login2_page, data)
         elif self.RImc.search(url):
             # Loging to IMC website
             login_page = 'http://www.imcmagazine.com/login.php'
@@ -133,7 +133,6 @@ class Connector():
             opener = self.threadsafe_opener()
             urllib2.install_opener(opener)
             request = urllib2.Request(login_page, data)
-            response = opener.open(request)
         elif self.RCelebrityForum.search(url):
             login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
             auth_page = 'http://auth.leonardo.it/sso/login'
@@ -150,7 +149,6 @@ class Connector():
             opener = self.threadsafe_opener()
             urllib2.install_opener(opener)
             request = urllib2.Request(auth_page, data)
-            response = opener.open(request)
         elif self.ROrfaosdoexclusivo.search(url):
             login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
             values = {'username': orfaos_name, 'password': orfaos_pwd}
@@ -160,7 +158,14 @@ class Connector():
             opener = self.threadsafe_opener()
             urllib2.install_opener(opener)
             request = urllib2.Request(login_page, data)
+
+        try:
             response = opener.open(request)
+        except urllib2.HTTPError as e:
+            if e.code == 408:
+                # request timed-out, wait a sec and retry
+                sleep(1)
+                response = opener.open(request)
 
     def post_request(self, url, data, headers, referer=''):
         request = urllib2.Request(url, data, headers)
