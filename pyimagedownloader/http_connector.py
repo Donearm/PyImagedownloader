@@ -104,60 +104,43 @@ class Connector():
         """check if it's a site or forum we have login credentials for and
         log-in"""
 
+        login_page = ''
+        values = {}
+
         # Regexps needed
         self.RUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
         self.RImc = re.compile("http://www\.(project\-xtapes|imcmagazine)\.com/", re.IGNORECASE)
         self.RCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
         self.ROrfaosdoexclusivo = re.compile("http[s]?://www\.orfaosdoexclusivo\.com", re.IGNORECASE)
 
+        # check if url matches one of the sites and prepare the request to log in it
         if self.RUsemycomputer.search(url):
-            # We got a login user/pwd for usemycomputer, let's first login then
-            login2_page = 'http://forum.usemycomputer.com/index.php?action=login2'
+            login_page = 'http://forum.usemycomputer.com/index.php?action=login2'
             values = {'user' : umc_name, 'passwrd' : umc_pwd, 'login' : 'Login'}
-
-            # encode values
-            data = urlencode(values)
-
-            # second request to the login2 page
-            opener = self.threadsafe_opener()
-            urllib2.install_opener(opener)
-            request = urllib2.Request(login2_page, data)
         elif self.RImc.search(url):
-            # Loging to IMC website
             login_page = 'http://www.imcmagazine.com/login.php'
             values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
-
-            data = urlencode(values)
-
-            # login page request
-            opener = self.threadsafe_opener()
-            urllib2.install_opener(opener)
-            request = urllib2.Request(login_page, data)
         elif self.RCelebrityForum.search(url):
             login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
             auth_page = 'http://auth.leonardo.it/sso/login'
-
 
             values = {'SSO_cik': 'G9clW564v319FjXGuTXXOVzSKDrUTFAXfI8M0uDx2EoxYiBekWLO7M6fMu99MlpQ',
                     'SSO_USERNAME': cf_name, 'SSO_PASSWORD': cf_pwd, 'SSO_p': 'c',
                     'SSO_CHANNEL': '3', 'SSO_PAUTH': '0', 'SSO_USE_ENC': '0',
                     'SSO_PAYLOAD': '1', 'SSO_SECURE_LOGIN': '1', 'FFZ_LOGIN_RQ': '1',
                     'FFZ_SLOGIN': '1', 'FFZ_HLOGIN': '0', 'SSO_REDIRECT_PATH': login_page}
-            
-            data = urlencode(values)
-
-            opener = self.threadsafe_opener()
-            urllib2.install_opener(opener)
-            request = urllib2.Request(auth_page, data)
         elif self.ROrfaosdoexclusivo.search(url):
             login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
             values = {'username': orfaos_name, 'password': orfaos_pwd}
+        else:
+            return
 
-            data = urlencode(values)
+        # encode values
+        data = urlencode(values)
 
-            opener = self.threadsafe_opener()
-            urllib2.install_opener(opener)
-            request = urllib2.Request(login_page, data)
+        opener = self.threadsafe_opener()
+        urllib2.install_opener(opener)
+        request = urllib2.Request(login_page, data)
 
         try:
             response = opener.open(request)
