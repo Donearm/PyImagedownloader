@@ -121,8 +121,8 @@ class Connector():
             login_page = 'http://www.imcmagazine.com/login.php'
             values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
         elif self.RCelebrityForum.search(url):
-            login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
-            auth_page = 'http://auth.leonardo.it/sso/login'
+#            login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
+            login_page = 'http://auth.leonardo.it/sso/login'
 
             values = {'SSO_cik': 'G9clW564v319FjXGuTXXOVzSKDrUTFAXfI8M0uDx2EoxYiBekWLO7M6fMu99MlpQ',
                     'SSO_USERNAME': cf_name, 'SSO_PASSWORD': cf_pwd, 'SSO_p': 'c',
