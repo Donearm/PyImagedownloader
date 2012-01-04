@@ -86,7 +86,7 @@ class SaveSource():
         with open('source.txt', "w") as source_file:
             source_file.write("\n\n\nfonte:%s\n" % url)
 
-        if creditor is not False and not (creditor == ""):
+        if creditor:
             domain_name = self.extract_domain(url)
             with open('credits.txt', "w") as credits_file:
                 credits_file.write("\n\ncredits: %s @%s \n" % (creditor, domain_name))
@@ -97,7 +97,7 @@ class SaveSource():
         with open('source.mdown', "w") as source_file:
             source_file.write("\n\n\nfonte:[%s](%s)\n" % (domain_name, url))
 
-        if creditor is not False and not (creditor == ""):
+        if creditor:
             with open('credits.mdown', "w") as credits_file:
                 credits_file.write("\n\ncredits: %s @[%s](%s) \n" % (creditor, domain_name, url))
         
