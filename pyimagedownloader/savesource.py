@@ -86,11 +86,20 @@ class SaveSource():
         with open('source.txt', "w") as source_file:
             source_file.write("\n\n\nfonte:%s\n" % url)
 
-        if creditor is not False:
-            if creditor is not None:
-                domain_name = self.extract_domain(url)
-                with open('credits.txt', "w") as credits_file:
-                    credits_file.write("\n\ncredits: %s @%s \n" % (creditor, domain_name))
+        if creditor is not False and not (creditor == ""):
+            domain_name = self.extract_domain(url)
+            with open('credits.txt', "w") as credits_file:
+                credits_file.write("\n\ncredits: %s @%s \n" % (creditor, domain_name))
+
+    def save_markdown_source_file(self, url, creditor=""):
+        """write a Markdown version of the source (source.txt) and of the credits file (credits.txt)"""
+        domain_name = self.extract_domain(url)
+        with open('source.mdown', "w") as source_file:
+            source_file.write("\n\n\nfonte:[%s](%s)\n" % (domain_name, url))
+
+        if creditor is not False and not (creditor == ""):
+            with open('credits.mdown', "w") as credits_file:
+                credits_file.write("\n\ncredits: %s @[%s](%s) \n" % (creditor, domain_name, url))
         
     def link_save(self):
         """main method linking all the others in SaveSource class"""
@@ -102,7 +111,7 @@ class SaveSource():
 
         self.output_dir_exist(self.output_dir)
 
-        self.save_source_file(self.url, self.creditor)
+        self.save_markdown_source_file(self.url, self.creditor)
 
         return self.output_dir
 
