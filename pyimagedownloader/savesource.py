@@ -124,7 +124,10 @@ class SaveSource():
             return u[1] + '.' + u[2] + '.' + u[3]
         else:
             if u[0] == 'www' or 'forum':
-                return u[1] + '.' + u[2]
+                try:
+                    return u[1] + '.' + u[2]
+                except IndexError:
+                    return u[0] + '.' + u[1]
             else:
                 return u[0] + '.' + u[1]
 
