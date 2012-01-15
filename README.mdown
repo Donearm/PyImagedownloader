@@ -46,6 +46,7 @@ Supported Host List
 ==================
 
 * Blogspot.com
+* Bellazon.com (only with a valid login)
 * Imagebam.com
 * Imageban.ru
 * Imageboss.com
