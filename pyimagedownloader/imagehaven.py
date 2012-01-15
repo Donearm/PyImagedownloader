@@ -42,7 +42,11 @@ class ImagehavenParse():
 
     def imagehaven_get_image_split_and_src(self, page):
         # find the src attribute which contains the real url
-        src_links = page.xpath("//img[@id='image']")
+        try:
+            src_links = page.xpath("//img[@id='image']")
+        except AttributeError as e:
+            # NoneType object? Exit
+            return
 
         imagehaven_src = [li.get('src', None) for li in src_links]
 
