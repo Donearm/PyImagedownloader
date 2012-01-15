@@ -141,7 +141,7 @@ class ImageHostParser():
         Then use a queue and enough processes to download all matched urls"""
         # make a queue and enough processes as numprocs
         self.q = Queue()
-        self.ps = [ Process(target=self.use_queue, args=()) for i in range(self.numprocs) ]
+        self.ps = ( Process(target=self.use_queue, args=()) for i in range(self.numprocs) )
 
         # enable multiprocessing logging feature
         if debug:
