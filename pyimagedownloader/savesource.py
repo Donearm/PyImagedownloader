@@ -20,11 +20,14 @@ import re
 import os
 import string
 import htmlentitydefs
+import locale
 from os.path import join
 from urlparse import urlparse
 import lxml.html
 
-ACCEPTEDCHARS = frozenset(string.ascii_letters + string.digits + '(){}[]@-_+"&')
+# Set locale for string.letters to include all valid characters in it and not only in Ascii
+locale.setlocale(locale.LC_ALL, '')
+ACCEPTEDCHARS = frozenset(string.letters + string.digits + '(){}[]@-_+"&')
 
 class SaveSource():
     """Class to save an url to a file in the given directory and, optionally,
@@ -65,10 +68,9 @@ class SaveSource():
         preserving unicode ones"""
         neat_title = self.decode_htmlentities(title)
 
-#        neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title)
-        
         # remove all characters in the regexp plus any whitespace
-        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'\’/«»:<>.|,;]', '', neat_title).split())
+        neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title) # filter solution
+#        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'\’/«»:<>.|,;]', '', neat_title).split()) # manual substitution solution
         print(neat_title)
 
         return neat_title
