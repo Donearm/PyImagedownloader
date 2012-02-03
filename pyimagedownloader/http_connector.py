@@ -45,12 +45,12 @@ class Connector():
         self.user_agent = user_agent
         self.headers = { 'User-Agent' : self.user_agent, 'Connection' : 'Keep-Alive' }
         self.timeout = timeout
+        #set a cookie handler and install the opener
+        self.cj = CookieJar()
+        self.opener = self.threadsafe_opener()
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
 
-
-        #set a cookie handler and install the opener
-        self.cj = CookieJar()
 
     def threadsafe_opener(self):
         """Generate a new opener with each call, so to be thread-safe"""
@@ -64,8 +64,8 @@ class Connector():
                     urllib2.HTTPHandler(),
                     urllib2.HTTPSHandler(),
                     urllib2.HTTPRedirectHandler)
+        urllib2.install_opener(opener)
         return opener
-#        urllib2.install_opener(opener)
 
 
     def reqhandler(self, url, login=0):
@@ -80,7 +80,6 @@ class Connector():
 
         # for some sites we need to login first....
         if login == 1:
-            urllib2.install_opener(self.threadsafe_opener())
             self.site_login(self.uri)
 
         if self.values:
@@ -138,29 +137,25 @@ class Connector():
         # encode values
         data = urlencode(values)
 
-        opener = self.threadsafe_opener()
-        urllib2.install_opener(opener)
         request = urllib2.Request(login_page, data)
 
         try:
-            response = opener.open(request)
+            response = self.opener.open(request)
         except urllib2.HTTPError as e:
             if e.code == 408:
                 # request timed-out, wait a sec and retry
                 sleep(1)
-                response = opener.open(request)
+                response = self.opener.open(request)
 
     def post_request(self, url, data, headers, referer=''):
         request = urllib2.Request(url, data, headers)
-        opener = self.threadsafe_opener()
-        urllib2.install_opener(opener)
         request.add_header('Accept', '*/*')
         if referer:
             request.add_header('Referer', referer)
         attempts = 0
         while attempts < 10:
             try:
-                response = opener.open(request, data)
+                response = self.opener.open(request, data)
                 # various infos on the response
                 #print(response.info())
                 #print(response.geturl())
@@ -202,8 +197,6 @@ class Connector():
 
     def get_request(self, url, ua, referer=''):
         request = urllib2.Request(url)
-        opener = self.threadsafe_opener()
-        urllib2.install_opener(opener)
         request.add_header('User-Agent', ua)
         request.add_header('Accept', '*/*')
         if referer:
@@ -211,7 +204,7 @@ class Connector():
         attempts = 0
         while attempts < 10:
             try:
-                response = opener.open(request, None)
+                response = self.opener.open(request, None)
 #                print(request.header_items())
 #                print(request.unredirected_hdrs)
                 return response.read()
@@ -248,11 +241,9 @@ class Connector():
 
     def get_filename(self, url, split=''):
         request = urllib2.Request(url)
-        opener = self.threadsafe_opener()
-        urllib2.install_opener(opener)
         request.add_header('User-Agent', self.user_agent)
         try:
-            response = opener.open(request)
+            response = self.opener.open(request)
             try:
                 self.filename = response.headers['Content-Disposition'].split('=')[1]
                 # remove single or double quotes from the filename

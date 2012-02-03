@@ -57,6 +57,7 @@ Supported Host List
 * Imageupper.com
 * Imagevenue.com
 * Imgbox.com
+* Imgchili.com
 * Imgur.com
 * Photobucket.com
 * Pixroute.com
