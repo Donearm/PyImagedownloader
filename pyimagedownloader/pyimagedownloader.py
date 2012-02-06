@@ -29,6 +29,7 @@ import re
 import fileinput
 import urllib2
 import logging
+import logging.handlers
 from multiprocessing import Process, Queue, log_to_stderr
 from os.path import abspath, dirname
 from os import rename
@@ -42,7 +43,7 @@ import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         imgchili
 import http_connector
 # importing config file variables
-from pyimg import basedir, numprocs, debug
+from pyimg import basedir, numprocs, debug, logfile, logmaxsize
 
 
 
@@ -128,6 +129,7 @@ class ImageHostParser():
         self.basedir = basedir
         self.numprocs = numprocs
         self.img_counter = 0
+        self.logger = logging.getLogger('pyimagedownloader')
 # iterlinks() gets all links on the page but it's slower than using xpath
 # (because it catches a whole lot more links)
 #        self.linklist = []
@@ -148,6 +150,7 @@ class ImageHostParser():
 
         # enable multiprocessing logging feature
         if debug:
+            logger.setLevel(logging.DEBUG)
             log_to_stderr(logging.DEBUG)
 
 
@@ -170,6 +173,7 @@ class ImageHostParser():
             # matching, put the the class name, url and self.basedir in the queue
             for k, v in regexp_dict.items():
                 if k.search(L):
+                    self.logger.info("downloading %s" % L)
                     # instantiate and then pass the parse method to the queue.
                     # it downloads but doesn't make the queue do its job
 #                    parser = v(L, self.basedir)
@@ -186,6 +190,7 @@ class ImageHostParser():
             # put a STOP to end the iter builtin inside use_queue
             self.q.put("STOP")
 
+        self.logger.info('%d images were present' % self.img_counter)
         print("%d images were present" % self.img_counter)
 
     def use_queue(self):
@@ -290,6 +295,20 @@ def argument_parser():
 
 def download_url(url, savedirectory, embed="", poster=""):
     """Main function to parse and download images"""
+
+    # set up logging
+    logger = logging.getLogger('pyimagedownloader')
+    logger.setLevel(logging.INFO)
+#    fh = logging.FileHandler(logfile)
+    formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(process)d:%(message)s')
+#    fh.setFormatter(formatter)
+#    logger.addHandler(fh)
+    # trunk log file when it gets bigger than logmaxsize
+    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=0)
+    rh.setFormatter(formatter)
+    logger.addHandler(rh)
+
+    logger.info("Downloading from %s" % url[0])
     
     connector = http_connector.Connector()
     r_page = connector.reqhandler(url, 1)

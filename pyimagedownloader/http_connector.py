@@ -29,6 +29,7 @@ import re
 import urllib2
 import socket
 import httplib
+import logging
 from time import sleep
 from cookielib import CookieJar
 from urllib import urlencode, quote
@@ -48,6 +49,7 @@ class Connector():
         #set a cookie handler and install the opener
         self.cj = CookieJar()
         self.opener = self.threadsafe_opener()
+        self.logger = logging.getLogger('pyimagedownloader')
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
 
@@ -55,11 +57,13 @@ class Connector():
     def threadsafe_opener(self):
         """Generate a new opener with each call, so to be thread-safe"""
         if debug == 1:
-           opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
+            self.logger.setLevel(logging.DEBUG)
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                    urllib2.HTTPHandler(debuglevel=1),
                    urllib2.HTTPSHandler(debuglevel=1),
                    urllib2.HTTPRedirectHandler)
         else:
+
             opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj), 
                     urllib2.HTTPHandler(),
                     urllib2.HTTPSHandler(),
@@ -132,6 +136,7 @@ class Connector():
             login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
             values = {'username': orfaos_name, 'password': orfaos_pwd}
         else:
+            self.logger.debug("%s didn't match any know login-provided site" % url)
             return
 
         # encode values
@@ -179,7 +184,8 @@ class Connector():
                     response = self.get_request(url, self.user_agent)
                 elif e.code == 404:
                     # url non-existing, just go on
-                    print("%s couldn't be found, skipping it..." % url)
+                    self.logger.info("%s couldn't be found, skipping it..." % url)
+#                    print("%s couldn't be found, skipping it..." % url)
                     return response
                 else:
                     print(e.code)
@@ -190,7 +196,8 @@ class Connector():
                 attempts += 1
                 print(e)
 
-        print("An image couldn't be downloaded.")
+        self.logger.info("10 tries weren't enough to download %s ..." % url)
+#        print("An image couldn't be downloaded.")
         response = ''
         return response
 
@@ -223,7 +230,8 @@ class Connector():
                 response = ''
                 if e.code == 404:
                     # url non-existing, just go on
-                    print("%s couldn't be found, skipping it..." % url)
+                    self.logger.info("%s couldn't be found, skipping it..." % url)
+#                    print("%s couldn't be found, skipping it..." % url)
                     return response
                 else:
                     print(e.code)
@@ -234,7 +242,8 @@ class Connector():
                 attempts += 1
                 print(e)
 
-        print("An image couldn't be downloaded.")
+        self.logger.info("10 tries weren't enough to download %s ..." % url)
+#        print("An image couldn't be downloaded.")
         response = ''
         return response
 

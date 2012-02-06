@@ -10,6 +10,11 @@ timeout = 120
 # Debug or not?
 debug = 0
 
+# Log file
+logfile = '~/.pyimagedownloader.log'
+# Log file maximum size (in bytes). Default is 2Mb
+logmaxsize = 2000000
+
 # Number of simultaneous downloads
 numprocs = 20
 
