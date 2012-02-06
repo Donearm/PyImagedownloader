@@ -21,6 +21,7 @@ import string
 from urllib import urlretrieve
 from os.path import join, exists, splitext
 import lxml.html
+import logging
 import http_connector
 
 
@@ -30,6 +31,7 @@ class ImagebamParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -38,6 +40,7 @@ class ImagebamParse():
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s " % url)
             return
 
         return self.page
@@ -54,6 +57,7 @@ class ImagebamParse():
             imagename = self.connector.get_filename(imagebam_src[0], 'filename=')
         except IndexError:
             # sometimes Imagebam server go offline, skip this image
+            self.logger.warning("IndexError in %s" % imagebam_src)
             return
 
         return imagebam_src, imagename
@@ -90,6 +94,7 @@ class ImagebamParse():
             try:
                 urlretrieve(download_url, savefile) 
             except IOError as e:
+                self.logger.warning("%s not loading" % download_url)
                 # image not loading, skipping it
                 return
         else:
@@ -105,6 +110,7 @@ class ImagebamParse():
             try:
                 urlretrieve(download_url, savefile)
             except IOError as e:
+                self.logger.error("Unable to save %s" % savefile)
                 return
 
     def parse(self):
@@ -112,5 +118,3 @@ class ImagebamParse():
 
         self.imagebam_src, self.imagename = self.imagebam_get_image_src_and_name(self.page)
         self.imagebam_save_image(self.imagebam_src, self.imagename)
-
-

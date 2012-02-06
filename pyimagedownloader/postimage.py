@@ -20,6 +20,7 @@ import re
 from os.path import join
 import random
 import lxml.html
+import logging
 import http_connector
 
 
@@ -29,6 +30,7 @@ class PostimageParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -37,6 +39,7 @@ class PostimageParse():
             page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return page
@@ -45,6 +48,7 @@ class PostimageParse():
         # some images on postimage are embedded, check for <a><img> first
         src_links = page.xpath("//center/a[@href]/img[@alt]")
         if len(src_links) == 0:
+            self.logger.debug("(%s) first xpath query didn't find anything" % self.link)
             src_links = page.xpath("//center/img[@alt]")
 
         postimage_src = [li.get('src', None) for li in src_links]
@@ -70,6 +74,7 @@ class PostimageParse():
             with open(savefile, 'wb') as f:
                 f.write(downreq)
         except IndexError as e:
+            self.logger.error("IndexError in %s" % src_list)
             return
 
     def parse(self):

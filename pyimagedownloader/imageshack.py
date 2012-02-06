@@ -22,6 +22,7 @@ from urllib import urlencode, urlretrieve
 from os.path import join
 import random
 import lxml.html
+import logging
 from pyimg import user_agent
 import http_connector
 
@@ -68,12 +69,14 @@ class ImageshackParse():
         self.link = link
         self.basedir = basedir
         self.connector = ShackConnector(self.link)
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
         try:
             page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return page
@@ -132,6 +135,7 @@ class ImageshackParse():
         try:
             self.imageshack_src = self.imageshack_get_image_src(self.page)
         except:
+            self.logger.error("Couldn't get a src tag from %s" % self.link)
             return
 
         try:

@@ -17,6 +17,7 @@ __license__ = "GPL"
 __email__ = "forod.g@gmail.com"
 
 import re
+import logging
 from urllib import urlretrieve
 from os.path import join
 
@@ -25,6 +26,7 @@ class PhotobucketParse():
     def __init__(self, link, basedir):
         self.link = link
         self.basedir = basedir
+        self.logger = logging.getLogger('pyimagedownloader')
     
     def parse(self):
         try:
@@ -36,4 +38,5 @@ class PhotobucketParse():
             # finally save the image on the desidered directory
             urlretrieve(download_url, savefile) 
         except IndexError:
+            self.logger.error("IndexError trying splitting %s" % self.link)
             return

@@ -24,6 +24,7 @@ import httplib
 import socket
 from os.path import join
 import lxml.html
+import logging
 from pyimg import user_agent, debug
 import http_connector
 
@@ -49,6 +50,7 @@ class SharenxsConnector(http_connector.Connector):
         self.data = urlencode(self.values)
         self.cj = cookielib.CookieJar()
         self.opener = self.threadsafe_opener()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def get_request(self, url, ua, cookie='', referer=''):
         request = urllib2.Request(url)
@@ -77,7 +79,8 @@ class SharenxsConnector(http_connector.Connector):
                 response = ''
                 if e.code == 404:
                     # url non-existing, just go on
-                    print("%s couldn't be found, skipping it..." % url)
+                    self.logger.warning("%s couldn't be found, skipping it..." % url)
+#                    print("%s couldn't be found, skipping it..." % url)
                     return response
                 else:
                     print(e.code)
@@ -88,6 +91,7 @@ class SharenxsConnector(http_connector.Connector):
                 attempts += 1
                 print(e)
 
+        self.logger.error("%s couldn't be downloaded" % url)
         print("An image couldn't be downloaded.")
         response = ''
         return response
@@ -100,7 +104,7 @@ class SharenxsParse():
         self.link = link
         self.basedir = basedir
         self.connector = SharenxsConnector(self.link)
-
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         # generate a first request that is needed for extract_cookies()
@@ -128,6 +132,7 @@ class SharenxsParse():
             page = lxml.html.fromstring(response2.read())
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return page
@@ -166,8 +171,10 @@ class SharenxsParse():
                 return
             except IOError:
                 # it's very possible the image isn't available anymore then
+                self.logger.warning("It's possible that %s isn't available anymore" % download_url)
                 return
         except IndexError:
+            self.logger.error("IndexError in %s" % src_list)
             return
 
         
@@ -195,6 +202,7 @@ class SharenxsParse():
                     download_url = str(self.sharenxs_wz[0])
                     urlretrieve(download_url, savefile)
                 except IndexError:
+                    self.logger.error("IndexError in %s" % self.sharenxs_wz)
                     return
             else:
                 # in the case we don't have the full-sized uri, we use the thumbnail
@@ -210,4 +218,5 @@ class SharenxsParse():
                     download_url = 'http://cache.sharenxs.com/images/wz/' + sharenxs_split[1] + save_extension[1]
                     urlretrieve(download_url, savefile)
                 except IndexError:
+                    self.logger.error("IndexError in %s" % self.thumb_src)
                     return

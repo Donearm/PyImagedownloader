@@ -20,6 +20,7 @@ import re
 from urllib import urlretrieve
 from os.path import join
 import lxml.html
+import logging
 import http_connector
 
 
@@ -29,6 +30,7 @@ class TypepadParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -37,6 +39,7 @@ class TypepadParse():
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return self.page
@@ -62,6 +65,7 @@ class TypepadParse():
             savefile = join(self.basedir, str(imagename[1]) + '.jpg')
             urlretrieve(download_url, savefile)
         except IndexError:
+            self.logger.error("IndexError in %s" % imagename)
             pass
 
 

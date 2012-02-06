@@ -19,6 +19,7 @@ __email__ = "forod.g@gmail.com"
 from os.path import join
 from urllib import urlretrieve
 import lxml.html
+import logging
 import http_connector
 
 class BellazonParse():
@@ -28,6 +29,7 @@ class BellazonParse():
         self.basedir = basedir
         self.page = ''
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -35,6 +37,7 @@ class BellazonParse():
         try:
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return self.page
@@ -52,6 +55,7 @@ class BellazonParse():
             download_url = src_list[0]
             savefile = join(self.basedir, str(save_extension))
         except IndexError:
+            self.logger.error("index error in %s")
             return
 
         urlretrieve(download_url, savefile)

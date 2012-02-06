@@ -20,6 +20,7 @@ import re
 from urllib import urlretrieve
 from os.path import join
 import lxml.html
+import logging
 import http_connector
 
 
@@ -39,6 +40,7 @@ class ImagevenueParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
         # once we had 2 different functions for imagevenue's images coming from 
         # paid hosts like usercash; now it's not needed anymore so 
         # imagevenue_embed is just another name for parse()
@@ -58,6 +60,7 @@ class ImagevenueParse():
             page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return page
@@ -81,6 +84,7 @@ class ImagevenueParse():
         except IndexError:
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
+            self.logger.warning("IndexError in %s or %s" % (split, src_list))
             pass
 
         try:
@@ -94,6 +98,7 @@ class ImagevenueParse():
             # finally save the image on the desidered directory
             urlretrieve(download_url, savefile) 
         except IndexError:
+            self.logger.error("IndexError in %s" % src_list)
             return
 
     def parse(self):

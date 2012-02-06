@@ -20,6 +20,7 @@ import re
 from urllib import urlretrieve
 from os.path import join
 import lxml.html
+import logging
 import http_connector
 
 class ImagehavenParse():
@@ -28,6 +29,7 @@ class ImagehavenParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -36,6 +38,7 @@ class ImagehavenParse():
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return self.page
@@ -45,6 +48,7 @@ class ImagehavenParse():
         try:
             src_links = page.xpath("//img[@id='image']")
         except AttributeError as e:
+            self.logger.error("Didn't find src tag with xpath query at %s" % self.link)
             # NoneType object? Exit
             return
 
@@ -64,6 +68,7 @@ class ImagehavenParse():
         except IndexError:
             # if we get an IndexError just continue (it may means that the image
             # can't be downloaded from the server or there is a host's glitch
+            self.logger.debug("Skipping an IndexError on %s" % srclist[0])
             pass
 
 

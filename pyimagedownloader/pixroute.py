@@ -20,6 +20,7 @@ from os.path import join
 from urllib import urlretrieve
 from pyimg import user_agent
 import lxml.html
+import logging
 import http_connector
 
 
@@ -29,6 +30,7 @@ class PixrouteParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -45,6 +47,7 @@ class PixrouteParse():
         try:
             imagename = self.connector.get_filename(pixroute_src[0], '/')
         except IndexError:
+            self.logger.error("IndexError in %s" % pixroute_src)
             return
 
         return pixroute_src, imagename

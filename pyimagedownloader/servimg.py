@@ -19,6 +19,7 @@ __email__ = "forod.g@gmail.com"
 from os.path import join
 from urllib import urlretrieve
 import lxml.html
+import logging
 import http_connector
 
 
@@ -28,6 +29,7 @@ class ServimgParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -44,6 +46,7 @@ class ServimgParse():
         try:
             imagename = self.connector.get_filename(servimg_src[0], '/')
         except IndexError:
+            self.logger.error("IndexError in %s" % servimg_src)
             return
 
         return servimg_src, imagename

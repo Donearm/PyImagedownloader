@@ -136,7 +136,7 @@ class Connector():
             login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
             values = {'username': orfaos_name, 'password': orfaos_pwd}
         else:
-            self.logger.debug("%s didn't match any know login-provided site" % url)
+            self.logger.error("%s didn't match any know login-provided site" % url)
             return
 
         # encode values
@@ -184,7 +184,7 @@ class Connector():
                     response = self.get_request(url, self.user_agent)
                 elif e.code == 404:
                     # url non-existing, just go on
-                    self.logger.info("%s couldn't be found, skipping it..." % url)
+                    self.logger.warning("%s couldn't be found, skipping it..." % url)
 #                    print("%s couldn't be found, skipping it..." % url)
                     return response
                 else:
@@ -196,7 +196,7 @@ class Connector():
                 attempts += 1
                 print(e)
 
-        self.logger.info("10 tries weren't enough to download %s ..." % url)
+        self.logger.error("10 tries weren't enough to download %s ..." % url)
 #        print("An image couldn't be downloaded.")
         response = ''
         return response
@@ -230,7 +230,7 @@ class Connector():
                 response = ''
                 if e.code == 404:
                     # url non-existing, just go on
-                    self.logger.info("%s couldn't be found, skipping it..." % url)
+                    self.logger.warning("%s couldn't be found, skipping it..." % url)
 #                    print("%s couldn't be found, skipping it..." % url)
                     return response
                 else:
@@ -242,7 +242,7 @@ class Connector():
                 attempts += 1
                 print(e)
 
-        self.logger.info("10 tries weren't enough to download %s ..." % url)
+        self.logger.error("10 tries weren't enough to download %s ..." % url)
 #        print("An image couldn't be downloaded.")
         response = ''
         return response

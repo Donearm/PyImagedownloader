@@ -20,6 +20,7 @@ import re
 from urllib import urlretrieve
 from os.path import join
 import lxml.html
+import logging
 import http_connector
 
 class ImagehostorgParse():
@@ -28,6 +29,7 @@ class ImagehostorgParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -36,6 +38,7 @@ class ImagehostorgParse():
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return self.page
@@ -75,6 +78,7 @@ class ImagehostorgParse():
         try:
             self.imagehostorg_split, self.imagehostorg_src = self.imagehostorg_get_image_split_and_src(self.page)
         except:
+            self.logger.error("Couldn't get a split or a src string for %s" % self.link)
             return
 
         self.imagehostorg_save_image(self.imagehostorg_split, self.imagehostorg_src)

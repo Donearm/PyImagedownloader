@@ -20,6 +20,7 @@ import re
 from urllib import urlretrieve
 from os.path import join
 import lxml.html
+import logging
 import http_connector
 
 class SkinsbeParse():
@@ -28,6 +29,7 @@ class SkinsbeParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -36,6 +38,7 @@ class SkinsbeParse():
             page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return page

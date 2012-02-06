@@ -19,6 +19,7 @@ __email__ = "forod.g@gmail.com"
 from os.path import join
 from urllib import urlretrieve
 import lxml.html
+import logging
 import http_connector
 
 
@@ -28,6 +29,7 @@ class ImagebossParse():
         self.link = link
         self.basedir = basedir
         self.connector = http_connector.Connector()
+        self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
         response = self.connector.reqhandler(url)
@@ -36,6 +38,7 @@ class ImagebossParse():
             self.page = lxml.html.fromstring(response)
         except lxml.etree.XMLSyntaxError as e:
             # most of the time we can simply ignore parsing errors
+            self.logger.error("XMLSyntaxError at %s" % url)
             return
 
         return self.page
@@ -56,6 +59,7 @@ class ImagebossParse():
             download_url = src_list[0]
             savefile = join(self.basedir, str(save_extension[-1]))
         except IndexError:
+            self.logger.error("IndexError in %s" % src_list)
             return
 
         urlretrieve(download_url, savefile)
