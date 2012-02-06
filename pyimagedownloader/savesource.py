@@ -24,6 +24,7 @@ import locale
 from os.path import join
 from urlparse import urlparse
 import lxml.html
+import logging
 
 # Set locale for string.letters to include all valid characters in it and not only in Ascii
 locale.setlocale(locale.LC_ALL, '')
@@ -43,6 +44,7 @@ class SaveSource():
         self.response = ''
         self.page_title = ''
         self.neat_title = ''
+        self.logger = logging.getLogger('pyimagedownloader')
 
 
     def get_page_title(self, response):
@@ -54,6 +56,7 @@ class SaveSource():
             self.page_title = page_title_parsed.find(".//title").text
         except AttributeError:
             # in the case there is no title tag on the page, use the url
+            self.logger.debug("No title tag found on %s" % self.url)
             self.page_title = str(self.url)
 
         # some pages don't return AttributeError but page_title is still None.
@@ -71,6 +74,7 @@ class SaveSource():
         # remove all characters in the regexp plus any whitespace
         neat_title = filter(ACCEPTEDCHARS.__contains__, neat_title) # filter solution
 #        neat_title = "".join(re.sub('[\(\)\{\}\[\]"\&\'\’/«»:<>.|,;]', '', neat_title).split()) # manual substitution solution
+        self.logger.info("Title of page is %s" % neat_title)
         print(neat_title)
 
         return neat_title
