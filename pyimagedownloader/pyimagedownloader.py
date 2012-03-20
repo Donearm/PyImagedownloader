@@ -55,7 +55,7 @@ def not_supported(host):
 
 # The regexp we'll need to find the link
 rHttp = re.compile("http://", re.IGNORECASE)
-rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com", re.IGNORECASE)
+rImagevenue = re.compile("http://img[0-9]{,3}\.imagevenue\.com/img", re.IGNORECASE)
 rImagebam = re.compile("http://www\.imagebam\.com/image/", re.IGNORECASE)
 rImagehaven = re.compile("http://(img|adult|[a-z])[0-9]{,3}\.imagehaven\.net", re.IGNORECASE)
 rImageshack = re.compile("http://(img[0-9]{,3}\.)?imageshack\.us", re.IGNORECASE)
