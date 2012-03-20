@@ -396,14 +396,10 @@ class TestImgbox(unittest.TestCase):
         self.page = self.ibimage.process_url(self.url)
         self.assertIsInstance(self.page, lxml.html.HtmlElement)
 
-    def test_imgbox_get_image_src(self):
-        self.imgbox_src = self.ibimage.imgbox_get_image_src(lxml.html.fromstring(self.example_ibimage_page))
+    def test_imgbox_get_image_src_and_name(self):
+        self.imgbox_src, self.imagename = self.ibimage.imgbox_get_image_src_and_name(lxml.html.fromstring(self.example_ibimage_page))
         self.assertIsInstance(self.imgbox_src, list)
         self.assertTrue(self.imgbox_src[0])
-
-    def test_imgbox_get_image_name(self):
-        self.imagename = self.ibimage.imgbox_get_image_name(self.image_url)
-
         self.assertIsInstance(self.imagename, list)
 
     def test_imgbox_save_image(self):

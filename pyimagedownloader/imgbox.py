@@ -42,19 +42,15 @@ class ImgboxParse():
 
         return self.page
 
-    def imgbox_get_image_src(self, page):
+    def imgbox_get_image_src_and_name(self, page):
         # find the src attribute which contains the real url
         src_links = page.xpath("//div[@id='cont']/img")
         imgbox_src = [li.get('src', None) for li in src_links]
 
-        return imgbox_src
+        # extract also the filename of the image
+        imagename = [li.get('title', None) for li in src_links]
 
-
-    def imgbox_get_image_name(self, src):
-        # generate just the filename of the image to be locally saved
-        imagename = src[0].split('/')
-
-        return imagename
+        return imgbox_src, imagename
 
     def imgbox_save_image(self, src, imagename):
         download_url = src[0]
@@ -69,8 +65,6 @@ class ImgboxParse():
     def parse(self):
         self.page = self.process_url(self.link)
 
-        self.imgbox_src = self.imgbox_get_image_src(self.page)
-
-        self.imagename = self.imgbox_get_image_name(self.imgbox_src)
+        self.imgbox_src, self.imagename = self.imgbox_get_image_src_and_name(self.page)
 
         self.imgbox_save_image(self.imgbox_src, self.imagename)
