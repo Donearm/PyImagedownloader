@@ -40,7 +40,7 @@ import savesource, imageshack, imagevenue, imagehaven, imagebam, \
         sharenxs, blogspot, postimage, imageupper, photobucket, \
         imageban, imagehostorg, turboimagehost, usemycomputer, wordpress, \
         imageboss, servimg, pixroute, tumblr, imgur, radikal, typepad, imgbox, \
-        imgchili
+        imgchili, general
 import http_connector
 # importing config file variables
 from pyimg import basedir, numprocs, debug, logfile, logmaxsize
@@ -84,6 +84,7 @@ rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 rTypepad = re.compile("http://([a-z0-9]+\.)?typepad\.com/\.a/", re.IGNORECASE)
 rImgbox = re.compile("http://imgbox\.com", re.IGNORECASE)
 rImgchili = re.compile("http://imgchili\.com", re.IGNORECASE)
+rGeneral = re.compile("http://.*/images/.*.[a-z]{,4}", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rImagebam : imagebam.ImagebamParse,
@@ -112,7 +113,8 @@ regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rRadikal : radikal.RadikalParse,
         rTypepad : typepad.TypepadParse,
         rImgbox : imgbox.ImgboxParse,
-        rImgchili : imgchili.ImgchiliParse
+        rImgchili : imgchili.ImgchiliParse,
+        rGeneral : general.GeneralParse
         }
 
 
