@@ -84,7 +84,7 @@ rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 rTypepad = re.compile("http://([a-z0-9]+\.)?typepad\.com/\.a/", re.IGNORECASE)
 rImgbox = re.compile("http://imgbox\.com", re.IGNORECASE)
 rImgchili = re.compile("http://imgchili\.com", re.IGNORECASE)
-rGeneral = re.compile("http://.*/images/.*.[a-z]{,4}", re.IGNORECASE)
+rGeneral = re.compile("http://.*/(images|photoshoots)/.*.[a-z]{,4}", re.IGNORECASE)
 # putting them all in a dictionary
 regexp_dict = {rImagevenue : imagevenue.ImagevenueParse,
         rImagebam : imagebam.ImagebamParse,
