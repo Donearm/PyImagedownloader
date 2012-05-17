@@ -301,12 +301,9 @@ def download_url(url, savedirectory, embed="", poster=""):
     # set up logging
     logger = logging.getLogger('pyimagedownloader')
     logger.setLevel(logging.INFO)
-#    fh = logging.FileHandler(logfile)
     formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(process)d:%(message)s')
-#    fh.setFormatter(formatter)
-#    logger.addHandler(fh)
     # trunk log file when it gets bigger than logmaxsize
-    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=0)
+    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=5)
     rh.setFormatter(formatter)
     logger.addHandler(rh)
 
