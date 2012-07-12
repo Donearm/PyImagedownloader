@@ -112,7 +112,7 @@ class Connector():
 
         # Regexps needed
         self.RUsemycomputer = re.compile("http://forum\.usemycomputer\.com/", re.IGNORECASE)
-        self.RImc = re.compile("http://www\.(project\-xtapes|imcmagazine)\.com/", re.IGNORECASE)
+        self.RImc = re.compile("http://(www\.)?(project\-xtapes|imcmagazine)\.com/", re.IGNORECASE)
         self.RCelebrityForum = re.compile("http://(celebrityforum\.)?freeforumzone\.leonardo\.it", re.IGNORECASE)
         self.ROrfaosdoexclusivo = re.compile("http[s]?://www\.orfaosdoexclusivo\.com", re.IGNORECASE)
 
