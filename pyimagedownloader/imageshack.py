@@ -36,6 +36,8 @@ RImageshackA = re.compile('a\.imageshack\.us/', re.IGNORECASE)
 RImageshackI = re.compile('/i/', re.IGNORECASE)
 # a partial url (without http://)
 RImageshackPartial = re.compile('^[a-z0-9]\.imageshack\.(us|com)/img[0-9]{,3}/', re.IGNORECASE)
+# a "desmond" url
+RImageshackDesmond = re.compile('desmond\.imageshack\.(us|com)/', re.IGNORECASE)
 
 
 values = {}
@@ -115,6 +117,10 @@ class ImageshackParse():
                 imgxxx = re.split('/', src[0])
                 download_url = 'http://' + imgxxx[1] + '.imageshack.us' + src[0]
                 savefile = join(basedir, str(num) + str(save_extension[-1]))
+            elif RImageshackDesmond.search(src[0]):
+                save_extension = re.split('&', src[0])
+                download_url = src[0]
+                savefile = join(basedir, str(num) + str(re.split('=', save_extension[1])[-1]))
 
             else:
                 # generate just the filename of the image to be locally saved
