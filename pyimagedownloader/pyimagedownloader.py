@@ -82,7 +82,7 @@ rTumblr = re.compile("http://[0-9]+\.media\.tumblr\.com", re.IGNORECASE)
 rImgur = re.compile("http://([a-z]+\.)?imgur\.com", re.IGNORECASE)
 rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 rTypepad = re.compile("http://([a-z0-9]+\.)?typepad\.com/\.a/", re.IGNORECASE)
-rImgbox = re.compile("http://imgbox\.com", re.IGNORECASE)
+rImgbox = re.compile("http://([a-z]+\.)?imgbox\.com", re.IGNORECASE)
 rImgchili = re.compile("http://imgchili\.com", re.IGNORECASE)
 rGeneral = re.compile("http://.*/(images|photoshoots)/.*.[a-z]{,4}", re.IGNORECASE)
 # putting them all in a dictionary
