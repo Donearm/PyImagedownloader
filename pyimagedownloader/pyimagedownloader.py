@@ -62,7 +62,7 @@ rImageshack = re.compile("http://(img[0-9]{,3}\.)?imageshack\.us", re.IGNORECASE
 rPostimage = re.compile("http://(www\.|[a-z0-9]+)?postimage\.org/(image|[a-z0-9]+)/", re.IGNORECASE)
 rSharenxs = re.compile("http://(www\.)?sharenxs\.com/(thumbnails|view/\?)", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
-rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
+rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?app=core&module=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/(content\.php\?id|View-[0-9]+-\.html)", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
