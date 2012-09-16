@@ -18,7 +18,6 @@ __email__ = "forod.g@gmail.com"
 
 from os.path import join
 from urllib import urlretrieve
-import lxml.html
 import logging
 import http_connector
 
@@ -27,32 +26,14 @@ class BellazonParse():
     def __init__(self, link, basedir):
         self.link = link
         self.basedir = basedir
-        self.page = ''
         self.connector = http_connector.Connector()
         self.logger = logging.getLogger('pyimagedownloader')
 
-    def process_url(self, url):
-        response = self.connector.reqhandler(url)
-
+    def bellazon_save_image(self, src_url):
         try:
-            self.page = lxml.html.fromstring(response)
-        except lxml.etree.XMLSyntaxError as e:
-            self.logger.error("XMLSyntaxError at %s" % url)
-            return
-
-        return self.page
-
-    def bellazon_get_image_src(self, page):
-        src_links = page.xpath("//img[@id='thepic']")
-
-        bellazon_src = [li.get('src', None) for li in src_links]
-
-        return bellazon_src
-
-    def bellazon_save_image(self, src_list):
-        try:
-            save_extension = self.connector.get_filename(src_list[0], 'id=')
-            download_url = src_list[0]
+            save_extension = self.connector.get_filename(src_url, 'attach_id=')
+            download_url = src_url
+            print(save_extension)
             savefile = join(self.basedir, str(save_extension))
         except IndexError:
             self.logger.error("index error in %s")
@@ -60,9 +41,7 @@ class BellazonParse():
 
         urlretrieve(download_url, savefile)
 
+
     def parse(self):
-        self.page = self.process_url(self.link)
-
-        self.bellazon_src = self.bellazon_get_image_src(self.page)
-
-        self.bellazon_save_image(self.bellazon_src)
+        # Bellazon's images are just attachments to post, we already have the direct url
+        self.bellazon_save_image(self.link)
