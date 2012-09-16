@@ -33,7 +33,6 @@ class BellazonParse():
         try:
             save_extension = self.connector.get_filename(src_url, 'attach_id=')
             download_url = src_url
-            print(save_extension)
             savefile = join(self.basedir, str(save_extension))
         except IndexError:
             self.logger.error("index error in %s")
