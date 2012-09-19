@@ -18,9 +18,13 @@ __email__ = "forod.g@gmail.com"
 
 from urllib import urlretrieve
 from os.path import join
+import re
 import lxml.html
 import logging
 import http_connector
+
+# Regexp for imgbox gallery images' thumbnails
+rIMGBOXTHUMB = re.compile("http://t\.imgbox\.com", re.IGNORECASE)
 
 class ImgboxParse():
 
@@ -31,6 +35,14 @@ class ImgboxParse():
         self.logger = logging.getLogger('pyimagedownloader')
 
     def process_url(self, url):
+        if re.search(rIMGBOXTHUMB, url):
+            # if we are dealing with an imgbox gallery with just thumbs, split their urls
+            # and reconstruct the single urls for each image; then resubmit each one to the parser
+            split_url = re.split('\.|\/', url)
+            new_url = 'http://imgbox.com/' + split_url[-2]
+            self.page = self.process_url(new_url)
+            return self.page
+
         response = self.connector.reqhandler(url)
 
         try:
@@ -45,6 +57,7 @@ class ImgboxParse():
     def imgbox_get_image_src_and_name(self, page):
         # find the src attribute which contains the real url
         src_links = page.xpath("//div[@id='cont']/img")
+
         imgbox_src = [li.get('src', None) for li in src_links]
 
         # extract also the filename of the image

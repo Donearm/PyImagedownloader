@@ -70,6 +70,10 @@ class RadikalParse():
         else:
             download_url = src[0]
 
+        if len(imagename) < 2:
+            # don't try to download simple 'http://www.radikal.ru' urls
+            return
+
         try:
             savefile = join(self.basedir, str(imagename[-1]))
             urlretrieve(download_url, savefile)

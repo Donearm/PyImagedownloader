@@ -62,7 +62,7 @@ rImageshack = re.compile("http://(img[0-9]{,3}\.)?imageshack\.us", re.IGNORECASE
 rPostimage = re.compile("http://(www\.|[a-z0-9]+)?postimage\.org/(image|[a-z0-9]+)/", re.IGNORECASE)
 rSharenxs = re.compile("http://(www\.)?sharenxs\.com/(thumbnails|view/\?)", re.IGNORECASE)
 rBlogspot = re.compile("http://[0-9]\.bp\.blogspot\.com", re.IGNORECASE)
-rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?s=[a-z0-9]+&act=attach", re.IGNORECASE)
+rBellazon = re.compile("http://www\.bellazon\.com/main/index\.php\?app=core&module=attach", re.IGNORECASE)
 rSkinsBe = re.compile("http://image\.skins\.be", re.IGNORECASE)
 rShareapic = re.compile("http://www\.shareapic\.net/(content\.php\?id|View-[0-9]+-\.html)", re.IGNORECASE)
 rImagetitan = re.compile("http://img[0-9]{,2}\.imagetitan\.com", re.IGNORECASE)
@@ -82,7 +82,7 @@ rTumblr = re.compile("http://[0-9]+\.media\.tumblr\.com", re.IGNORECASE)
 rImgur = re.compile("http://([a-z]+\.)?imgur\.com", re.IGNORECASE)
 rRadikal = re.compile("http://([a-z0-9]+\.)?radikal\.ru", re.IGNORECASE)
 rTypepad = re.compile("http://([a-z0-9]+\.)?typepad\.com/\.a/", re.IGNORECASE)
-rImgbox = re.compile("http://imgbox\.com", re.IGNORECASE)
+rImgbox = re.compile("http://([a-z]+\.)?imgbox\.com", re.IGNORECASE)
 rImgchili = re.compile("http://imgchili\.com", re.IGNORECASE)
 rGeneral = re.compile("http://.*/(images|photoshoots)/.*.[a-z]{,4}", re.IGNORECASE)
 # putting them all in a dictionary
@@ -163,7 +163,7 @@ class ImageHostParser():
         # piping the urllist urls into a set to purge duplicates
         finalset = set()
         for L in urllist:
-            self.stringl = str(L.get(attr, None))
+            self.stringl = L.get(attr, None)
             # remove the anonym.to string before urls
             if self.stringl.startswith("http://anonym.to/?"):
                 self.stringl = re.sub('http://anonym.to/\?', '', self.stringl)
@@ -301,12 +301,9 @@ def download_url(url, savedirectory, embed="", poster=""):
     # set up logging
     logger = logging.getLogger('pyimagedownloader')
     logger.setLevel(logging.INFO)
-#    fh = logging.FileHandler(logfile)
     formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(process)d:%(message)s')
-#    fh.setFormatter(formatter)
-#    logger.addHandler(fh)
     # trunk log file when it gets bigger than logmaxsize
-    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=0)
+    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=5)
     rh.setFormatter(formatter)
     logger.addHandler(rh)
 
