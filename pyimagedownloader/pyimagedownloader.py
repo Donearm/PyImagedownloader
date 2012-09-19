@@ -163,7 +163,7 @@ class ImageHostParser():
         # piping the urllist urls into a set to purge duplicates
         finalset = set()
         for L in urllist:
-            self.stringl = str(L.get(attr, None))
+            self.stringl = L.get(attr, None)
             # remove the anonym.to string before urls
             if self.stringl.startswith("http://anonym.to/?"):
                 self.stringl = re.sub('http://anonym.to/\?', '', self.stringl)
