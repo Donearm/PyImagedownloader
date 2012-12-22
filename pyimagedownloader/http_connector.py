@@ -124,14 +124,17 @@ class Connector():
             login_page = 'http://www.imcmagazine.com/login.php'
             values = {'login' : 'Sign In', 'password' : imc_pwd, 'username' : imc_name}
         elif self.RCelebrityForum.search(url):
-#            login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx'
-            login_page = 'http://auth.leonardo.it/sso/login'
+#            login_page = 'http://auth.leonardo.it/sso/login'
+            login_page = 'http://celebrityforum.freeforumzone.leonardo.it/loginc.aspx?c=3207&f=3207&pbu=%252fforum.aspx%253fc%253d3207%2526f%253d3207'
 
-            values = {'SSO_cik': 'G9clW564v319FjXGuTXXOVzSKDrUTFAXfI8M0uDx2EoxYiBekWLO7M6fMu99MlpQ',
-                    'SSO_USERNAME': cf_name, 'SSO_PASSWORD': cf_pwd, 'SSO_p': 'c',
-                    'SSO_CHANNEL': '3', 'SSO_PAUTH': '0', 'SSO_USE_ENC': '0',
-                    'SSO_PAYLOAD': '1', 'SSO_SECURE_LOGIN': '1', 'FFZ_LOGIN_RQ': '1',
-                    'FFZ_SLOGIN': '1', 'FFZ_HLOGIN': '0', 'SSO_REDIRECT_PATH': login_page}
+            values = {'__VIEWSTATE': '/wEPDwUJNDY0NDIzNDMwD2QWAmYPZBYEAgEPZBYIAgEPFgIeB1Zpc2libGVoZAIEDxYCHgdjb250ZW50BUxDZWxlYnJpdHkgRm9ydW0gLSAxMDAlIHNleHkgZSBtYWRlIGluIEl0YWx5IC0gSWwgZm9ydW0gZGVsbGUgY2VsZWJyaXQmIzIyNDsuZAIFDxYCHwEFK0NlbGVicml0eSBGb3J1bSAtIDEwMCUgc2V4eSBlIG1hZGUgaW4gSXRhbHlkAggPFgIfAQUaSWwgZm9ydW0gZGVsbGUgY2VsZWJyaXTDoC5kAgkPZBYIAgUPFgIfAGcWAgIBDxYCHgtjZWxsc3BhY2luZwUBMRYCZg9kFgRmDxYCHgVjbGFzcwUJY3RibGxvZ28xZAIBD2QWAmYPZBYEZg9kFgJmDxYCHgV3aWR0aAUBMWQCAQ9kFgQCAQ8WAh8EBQExZAICDxYEHgdjb2xzcGFuBQExHwQFBDEwMCVkAg8PZBYCAgEPZBYEAgoPFgQeBGhyZWYFHC9yZWdjLmFzcHg/Yz0zMjA3JmFtcDtmPTMyMDceCWlubmVyaHRtbAUkQ2xpY2sgaGVyZSB0byBSZWdpc3RlciBhIG5ldyBhY2NvdW50ZAILDxYEHwYFIS9wYXNzd29yZGMuYXNweD9jPTMyMDcmYW1wO2Y9MzIwNx8HBRlMb3N0IFBhc3N3b3JkPyBDbGljayBoZXJlZAIRD2QWAgICDxYCHgRUZXh0BdUDPCEtLSBiZWdpbiBhZCB0YWcgIC0gdGlsZSA9IDIgLS0+DQo8c2NyaXB0IGxhbmd1YWdlPSJKYXZhU2NyaXB0IiB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPi8vPCEtLQ0KaWYodHlwZW9mKHZfcmFuZG9tbnVtYmVyKT09InVuZGVmaW5lZCIpe3ZhciB2X3JhbmRvbW51bWJlcj1NYXRoLmZsb29yKE1hdGgucmFuZG9tKCkqMTAwMDAwMDAwMDApfQ0KaWYodHlwZW9mKHZfdGlsZSk9PSJ1bmRlZmluZWQiKXt2YXIgdl90aWxlPTF9ZWxzZXt2X3RpbGUrK30NCmRvY3VtZW50LndyaXRlKCc8Jysnc2NyJysnaXB0IHNyYz0iaHR0cDovL2FkLml0LmRvdWJsZWNsaWNrLm5ldC9hZGovZmZ6b25lL2NpbmVtYTt0aWxlPScrdl90aWxlKyc7c3o9MzAweDI1MDtvcmQ9Jyt2X3JhbmRvbW51bWJlcisnPyIgdHlwZT0idGV4dC9qYXZhc2NyaXB0Ij48XC8nKydzY3InKydpcHQ+Jyk7DQovLy0tPjwvc2NyaXB0Pg0KPCEtLSBFbmQgYWQgdGFnIC0tPmQCGQ9kFgICAQ9kFgJmDxBkZBQrAQBkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYDBSdjdGwwMCRDUEgxJExvZ2luQ29udHJvbCRMb2dpblBlcm1hbmVudGUFI2N0bDAwJENQSDEkTG9naW5Db250cm9sJExvZ2luU2ljdXJvBSVjdGwwMCRDUEgxJExvZ2luQ29udHJvbCRMb2dpbk5hc2Nvc3Rv+omcpM+HLM4mDkZ1qLfzOnIz+CpGg5ri5iQOrMVnTHk=',
+                    'ctl00$CPH1$LabPBUrl': '%2fforum.aspx%3fc%3d3207%26f%3d3207', 'ctl00$CPH1$LoginControl$TUsername': cf_name,
+                    'ctl00$CPH1$LoginControl$TPassword': cf_pwd, 'ctl00$CPH1$LoginControl$ButLogin': 'Log In'}
+#            values = {'SSO_cik': 'G9clW564v319FjXGuTXXOVzSKDrUTFAXfI8M0uDx2EoxYiBekWLO7M6fMu99MlpQ',
+#                    'SSO_USERNAME': cf_name, 'SSO_PASSWORD': cf_pwd, 'SSO_p': 'c',
+#                    'SSO_CHANNEL': '3', 'SSO_PAUTH': '0', 'SSO_USE_ENC': '0',
+#                    'SSO_PAYLOAD': '1', 'SSO_SECURE_LOGIN': '1', 'FFZ_LOGIN_RQ': '1',
+#                    'FFZ_SLOGIN': '1', 'FFZ_HLOGIN': '0', 'SSO_REDIRECT_PATH': login_page}
         elif self.ROrfaosdoexclusivo.search(url):
             login_page = 'https://www.orfaosdoexclusivo.com/forum/index.php?app=core&module=global&section=login&do=process'
             values = {'username': orfaos_name, 'password': orfaos_pwd}
