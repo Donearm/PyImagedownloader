@@ -90,7 +90,6 @@ function scaleImg(what)
         self.assertTrue(getsize(savefile) >= 1000)
 
 
-
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestImagetitan)
     unittest.TextTestRunner(verbosity=2).run(suite)

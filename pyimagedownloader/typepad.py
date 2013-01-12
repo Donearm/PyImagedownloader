@@ -52,7 +52,6 @@ class TypepadParse():
 
         return typepad_src
 
-
     def typepad_get_image_name(self, link):
         # generate just the filename of the image to be locally saved
         imagename = re.split('.a/', link)
@@ -67,7 +66,6 @@ class TypepadParse():
         except IndexError:
             self.logger.error("IndexError in %s" % imagename)
             pass
-
 
     def parse(self):
         self.page = self.process_url(self.link)

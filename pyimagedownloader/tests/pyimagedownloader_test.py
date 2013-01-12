@@ -37,6 +37,7 @@ class TestPyImagedownloader(unittest.TestCase):
         self.wordpress_uploads = 'http://www.bemagazine.tv/2011/07/12/beautiful-fashion-night-foto-video/'
         self.parser = pyimagedownloader.ImageHostParser()
 
+
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPyImagedownloader)
     unittest.TextTestRunner(verbosity=2).run(suite)

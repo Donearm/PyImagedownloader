@@ -40,11 +40,12 @@ from pyimg import *
 
 class Connector():
     """connect to a url, get the page and return its content"""
+
     def __init__(self):
         # Some variables for the connection
         self.values = {}
         self.user_agent = user_agent
-        self.headers = { 'User-Agent' : self.user_agent, 'Connection' : 'Keep-Alive' }
+        self.headers = {'User-Agent' : self.user_agent, 'Connection' : 'Keep-Alive'}
         self.timeout = timeout
         #set a cookie handler and install the opener
         self.cj = CookieJar()
@@ -52,7 +53,6 @@ class Connector():
         self.logger = logging.getLogger('pyimagedownloader')
         # Set the timeout we chose in the config file
         socket.setdefaulttimeout(self.timeout)
-
 
     def threadsafe_opener(self):
         """Generate a new opener with each call, so to be thread-safe"""
@@ -70,7 +70,6 @@ class Connector():
                     urllib2.HTTPRedirectHandler)
         urllib2.install_opener(opener)
         return opener
-
 
     def reqhandler(self, url, login=0):
         """the attribute that actually starts the request and return the
@@ -97,11 +96,9 @@ class Connector():
 
         return self.response
 
-
         #print(cj.make_cookies(self.response, self.request)) # show the cookies
 #         self.Rpage = self.response.read()
 #         return self.Rpage
-
 
     def site_login(self, url):
         """check if it's a site or forum we have login credentials for and
@@ -204,7 +201,6 @@ class Connector():
         response = ''
         return response
 
-
     def get_request(self, url, ua, referer=''):
         request = urllib2.Request(url)
         request.add_header('User-Agent', ua)
@@ -250,7 +246,6 @@ class Connector():
         response = ''
         return response
 
-
     def get_filename(self, url, split=''):
         request = urllib2.Request(url)
         request.add_header('User-Agent', self.user_agent)
@@ -275,7 +270,6 @@ class Connector():
             # use the url and the split string then
             self.filename = re.split(split, url)
             return self.filename
-
 
     def check_string_or_list(self, url):
         """check if the url given is a string or a list and always returns a

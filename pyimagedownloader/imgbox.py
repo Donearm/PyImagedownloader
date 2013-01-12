@@ -74,7 +74,6 @@ class ImgboxParse():
             self.logger.error("IndexError in %s" % imagename)
             pass
 
-
     def parse(self):
         self.page = self.process_url(self.link)
 

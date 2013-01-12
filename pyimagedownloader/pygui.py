@@ -52,11 +52,9 @@ except:
     sys.exit(1)
 
 
-
-
-
 # PyGtk gui class
 class Gui():
+    
     def __init__(self, basedir, embed=False, poster=""):
         """ Main window class """
         
@@ -149,7 +147,6 @@ class Gui():
         gtk.threads_init()
         gtk.main()
 
-
     def close(self, widget):
         gtk.main_quit()
         sys.exit(1)
@@ -235,12 +232,10 @@ class Gui():
     
         rename(abspath(b.name), abspath(f.name))
 
-
     def sequential_downloader(self, widget, liststore, basedir="", embed="", poster=""):
         """instantiate a SequentialDownloader object and execute run()"""
         self.sqdownloader = SequentialDownloader(widget, liststore, basedir, embed, poster)
         self.sqdownloader.start()
-
 
 
 class SequentialDownloader(threading.Thread):
@@ -284,7 +279,6 @@ class SequentialDownloader(threading.Thread):
             print("")
             embed_links = parser.get_all_links('img', 'src')
             parser.which_host(embed_links, 'src')
-
 
 
 if __name__ == "__main__":

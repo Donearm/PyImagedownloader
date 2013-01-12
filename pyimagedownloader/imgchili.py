@@ -49,7 +49,6 @@ class ImgchiliParse():
 
         return imgchili_src
 
-
     def imgchili_get_image_name(self, src):
         # generate just the filename of the image to be locally saved
         imagename = src[0].split('/')
@@ -64,7 +63,6 @@ class ImgchiliParse():
         except IndexError as e:
             self.logger.error("IndexError in %s" % imagename)
             pass
-
 
     def parse(self):
         self.page = self.process_url(self.link)

@@ -46,7 +46,6 @@ class SaveSource():
         self.neat_title = ''
         self.logger = logging.getLogger('pyimagedownloader')
 
-
     def get_page_title(self, response):
         """extract title page"""
 
@@ -121,7 +120,6 @@ class SaveSource():
 
         return self.output_dir
 
-
     def extract_domain(self, url):
         """Given an url extract only the domain name (without 'www' and 'com' for
         example)"""
@@ -158,4 +156,3 @@ class SaveSource():
                     return match.group()
         entity_re = re.compile(r'&(#?)(x?)(\w+);')
         return entity_re.subn(substitute_entity, s)[0]
-

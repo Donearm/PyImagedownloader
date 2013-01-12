@@ -381,8 +381,6 @@ urchinTracker();
         self.assertTrue(getsize(savefile) >= 1000)
 
 
-
-
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestShareapic)
     unittest.TextTestRunner(verbosity=2).run(suite)

@@ -27,7 +27,6 @@ from pyimg import user_agent
 import http_connector
 
 
-
 # The split regexp
 RImageshackSplit = '/img[0-9]{,3}/[0-9]+/'
 # the 'a.imageshack.us' type url
@@ -41,7 +40,7 @@ RImageshackDesmond = re.compile('desmond\.imageshack\.(us|com)/', re.IGNORECASE)
 
 
 values = {}
-headers = { 'User-Agent' : user_agent }
+headers = {'User-Agent' : user_agent}
 data = urlencode(values)
 
 class ShackConnector(http_connector.Connector):
@@ -49,19 +48,19 @@ class ShackConnector(http_connector.Connector):
     def __init__(self, url):
         http_connector.Connector.__init__(self)
         self.values = {}
-        self.headers = { 'User-Agent' : user_agent }
+        self.headers = {'User-Agent' : user_agent}
         self.data = urlencode(self.values)
 
-        def post_request(self, url, data, headers):
-            self.request = urllib2.Request(url, data, headers)
-            try:
-                self.response = urllib2.urlopen(self.request)
-                return self.response
-            except urllib2.HTTPError as e:
-                if e.code == 405:
-                    # we could be dealing with an url which is already the
-                    # image url let's download it right away then
-                    imageshack_download(RImageshackSplit, url, basedir)
+    def post_request(self, url, data, headers):
+        self.request = urllib2.Request(url, data, headers)
+        try:
+            self.response = urllib2.urlopen(self.request)
+            return self.response
+        except urllib2.HTTPError as e:
+            if e.code == 405:
+                # we could be dealing with an url which is already the
+                # image url let's download it right away then
+                imageshack_download(RImageshackSplit, url, basedir)
 
 
 

@@ -40,7 +40,6 @@ try {var pageTracker = _gat._getTracker("UA-15108601-1");pageTracker._trackPagev
         self.assertTrue(getsize(savefile) >= 1000)
 
 
-
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestServimg)
     unittest.TextTestRunner(verbosity=2).run(suite)

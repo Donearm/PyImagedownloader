@@ -37,6 +37,7 @@ app = QtGui.QApplication(sys.argv)
 # PyQt4 gui class
 class Gui(QtGui.QWidget):
     """Main window class"""
+
     def __init__(self, basedir, embed, poster):
         QtGui.QWidget.__init__(self)
         
@@ -200,7 +201,6 @@ class Gui(QtGui.QWidget):
             parser.which_host(embed_links, 'src')
         
 #        self.emit(QtCore.SIGNAL('downloadDone(QString)'), row)
-    
 
     def sequential_downloader(self):
 #        self.sqdownloader = SequentialDownloader(self.listview, self.basedir, 
@@ -228,7 +228,6 @@ class Gui(QtGui.QWidget):
         print(self.thread_pool)
 
 
-
 class GenericThread(QtCore.QThread):
 #class GenericThread(threading.Thread):
     def __init__(self, function, *args, **kwargs):
@@ -244,7 +243,6 @@ class GenericThread(QtCore.QThread):
     def run(self):
         self.function(*self.args, **self.kwargs)
         return
-
 
 
 class SequentialDownloader(QtCore.QThread):
@@ -265,7 +263,6 @@ class SequentialDownloader(QtCore.QThread):
             self.download_url(url, self.basedir, self.embed)
             self.emit(QtCore.SIGNAL("downloadDone(int)"), i)
 #            self.listview.takeItem(i)
-
 
     def download_url(self, url, savedirectory, embed="", poster=""):
         
@@ -292,6 +289,7 @@ class SequentialDownloader(QtCore.QThread):
             print("")
             embed_links = parser.get_all_links('img', 'src')
             parser.which_host(embed_links, 'src')
+
 
 if __name__ == "__main__":
     pygui = Gui()

@@ -42,11 +42,12 @@ class SharenxsConnector(http_connector.Connector):
     # 'ad_redirect_st_nxs' cookies to pass the initial ad page on sharenxs.com
     # Then they will be added to a second get_request() as the 'Cookie' header so
     # to enable downloading of the image
+
     def __init__(self, url):
         http_connector.Connector.__init__(self)
         self.uri = url
         self.values = {}
-        self.headers = { 'User-Agent' : user_agent }
+        self.headers = {'User-Agent' : user_agent}
         self.data = urlencode(self.values)
         self.cj = cookielib.CookieJar()
         self.opener = self.threadsafe_opener()
@@ -95,7 +96,6 @@ class SharenxsConnector(http_connector.Connector):
         print("An image couldn't be downloaded.")
         response = ''
         return response
-
 
 
 class SharenxsParse():
@@ -160,7 +160,6 @@ class SharenxsParse():
 
         return src_links, sharenxs_src, sharenxs_wz
 
-
     def sharenxs_save_image(self, src_list):
         try:
             save_extension = re.split('/', str(src_list[0]))
@@ -177,7 +176,6 @@ class SharenxsParse():
             self.logger.error("IndexError in %s" % src_list)
             return
 
-        
     def parse(self):
         self.page = self.process_url(self.link)
 

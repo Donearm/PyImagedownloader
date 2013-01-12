@@ -246,7 +246,6 @@ pageTracker._trackPageview();
         self.assertTrue(getsize(savefile) >= 1000)
 
 
-
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestImagehaven)
     unittest.TextTestRunner(verbosity=2).run(suite)

@@ -21,6 +21,7 @@ from urllib import urlretrieve
 import logging
 import http_connector
 
+
 class BellazonParse():
 
     def __init__(self, link, basedir):
@@ -39,7 +40,6 @@ class BellazonParse():
             return
 
         urlretrieve(download_url, savefile)
-
 
     def parse(self):
         # Bellazon's images are just attachments to post, we already have the direct url

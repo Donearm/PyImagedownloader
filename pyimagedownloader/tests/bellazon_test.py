@@ -24,7 +24,6 @@ class TestBellazon(unittest.TestCase):
         self.assertTrue(getsize(savefile) >= 1000)
 
 
-
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBellazon)
     unittest.TextTestRunner(verbosity=2).run(suite)

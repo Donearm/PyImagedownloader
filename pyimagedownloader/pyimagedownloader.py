@@ -148,7 +148,7 @@ class ImageHostParser():
         Then use a queue and enough processes to download all matched urls"""
         # make a queue and enough processes as numprocs
         self.q = Queue()
-        self.ps = ( Process(target=self.use_queue, args=()) for i in range(self.numprocs) )
+        self.ps = (Process(target=self.use_queue, args=()) for i in range(self.numprocs))
 
         # enable multiprocessing logging feature
         if debug:
@@ -330,6 +330,7 @@ def download_url(url, savedirectory, embed="", poster=""):
         # Note: at the moment it downloads thumbnails too
         embed_download(parser)
 
+
 def embed_download(parser):
     """Search for embedded images in a page. Requires an instance of ImageHostParser to be passed"""
     print("Searching for embedded images")
@@ -342,6 +343,7 @@ def filelist_parse(parsefile):
     """parsing a file containing urls and giving back a list of them"""
     with open(abspath(parsefile), 'r') as f:
         return f.readlines()
+
 
 def filelist_download(download_file):
     """download a serie of urls from a file and comment out them, in another
@@ -390,6 +392,7 @@ def filelist_fileinput(download_file):
         l = '#' + line
         print(l.strip("\n"))
 
+
 if __name__ == "__main__":
     # try argparse first
     try:
@@ -425,7 +428,5 @@ if __name__ == "__main__":
             download_url(url, basedir, options.embed, options.poster)
         except KeyboardInterrupt:
             sys.exit(1)
-
-
 
     sys.exit(0)

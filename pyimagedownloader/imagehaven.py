@@ -71,7 +71,6 @@ class ImagehavenParse():
             self.logger.debug("Skipping an IndexError on %s" % srclist[0])
             pass
 
-
     def parse(self):
         self.page = self.process_url(self.link)
 

@@ -24,9 +24,8 @@ import logging
 import http_connector
 
 
+# The regexps we'll need to find the link
 
-# The regexp we'll need to find the link
-#
 # to find the page with streamate ads
 RRedirects = re.compile("uploadimg\-streamate\.php", re.IGNORECASE)
 # to find generical redirects

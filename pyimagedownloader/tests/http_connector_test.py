@@ -66,6 +66,7 @@ class TestHttpConnector(unittest.TestCase):
         self.assertIsInstance(uri_from_list, str)
         self.assertIsInstance(uri_from_url, str)
 
+
 def main():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestHttpConnector)
     unittest.TextTestRunner(verbosity=2).run(suite)
