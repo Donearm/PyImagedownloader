@@ -31,7 +31,7 @@ import urllib2
 import logging
 import logging.handlers
 from multiprocessing import Process, Queue, log_to_stderr
-from os.path import abspath, dirname
+from os.path import abspath, dirname, expanduser
 from os import rename
 import lxml.html
 # importing local modules
@@ -303,7 +303,7 @@ def download_url(url, savedirectory, embed="", poster=""):
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(process)d:%(message)s')
     # trunk log file when it gets bigger than logmaxsize
-    rh = logging.handlers.RotatingFileHandler(logfile, maxBytes=logmaxsize, backupCount=5)
+    rh = logging.handlers.RotatingFileHandler(abspath(expanduser(logfile)), maxBytes=logmaxsize, backupCount=5)
     rh.setFormatter(formatter)
     logger.addHandler(rh)
 
