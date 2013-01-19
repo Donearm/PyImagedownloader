@@ -370,7 +370,7 @@ def filelist_download(download_file):
                         # if anything goes wrong, append an error tag to the
                         # url and go on to the next one
                         bckp_l.append(u)
-                        url = 'ERROR: ' + u
+                        url = 'ERROR,' + u
                         o.write(url)
 
     # at the end, move the backup file to the filelist's place
