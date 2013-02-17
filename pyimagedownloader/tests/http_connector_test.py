@@ -1,5 +1,4 @@
 import unittest
-#import re
 import http_connector
 import urllib2
 from urllib import urlencode
