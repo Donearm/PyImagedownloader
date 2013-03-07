@@ -8,7 +8,7 @@ from os.path import isfile, join, getsize
 class TestBellazon(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.bellazon.com/main/topic/4517-lena-gercke/page__st__800#entry2978466'
         self.image_url = 'http://www.bellazon.com/main/index.php?app=core&module=attach&section=attach&attach_rel_module=post&attach_id=1647508'
         self.bz = bellazon.BellazonParse(self.url, self.basedir)

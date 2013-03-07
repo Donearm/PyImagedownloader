@@ -10,7 +10,7 @@ import re
 class TestSkinsbe(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://image.skins.be/2831923/24797-septimiu29-danicathrall-nutsuk-31dec2010-123/'
         self.image_url = 'http://13img.skins.be/2/8/3/1/9/2/3/24797-septimiu29-danicathrall-nutsuk-31dec2010-123.jpg'
         self.example_skin_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"

@@ -8,7 +8,7 @@ from os.path import join, isfile, getsize
 class TestUsemycomputer(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://usemycomputer.com/show.html?w=900&h=1237&i=/indeximages/women/Emma.Watson/002181756.jpg'
         self.example_umc_page = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

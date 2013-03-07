@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestImagehaven(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://img22.imagehaven.net/img.php?id=3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg'
         self.image_url = 'http://img22.imagehaven.net/images/58c249f166baa072125176f846a5d484/4e3572ca/3PO8Y3PLXP_Avril_Lavigne_Arriving_NRJ_Radio_Paris_BSQUNoNDasgl.jpg'
         self.example_ihvn_page = """<LINK REL="SHORTCUT ICON" HREF="favicon.ico">

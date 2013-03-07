@@ -9,7 +9,7 @@ class TestSavesource(unittest.TestCase):
         self.brazilian_domain = 'http://www.tam.com.br'
         self.url = 'http://mode.newslicious.net/'
         self.utf8_url = 'http://mode.newslicious.net/2011/07/january-3-amanda-nrgaard-katrin.html'
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.creditor = 'nirari@celebrityforum'
         self.utf8_title = u'prover\xc3\xb2 a \xc3\xa6 in \xc3\xa5 for \xc3\x97'
         self.title_with_nonaccepted_chars = 'Try with [some] NOT accepted chars \' /\ '

@@ -8,7 +8,7 @@ import lxml.html
 class TestImageshack(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://imageshack.us/photo/my-images/140/0299wg.jpg/'
         self.example_ishack_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">

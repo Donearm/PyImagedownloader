@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestServimg(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.servimg.com/image_preview.php?i=496&u=10000834'
         self.image_url = 'http://i20.servimg.com/u/f20/09/00/08/34/h10.jpg'
         self.example_serv_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>h10 - Servimg.com - Free image hosting service</title><link rel="stylesheet" type="text/css" href="style4.css" /><link rel="stylesheet" type="text/css" href="preview.css" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script type="text/javascript" src="js/script.js"></script><!--

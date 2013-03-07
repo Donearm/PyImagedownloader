@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestPixroute(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.pixroute.com/s4tx57g1po5v/Ana_Ivanovic_En_Bikini_Le_15-01-11_1.jpg.html'
         self.image_url = 'http://img127.pixroute.com/i/00036/s4tx57g1po5v.jpg'
         self.example_pr_page = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

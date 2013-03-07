@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestShareapic(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.shareapic.net/View-24384249-Satomi-Shigemori---Sexy-Asian-Bikini-Model.html'
         self.image_url = 'http://images.shareapic.net/fullsize7/024384249.jpg'
         self.example_shpic_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

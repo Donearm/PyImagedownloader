@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestImgbox(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://imgbox.com/aaaHwL9s'
         self.image_url = 'http://o.imgbox.com/aaaHwL9s.jpg'
         self.example_ibimage_page = """<!DOCTYPE html> 

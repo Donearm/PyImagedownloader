@@ -8,7 +8,7 @@ from os.path import join, getsize, isfile
 class TestImagebam(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.imagebam.com/image/38af8c140780852'
         self.image_url = 'http://45.imagebam.com/download/pWQfnGAtSfxbP4m7f4Y3bg/14079/140780852/119274167.jpg'
         self.example_ibam_page = """<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

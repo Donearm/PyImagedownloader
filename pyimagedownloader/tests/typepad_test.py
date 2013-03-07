@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestTypepad(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://fashioncopious.typepad.com/.a/6a00e54ef964538834015432347a94970c-popup'
         self.example_tpad_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

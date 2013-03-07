@@ -8,7 +8,7 @@ from os.path import join, getsize, isfile
 class TestImageboss(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.imageboss.net/view/4yui83wma8beyq2ja174ne7x6k79mg-83663.JPG'
         self.image_url = 'http://www.imageboss.net/img/4yui83wma8beyq2ja174ne7x6k79mg/83663.JPG'
         self.example_iboss_page = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

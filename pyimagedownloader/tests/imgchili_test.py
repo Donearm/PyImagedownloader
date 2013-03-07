@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestImgchili(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://imgchili.com/show/2765/2765317_9.jpg'
         self.image_url = 'http://i1.imgchili.com/2765/2765317_9.jpg'
         self.example_chiliimage_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

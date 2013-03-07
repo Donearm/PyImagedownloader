@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestPostimage(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://postimage.org/image/2a2npxl6s/'
         self.image_url = 'http://s3.postimage.org/5tolfqo49/Clip_20io.jpg'
         self.example_pimage_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

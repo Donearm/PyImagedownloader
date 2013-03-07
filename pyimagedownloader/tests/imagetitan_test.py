@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestImagetitan(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://img2.imagetitan.com/img.php?image=38_1966.jpg'
         self.image_url = 'http://img2.imagetitan.com/img2/IVljS3wDcTG4k66/38/38_1966.jpg'
         self.example_ititan_page = """<html>

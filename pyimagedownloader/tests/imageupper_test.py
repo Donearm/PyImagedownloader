@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestImageupper(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://imageupper.com/i/?S0700010020221Z2735188161074'
         self.image_url = 'http://s07.imageupper.com/1/2/Z2735188161074_22.jpg'
         self.example_iupper_page = """<HTML><HEAD><TITLE>Image Upper.com - Free Image Hosting - View Image</TITLE>

@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestTurboimagehost(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.turboimagehost.com/p/5787190/La_Senza.jpg.html'
         self.image_url = 'http://s2d3.turboimagehost.com/sp/b66b32b24b95b7055395adb2ad7a08e8/La_Senza.jpg'
         self.example_turbo_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

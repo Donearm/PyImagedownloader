@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestRadikal(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://radikal.ru/F/s58.radikal.ru/i159/0904/4d/2f35f54b7251.jpg.html'
         self.image_url = 'http://s58.radikal.ru/i159/0904/4d/2f35f54b7251.jpg'
         self.example_rdkl_page = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

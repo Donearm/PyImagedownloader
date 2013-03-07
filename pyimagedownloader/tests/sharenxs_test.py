@@ -9,7 +9,7 @@ from os.path import join, getsize, isfile
 class TestSharenxs(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://www.sharenxs.com/view/?id=tb5w2bf-05161681-7d2acgb'
         self.image_url = 'http://cache.sharenxs.com/images/wz/cabb/ci/ah/bg/aa/AmberHeard1.jpg'
         self.example_snxs_page = """

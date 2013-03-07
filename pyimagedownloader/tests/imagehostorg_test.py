@@ -8,7 +8,7 @@ from os.path import join, getsize, isfile
 class TestImagehostorg(unittest.TestCase):
 
     def setUp(self):
-        self.basedir = '/mnt/documents/Maidens/Uploads/'
+        self.basedir = '/mnt/d/Maidens/Uploads/'
         self.url = 'http://h.imagehost.org/view/0790/cover'
         self.url2 = 'http://h.imagehost.org/view/0198/z_cover.jpg'
         self.image_url = 'http://h.imagehost.org/0790/cover.jpg'
