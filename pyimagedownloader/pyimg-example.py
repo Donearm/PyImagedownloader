@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # The directory where to download the images. Full path
 basedir = ''
 
