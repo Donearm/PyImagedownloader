@@ -1,4 +1,5 @@
 import unittest
+# -*- coding: utf-8 -*-
 import savesource
 import http_connector
 

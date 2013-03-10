@@ -1,4 +1,5 @@
 import unittest
+# -*- coding: utf-8 -*-
 import http_connector
 import urllib2
 from urllib import urlencode
