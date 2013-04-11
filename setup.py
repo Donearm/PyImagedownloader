@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='PyImagedownloader',
         version='1.6',
@@ -26,5 +26,8 @@ setup(name='PyImagedownloader',
             'Topic :: Internet',
             'Topic :: Internet :: WWW/HTTP'
             ],
+        install_requires=[
+            "lxml",
+        ],
         )
 
