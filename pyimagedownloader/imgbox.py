@@ -56,7 +56,7 @@ class ImgboxParse():
 
     def imgbox_get_image_src_and_name(self, page):
         # find the src attribute which contains the real url
-        src_links = page.xpath("//div[@id='cont']/img")
+        src_links = page.xpath("//div[@class='image-container']/img")
 
         imgbox_src = [li.get('src', None) for li in src_links]
 
